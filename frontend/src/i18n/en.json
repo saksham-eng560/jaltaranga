@@ -1,0 +1,18 @@
+{
+  "app_title": "Jaltaranga — Flood Evacuation Intelligence",
+  "replay_badge": "REPLAY · 13 Jul 2023 · Not a live alert",
+  "command_view": "Command View (Officer)",
+  "colony_view": "Colony View (Citizen)",
+  "compare_view": "Compare View",
+  "time_to_water": "Time to Water",
+  "hours": "hours",
+  "safe_evac_route": "Safe Evacuation Route",
+  "avoid_warning": "Warning: Ring Road is flooded, do not use",
+  "shelter_destination": "Assigned Shelter",
+  "call_helpline": "Call Helpline",
+  "free_beds": "Free beds",
+  "draft_dispatch": "Draft Evacuation Dispatch",
+  "approve_dispatch": "Approve & Send Dispatch",
+  "listen_audio": "Listen to Briefing",
+  "status_sent": "Dispatch Sent"
+}

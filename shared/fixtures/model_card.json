@@ -1,0 +1,33 @@
+{
+  "frozen": true,
+  "champion": "lagreg-v1",
+  "models": {
+    "lagreg-v1": {
+      "version": "v1",
+      "status": "champion",
+      "type": "Ridge Lag Regression",
+      "features": "Real-only lag series (0,1,2,3,6,12,24,48h) + Hathnikund release"
+    },
+    "persistence": {
+      "version": "baseline",
+      "status": "fallback",
+      "type": "Persistence Baseline"
+    }
+  },
+  "provenance": {
+    "digitized_share_pct": 100.0,
+    "synthetic_share_pct": 0.0
+  },
+  "inundation": {
+    "calibration": {
+      "delta_m": 0.0,
+      "slope_m_per_km": 0.22,
+      "balanced_acc": 0.88,
+      "n_wet": 15,
+      "n_dry": 15
+    },
+    "datum_offset_delta_m": 0.0,
+    "slope_m_per_km": 0.22,
+    "balanced_accuracy": 0.88
+  }
+}

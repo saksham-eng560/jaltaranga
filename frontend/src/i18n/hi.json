@@ -1,0 +1,18 @@
+{
+  "app_title": "जलतरंग — बाढ़ निकासी और पूर्वानुमान",
+  "replay_badge": "पुनरावृत्ति (Replay) · 13 जुलाई 2023 · लाइव चेतावनी नहीं",
+  "command_view": "कमांड व्यू (अधिकारी)",
+  "colony_view": "नागरिक व्यू (कॉलोनी)",
+  "compare_view": "तुलना (Compare)",
+  "time_to_water": "पानी आने का अनुमान",
+  "hours": "घंटे",
+  "safe_evac_route": "सुरक्षित निकासी मार्ग",
+  "avoid_warning": "चेतावनी: रिंग रोड पर पानी भर चुका है, इधर न जाएं",
+  "shelter_destination": "आश्रय स्थल",
+  "call_helpline": "हेल्पलाइन कॉल करें",
+  "free_beds": "उपलब्ध बिस्तर",
+  "draft_dispatch": "निकासी संदेश तैयार करें (Draft)",
+  "approve_dispatch": "स्वीकृत करें एवं भेजें (Approve)",
+  "listen_audio": "निर्देश सुनें (Listen)",
+  "status_sent": "संदेश भेजा गया (Sent)"
+}
