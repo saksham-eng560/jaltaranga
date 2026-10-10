@@ -1,0 +1,92 @@
+{
+  "properties": {
+    "station_id": {
+      "title": "Station Id",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "pattern": "\\+05:30$",
+      "title": "Ts",
+      "type": "string"
+    },
+    "level_m": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Level M"
+    },
+    "discharge_cumecs": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Discharge Cumecs"
+    },
+    "source": {
+      "enum": [
+        "cwc",
+        "floodhub",
+        "digitized",
+        "synthetic",
+        "glofas",
+        "news"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "qc_flag": {
+      "default": "ok",
+      "enum": [
+        "ok",
+        "imputed",
+        "suspect"
+      ],
+      "title": "Qc Flag",
+      "type": "string"
+    },
+    "source_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Ref"
+    },
+    "note": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Note"
+    }
+  },
+  "required": [
+    "station_id",
+    "ts",
+    "source"
+  ],
+  "title": "GaugeReading",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/gauge_reading.schema.json"
+}

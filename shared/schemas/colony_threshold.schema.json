@@ -1,0 +1,43 @@
+{
+  "properties": {
+    "colony_id": {
+      "title": "Colony Id",
+      "type": "string"
+    },
+    "wet_at_level_m": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Wet At Level M"
+    },
+    "cutoff_at_level_m": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Cutoff At Level M"
+    },
+    "buffer_m": {
+      "default": 150,
+      "title": "Buffer M",
+      "type": "number"
+    }
+  },
+  "required": [
+    "colony_id",
+    "wet_at_level_m",
+    "cutoff_at_level_m"
+  ],
+  "title": "ColonyThreshold",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/colony_threshold.schema.json"
+}

@@ -1,0 +1,35 @@
+{
+ "dispatch_id": "00000000-0000-4000-8000-000000000003",
+ "plan_ref": {
+  "scenario_id": "yamuna-2023-07",
+  "colony_id": "DEL-YP-04",
+  "computed_at": "2023-07-11T15:00:00+05:30"
+ },
+ "alert_type": "SHELTER_IN_PLACE",
+ "message_hi": "पानी आ चुका है: यमुना पुश्ता सेक्टर सी में पानी भर गया है। पानी में चलकर बाहर न निकलें। छत या ऊपरी मंज़िल पर जाएं और बिजली बंद रखें। नाव और बचाव के लिए 1077 या 112 पर कॉल करें।",
+ "message_en": "WATER HAS ARRIVED: Yamuna Pushta Sector C is flooded. Do not walk through the water. Move to the roof or an upper floor and switch off power. Call 1077 or 112 for a boat and rescue.",
+ "sms_hi": "यमुना पुश्ता सेक्टर सी: पानी आ चुका है। छत पर जाएं, पानी में न चलें। नाव हेतु 1077/112",
+ "audio_url_hi": null,
+ "validation": {
+  "passed": true,
+  "checks": [
+   "numbers_match",
+   "names_match",
+   "slots_used",
+   "phones_whitelist",
+   "length",
+   "script"
+  ],
+  "fallback_used": true,
+  "failed_checks": [],
+  "fallback_fields": [
+   "message_hi",
+   "message_en",
+   "sms_hi"
+  ],
+  "source": "template"
+ },
+ "status": "draft",
+ "approved_by": null,
+ "ts": "2023-07-11T09:02:00+05:30"
+}

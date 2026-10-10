@@ -1,0 +1,25 @@
+{
+ "report": {
+  "report_id": "00000000-0000-4000-8000-0000000000aa",
+  "ts": "2023-07-11T09:00:00+05:30",
+  "location": [
+   77.2405,
+   28.6535
+  ],
+  "kind": "road_blocked",
+  "depth_cm": 45.0,
+  "photo_key": "uploads/reports/00000000-0000-4000-8000-0000000000aa.jpg",
+  "reporter_id": "anon-f16d05ec6b29",
+  "trust": 0.6,
+  "verified": false
+ },
+ "upload": {
+  "url": "https://jt-demo-data-123456789012.s3.amazonaws.com/",
+  "fields": {
+   "key": "uploads/reports/00000000-0000-4000-8000-0000000000aa.jpg",
+   "Content-Type": "image/jpeg",
+   "policy": "<base64-policy>",
+   "x-amz-signature": "<sig>"
+  }
+ }
+}

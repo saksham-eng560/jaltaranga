@@ -1,0 +1,31 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "colony_id": {
+      "title": "Colony Id",
+      "type": "string"
+    },
+    "reason": {
+      "enum": [
+        "already_wet",
+        "no_dry_origin",
+        "no_feasible_route",
+        "no_shelter_capacity"
+      ],
+      "title": "Reason",
+      "type": "string"
+    },
+    "population": {
+      "title": "Population",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "colony_id",
+    "reason",
+    "population"
+  ],
+  "title": "UnreachableEntry",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/unreachable_entry.schema.json"
+}

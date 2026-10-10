@@ -1,0 +1,55 @@
+"""Ground truth from SHARED_RESOURCES §1/§2/§5. Every user-visible number comes from code or here."""
+
+REF_STATION = "DELHI_RLY_BRIDGE"
+FLOODHUB_STATION_CODE = "CWC_015-UYDDEL"
+
+WARNING_LEVEL_M = 204.50
+DANGER_LEVEL_M = 205.33
+EVACUATION_LEVEL_M = 206.00
+HFL_M = 208.66
+
+THRESHOLDS = {
+    "warning": WARNING_LEVEL_M,
+    "danger": DANGER_LEVEL_M,
+    "evacuation": EVACUATION_LEVEL_M,
+    "hfl": HFL_M,
+}
+
+# §5.4: red when depth > 0.30 m now; §5.3: flood polygon when depth > 0.05 m.
+DEPTH_CUTOFF_M = 0.30
+WET_DEPTH_M = 0.05
+AMBER_WINDOW_H = 2
+
+HORIZONS_H = (1, 3, 6, 12, 24)
+CONFORMAL_COVERAGE = 0.8
+
+# (minLon, minLat, maxLon, maxLat), WGS84
+BBOX = (77.20, 28.53, 77.33, 28.75)
+
+HELPLINES = ("1077", "112")
+
+PRIMARY_SCENARIO = "yamuna-2023-07"
+SECONDARY_SCENARIO = "yamuna-2025-09"
+
+STATIONS = (
+    "HATHNIKUND",
+    "KALANAUR",
+    "MAWI",
+    "PALLA",
+    "WAZIRABAD",
+    "DELHI_RLY_BRIDGE",
+    "ITO",
+    "OKHLA",
+)
+
+HERO_COLONY = "DEL-YP-04"
+
+# Names used by the ml/ workstream (aliases of the values above).
+DELHI_RLY_BRIDGE = REF_STATION
+HATHNIKUND = "HATHNIKUND"
+EXTREME_LEVEL_M = HFL_M
+ROAD_CUTOFF_DEPTH_M = DEPTH_CUTOFF_M
+SHALLOW_WATER_DEPTH_M = WET_DEPTH_M
+DEPTH_CLASSES = ("0.05-0.3", "0.3-1", "1-2", ">2")
+DEFAULT_SCENARIO_ID = PRIMARY_SCENARIO
+DEFAULT_HERO_COLONY = HERO_COLONY

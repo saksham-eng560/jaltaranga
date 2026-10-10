@@ -1,0 +1,23 @@
+[
+ {"source": "handwritten-sample", "note": "NOT a real Nova output; stand-in until `make -C alerts halluc-live` records live drafts",
+  "colony_id": "DEL-YP-04", "computed_at": "2023-07-11T09:00:00+05:30", "alert_type": "URGENT_EVACUATION_DISPATCH",
+  "expect": "pass",
+  "output": {
+   "message_hi": "चेतावनी: {COLONY} में {LEAD} घंटे के भीतर, लगभग {TSUB} तक, पानी पहुंच सकता है। {AVOID} {CUT} से बंद है, वहां से न जाएं। अभी {SHELTER} की ओर पैदल निकलें, वहां {BEDS} जगह खाली है। मदद के लिए {HELP} पर कॉल करें।",
+   "message_en": "WARNING: Water may reach {COLONY} within {LEAD} hours, around {TSUB}. {AVOID} is closed from {CUT}, so do not take it. Walk now to {SHELTER}, where {BEDS} places are free. Call {HELP} for help.",
+   "sms_hi": "{COLONY}: {LEAD} घंटे में पानी। {AVOID} न जाएं। {SHELTER} जाएं। मदद {HELP}"}},
+ {"source": "handwritten-sample", "note": "NOT a real Nova output; types a digit, a place name and a landmark noun",
+  "colony_id": "DEL-YP-04", "computed_at": "2023-07-11T09:00:00+05:30", "alert_type": "URGENT_EVACUATION_DISPATCH",
+  "expect": "fail",
+  "output": {
+   "message_hi": "चेतावनी: {COLONY} में 2 घंटे में पानी आएगा। कश्मीरी गेट मार्ग से {SHELTER} जाएं। {AVOID} {CUT} से बंद। मदद: {HELP}",
+   "message_en": "WARNING: Water reaches {COLONY} in two hours, by {TSUB}. Avoid {AVOID} after {CUT} and go to {SHELTER} via Ring Road. Help: {HELP}",
+   "sms_hi": "{COLONY}: पानी आ रहा है। {SHELTER} जाएं। मदद 1077"}},
+ {"source": "handwritten-sample", "note": "NOT a real Nova output; misses required slots and invents a phone number",
+  "colony_id": "DEL-YP-04", "computed_at": "2023-07-11T09:00:00+05:30", "alert_type": "URGENT_EVACUATION_DISPATCH",
+  "expect": "fail",
+  "output": {
+   "message_hi": "चेतावनी: पानी आ रहा है, तुरंत {SHELTER} जाएं। मदद: {HELP} या 9876543210",
+   "message_en": "WARNING: water is coming. Go to {SHELTER} now. Help: {HELP}",
+   "sms_hi": "{SHELTER} जाएं। {HELP} {HELP} {HELP}"}}
+]

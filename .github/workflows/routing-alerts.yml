@@ -1,0 +1,38 @@
+name: routing-alerts (Saksham)
+
+on:
+  push:
+    paths: ["routing/**", "alerts/**", "shared/**", "ml/**", "infra/**", "conftest.py", "pytest.ini", ".github/workflows/routing-alerts.yml"]
+  pull_request:
+    paths: ["routing/**", "alerts/**", "shared/**", "ml/**", "infra/**", "conftest.py", "pytest.ini", ".github/workflows/routing-alerts.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ""        # prove the offline chain needs no credentials (SHARED §9.4)
+      AWS_SECRET_ACCESS_KEY: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            routing/requirements-offline.txt
+            ml/pyproject.toml
+      - run: pip install -r routing/requirements-offline.txt jsonschema ruff cfn-lint
+      - name: Install ML package and test dependencies
+        run: pip install -e "ml[dev]" boto3
+      - name: Lint
+        run: ruff check --select F,E9,B --ignore B905 --line-length 120 shared routing alerts ml/lambda/forecast_fn ml/scripts ml/tests/test_lambda.py infra/tests conftest.py
+      - name: Schema drift
+        run: cd shared/py && python -m jt_shared.export_schemas >/dev/null && git diff --exit-code ../schemas
+      - name: SAM template (merged sections, cfn-lint incl. SAM transform)
+        run: python infra/build_template.py --check && cfn-lint infra/template.yaml
+      - name: Unit + integration tests (schemas, invariants, mutations, handlers)
+        run: pytest -q
+      - name: Offline chain (dev world → precompute → T_hero → predraft)
+        run: make -C routing demo-local JT_LOCAL_DATA=$PWD/data
+      - name: Hallucination replay (0 untraceable tokens)
+        run: make -C alerts halluc-eval JT_LOCAL_DATA=$PWD/data

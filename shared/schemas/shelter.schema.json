@@ -1,0 +1,95 @@
+{
+  "properties": {
+    "shelter_id": {
+      "title": "Shelter Id",
+      "type": "string"
+    },
+    "name_en": {
+      "title": "Name En",
+      "type": "string"
+    },
+    "name_hi": {
+      "title": "Name Hi",
+      "type": "string"
+    },
+    "location": {
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "title": "Location",
+      "type": "array"
+    },
+    "ground_elev_m": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ground Elev M"
+    },
+    "capacity": {
+      "minimum": 0,
+      "title": "Capacity",
+      "type": "integer"
+    },
+    "occupied": {
+      "minimum": 0,
+      "title": "Occupied",
+      "type": "integer"
+    },
+    "free_beds": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Free Beds"
+    },
+    "type": {
+      "enum": [
+        "school",
+        "community_hall",
+        "relief_camp",
+        "medical"
+      ],
+      "title": "Type",
+      "type": "string"
+    },
+    "updated_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Updated At"
+    }
+  },
+  "required": [
+    "shelter_id",
+    "name_en",
+    "name_hi",
+    "location",
+    "capacity",
+    "occupied",
+    "type"
+  ],
+  "title": "Shelter",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/shelter.schema.json"
+}

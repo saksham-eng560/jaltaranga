@@ -1,0 +1,19 @@
+stations:
+  DELHI_RLY_BRIDGE:
+    name: "Old Delhi Railway Bridge"
+    chainage_km: 25.0
+    zero_elevation_egm2008_m: 200.0
+    warning_level_m: 204.5
+    danger_level_m: 205.33
+    hfl_2023_m: 208.66
+  HATHNIKUND:
+    name: "Hathnikund Barrage"
+    chainage_km: 0.0
+    distance_to_delhi_km: 215.0
+    typical_travel_time_h: 48
+  WAZIRABAD:
+    name: "Wazirabad Barrage"
+    chainage_km: 17.0
+  OKHLA:
+    name: "Okhla Barrage"
+    chainage_km: 35.0

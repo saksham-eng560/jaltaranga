@@ -1,0 +1,37 @@
+{
+  "1": {
+    "mae": 0.411,
+    "rmse": 0.733,
+    "nse": 0.55,
+    "skill_vs_persistence": 0.081,
+    "n_samples": 16
+  },
+  "3": {
+    "mae": 0.434,
+    "rmse": 0.717,
+    "nse": 0.604,
+    "skill_vs_persistence": 0.174,
+    "n_samples": 16
+  },
+  "6": {
+    "mae": 0.449,
+    "rmse": 0.715,
+    "nse": 0.613,
+    "skill_vs_persistence": 0.211,
+    "n_samples": 16
+  },
+  "12": {
+    "mae": 0.406,
+    "rmse": 0.608,
+    "nse": 0.724,
+    "skill_vs_persistence": 0.553,
+    "n_samples": 16
+  },
+  "24": {
+    "mae": 0.525,
+    "rmse": 0.657,
+    "nse": 0.689,
+    "skill_vs_persistence": 0.711,
+    "n_samples": 16
+  }
+}

@@ -1,0 +1,24 @@
+{
+ "scenario_id": "yamuna-2023-07",
+ "rule": "latest dry step with 2h <= lead <= 6h and a primary route",
+ "hero": {
+  "colony_id": "DEL-YP-04",
+  "t": "2023-07-11T09:00:00+05:30",
+  "lead_time_h": 2.5,
+  "shelter_id": "SH-DG-03",
+  "walk_min": 46.1,
+  "avoid": [
+   "Bela Road"
+  ],
+  "trapped": true
+ },
+ "backup": {
+  "colony_id": "DEL-MON-03",
+  "t": "2023-07-11T08:00:00+05:30",
+  "lead_time_h": 2.0,
+  "shelter_id": "SH-KG-01",
+  "walk_min": 32.6,
+  "avoid": [],
+  "trapped": false
+ }
+}
