@@ -1,0 +1,8 @@
+node_modules/
+dist/
+public/fixtures/
+playwright-report/
+test-results/
+coverage/
+.env.local
+.env.*.local
