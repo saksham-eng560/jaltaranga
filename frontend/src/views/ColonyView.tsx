@@ -60,7 +60,7 @@ export function ColonyView({ step, colonyId, language, setLanguage, lite, setLit
   if (offlineOnly && !localPack) return <main className="resident-page"><div className="resident-offline-empty"><Pill tone="red">OFFLINE</Pill><h1>No saved plan on this device</h1><p>Open this colony while online and save its route before relying on offline access.</p><a className="button button-secondary" href="/command">Return to command</a></div></main>;
 
   return <main className="resident-page">
-    <section className="resident-topline"><div><div className="resident-overline"><span className="resident-logo-mark">J</span> JALTARANGA <span>·</span> YAMUNA CORRIDOR</div><Pill tone={offlineOnly ? 'amber' : 'violet'}>{offlineOnly ? 'OFFLINE PACK' : 'HISTORICAL REPLAY · NOT A LIVE ALERT'}</Pill></div>
+    <section className="resident-topline"><div><div className="resident-overline"><span className="resident-logo-mark"><img src="/logo.svg" alt="" /></span> JALTARANGA <span>·</span> YAMUNA CORRIDOR</div><Pill tone={offlineOnly ? 'amber' : 'violet'}>{offlineOnly ? 'OFFLINE PACK' : 'HISTORICAL REPLAY · NOT A LIVE ALERT'}</Pill></div>
       <div className="resident-controls"><button className="language-switch" onClick={() => setLanguage(language === 'hi' ? 'en' : 'hi')} aria-label="Switch resident language">{language === 'hi' ? 'EN' : 'हिंदी'}</button><button className={`lite-switch ${lite ? 'is-on' : ''}`} onClick={() => setLite(!lite)} aria-pressed={lite}>Lite {lite ? 'on' : 'off'}</button></div>
     </section>
     {isStale && <div className="stale-banner" role="status"><Icon name="report"/><span>Saved plan is over two hours old. Confirm current conditions before acting.</span></div>}

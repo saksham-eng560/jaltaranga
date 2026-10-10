@@ -156,7 +156,7 @@ function AppBody() {
 
   return <div className={`app-root ${demo ? 'director-mode' : ''} ${view === 'colony' ? 'resident-app' : ''}`}>
     {!demo && <header className="app-header">
-      <a className="brand-lockup" href="/command" onClick={(e) => { e.preventDefault(); navigate('command'); }}><span className="brand-mark">J</span><span><strong>jaltaranga</strong><small>Predict · Route · Protect</small></span></a>
+      <a className="brand-lockup" href="/command" onClick={(e) => { e.preventDefault(); navigate('command'); }}><span className="brand-mark"><img src="/logo.svg" alt="" /></span><span><strong>JALTARANGA</strong><small>Predict · Route · Protect</small></span></a>
       <div className="header-clock"><span>{formatIST(at, { month: 'long', day: 'numeric', year: 'numeric', hour: undefined, minute: undefined })}</span><i/><b>{formatIST(at, { hour: '2-digit', minute: '2-digit', hour12: false, day: undefined, month: undefined, year: undefined })}</b> IST</div>
       <nav className="primary-nav" aria-label="Main navigation">{routes.map((route) => <a key={route.key} href={route.key === 'colony' ? `/colony/${colonyId}` : `/${route.key}`} onClick={(e) => { e.preventDefault(); navigate(route.key); }} className={view === route.key ? 'nav-active' : ''} aria-current={view === route.key ? 'page' : undefined}><Icon name={route.icon}/><span>{route.label}</span></a>)}</nav>
       <div className="header-tools"><span className={`network-indicator ${online ? 'network-online' : 'network-offline'}`}><i/>System status: {online ? 'Active' : 'Offline'}</span>

@@ -61,9 +61,20 @@ body {
 .brand-mark,
 .resident-logo-mark {
   border-radius: 8px;
-  background: #167bd4;
-  color: #fff;
+  background: #10243a;
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 16%);
+}
+
+.brand-mark img,
+.resident-logo-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.resident-logo-mark {
+  padding: 3px;
 }
 
 .brand-lockup strong {
