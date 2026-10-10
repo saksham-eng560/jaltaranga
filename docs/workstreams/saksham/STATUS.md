@@ -68,8 +68,22 @@ So this branch also carries:
 profile, re-deploy with its `BedrockRegion`/`BedrockModelId`. Then run `make -C alerts halluc-live N=20` and check Polly audio on approve.
 Add the manifest, static and shelter-seeding steps to the publish targets so a fresh deploy does not need them by hand.
 
-When Shivansh's `pipeline/` and Vaibhav's `ml/` outputs exist, point `JT_LOCAL_DATA` at them and re-run
+Once Shivansh's `pipeline/` outputs exist, point `JT_LOCAL_DATA` at them and re-run
 `make -C routing precompute && make -C routing hero WRITE_MANIFEST=1 && make -C alerts predraft`, then publish again.
+
+## Follow-on integration branch (2026-10-10; not yet deployed)
+
+The current integration branch adds a third SAM Lambda for the ML read API, with forecast, flood, model-card, and
+what-if routes backed by the private data bucket. `ml/scripts/publish_artifacts.py` provides a dry-run-first,
+non-deleting upload path for the tracked `ml/out/` artifacts. The forecast endpoint selects the latest issued
+forecast at or before the requested timestamp, while flood and what-if responses return short-lived presigned
+asset URLs.
+
+The six operational routes (shelter patch, report upload, dispatch draft/approve/list/ack) are configured for
+AWS IAM authorization; public read routes remain public. These template changes have not been deployed to the
+existing `jt-demo` stack. The AWS Core session currently identifies as the account root user and local AWS/SAM
+CLIs are unavailable, so do not promote this branch until deployment is performed through a least-privilege
+deployment role and the updated API and signed asset links are smoke-tested.
 
 ## Deviations (declared)
 

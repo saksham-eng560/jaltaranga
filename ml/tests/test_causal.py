@@ -1,6 +1,5 @@
 """Tests for causal input extraction and time filtering."""
 
-import pytest
 import pandas as pd
 from datetime import datetime, timezone, timedelta
 from jt_ml.data.causal import build_causal_series_at, extract_lag_features_at

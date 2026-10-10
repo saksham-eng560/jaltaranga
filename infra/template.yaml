@@ -37,6 +37,9 @@ Conditions:
 Globals:
   Function:
     Tags: {project: jaltaranga, env: !Ref Env}
+  HttpApi:
+    Auth:
+      EnableIamAuthorizer: true
 
 Resources:
 # --- shared (Shivansh) ------------------------------------------------------------------------
@@ -162,6 +165,76 @@ Resources:
           Subscribers: [{SubscriptionType: EMAIL, Address: !Ref BudgetEmail}]
 # --- end shared --------------------------------------------------------------------------------
 
+# --- ML API (Vaibhav) -------------------------------------------------------------------------
+# Read-only API for precomputed forecast and inundation artifacts stored in DataBucket.
+# The artifact publisher writes ml/out/ under the bucket root, preserving its relative paths.
+
+  ForecastFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub jt-${Env}-forecast-fn
+      CodeUri: ../ml/lambda/forecast_fn/
+      Handler: handler.handler
+      Runtime: python3.12
+      Architectures: [arm64]
+      MemorySize: 512
+      Timeout: 10
+      LoggingConfig: {LogFormat: JSON}
+      Environment:
+        Variables:
+          JT_ENV: !Ref Env
+          JT_DATA_BUCKET: !Ref DataBucket
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: s3:GetObject
+              Resource:
+                - !Sub arn:${AWS::Partition}:s3:::${DataBucket}/models/registry.json
+                - !Sub arn:${AWS::Partition}:s3:::${DataBucket}/models/inundation/v1/whatif/*
+                - !Sub arn:${AWS::Partition}:s3:::${DataBucket}/models/inundation/v1/ladder/*
+                - !Sub arn:${AWS::Partition}:s3:::${DataBucket}/scenarios/yamuna-2023-07/forecasts/*
+                - !Sub arn:${AWS::Partition}:s3:::${DataBucket}/scenarios/yamuna-2023-07/depth/*
+            - Effect: Allow
+              Action: s3:ListBucket
+              Resource: !Sub arn:${AWS::Partition}:s3:::${DataBucket}
+              Condition:
+                StringLike:
+                  s3:prefix: ["scenarios/yamuna-2023-07/forecasts/*"]
+      Events:
+        ModelCard:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: "/models/card"
+        Forecast:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: "/scenarios/{id}/forecast"
+        Flood:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: "/scenarios/{id}/flood"
+        WhatIf:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: "/scenarios/{id}/whatif"
+      Tags: {project: jaltaranga, owner: vaibhav, env: !Ref Env}
+
+  ForecastLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/jt-${Env}-forecast-fn
+      RetentionInDays: 7
+
+# --- end ML API -------------------------------------------------------------------------------
+
 # --- routing/alerts (Saksham) -----------------------------------------------------------------
 # Append-only section for infra/template.yaml (SHARED §4, INTEGRATION_PLAN §1 rules).
 # Shivansh owns the template and merges this block under `Resources:`.
@@ -237,12 +310,16 @@ Resources:
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: PATCH
             Path: "/shelters/{id}"
         Reports:
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: POST
             Path: "/reports"
       Tags: {project: jaltaranga, owner: saksham, env: !Ref Env}
@@ -324,24 +401,32 @@ Resources:
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: POST
             Path: "/scenarios/{id}/colonies/{cid}/dispatch"
         Approve:
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: POST
             Path: "/dispatches/{dispatch_id}/approve"
         List:
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: GET
             Path: "/dispatches"
         Ack:
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: POST
             Path: "/dispatches/{dispatch_id}/ack"
       Tags: {project: jaltaranga, owner: saksham, env: !Ref Env}
@@ -368,3 +453,5 @@ Outputs:
     Value: !Ref RoutingFunction
   AlertsFunctionName:
     Value: !Ref AlertsFunction
+  ForecastFunctionName:
+    Value: !Ref ForecastFunction

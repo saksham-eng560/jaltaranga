@@ -17,11 +17,21 @@ Workstream plans and quality reviews are grouped by owner under `docs/workstream
 | [`routing/`](routing/README.md) | Road cutoffs (red/amber), time-dependent safe walking routes, capacity-aware shelter assignment (greedy + OR-Tools), avoid list + "death-trap" counterfactual, `T_hero` |
 | [`alerts/`](alerts/README.md) | Slot-filled Bedrock Nova dispatch ("the LLM never types a fact"), 6-check validator, templates, Polly Kajal, SNS, dispatch log |
 | `shared/py/jt_shared`, `shared/schemas`, `shared/fixtures` | Contract package (pydantic models for SHARED §5/§11), exported JSON Schemas, fixtures from the real writers |
-| `infra/sections/routing_alerts.yaml` | Append-only SAM block for the two Lambdas |
+| [`ml/`](ml/) | Forecast and inundation generation, precomputed artifacts, and the read-only `/models/card`, `/forecast`, `/flood`, and `/whatif` Lambda API |
+| `infra/sections/*.yaml` | Append-only SAM blocks for routing, alerts, and ML Lambdas |
 | [`docs/workstreams/saksham/STATUS.md`](docs/workstreams/saksham/STATUS.md) | What is built and tested vs the plan, and what still needs AWS |
 
 ```bash
 pip install -r routing/requirements-offline.txt jsonschema
-pytest                              # 136 tests: invariants, validator mutations, handlers, schemas
+pip install -e "ml[dev]" boto3
+pytest                              # routing, alerts, ML, handler and schema tests
 make -C routing demo-local          # synthetic dev world → precompute → T_hero → predraft, offline, ~25 s
+```
+
+The ML artifact publisher defaults to a dry run and preserves `ml/out/` paths in the private data bucket. Pass
+`--apply` to upload; it does not delete existing objects:
+
+```bash
+python3.12 ml/scripts/publish_artifacts.py --bucket <data-bucket>
+python3.12 ml/scripts/publish_artifacts.py --bucket <data-bucket> --apply
 ```
