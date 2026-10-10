@@ -1,0 +1,177 @@
+[
+ {
+  "edge_id": "osm:9100000027:9100000028:0",
+  "status": "red",
+  "depth_m": 0.41,
+  "cutoff_at": "2023-07-11T07:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000027:9100000074:0",
+  "status": "red",
+  "depth_m": 0.38,
+  "cutoff_at": "2023-07-11T08:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000028:9100000029:0",
+  "status": "red",
+  "depth_m": 0.95,
+  "cutoff_at": "2023-07-10T21:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000028:9100000075:0",
+  "status": "red",
+  "depth_m": 0.79,
+  "cutoff_at": "2023-07-11T00:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000030:9100000031:0",
+  "status": "red",
+  "depth_m": 1.03,
+  "cutoff_at": "2023-07-10T20:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000030:9100000077:0",
+  "status": "red",
+  "depth_m": 1.03,
+  "cutoff_at": "2023-07-10T20:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000031:9100000032:0",
+  "status": "red",
+  "depth_m": 0.5,
+  "cutoff_at": "2023-07-11T06:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000031:9100000078:0",
+  "status": "red",
+  "depth_m": 0.5,
+  "cutoff_at": "2023-07-11T06:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000032:9100000033:0",
+  "status": "red",
+  "depth_m": 0.33,
+  "cutoff_at": "2023-07-11T09:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000032:9100000079:0",
+  "status": "red",
+  "depth_m": 0.31,
+  "cutoff_at": "2023-07-11T09:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000073:9100000074:0",
+  "status": "red",
+  "depth_m": 0.38,
+  "cutoff_at": "2023-07-11T08:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000074:9100000075:0",
+  "status": "red",
+  "depth_m": 0.79,
+  "cutoff_at": "2023-07-11T00:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000074:9100000121:0",
+  "status": "red",
+  "depth_m": 0.67,
+  "cutoff_at": "2023-07-11T03:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000075:9100000122:0",
+  "status": "red",
+  "depth_m": 1.01,
+  "cutoff_at": "2023-07-10T20:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000076:9100000077:0",
+  "status": "red",
+  "depth_m": 0.99,
+  "cutoff_at": "2023-07-10T20:00:00+05:30",
+  "reason": "depth>0.3m"
+ },
+ {
+  "edge_id": "osm:9100000025:9100000026:0",
+  "status": "amber",
+  "depth_m": 0.08,
+  "cutoff_at": "2023-07-11T10:24:09+05:30",
+  "reason": "forecast_cutoff<2h"
+ },
+ {
+  "edge_id": "osm:9100000026:9100000027:0",
+  "status": "amber",
+  "depth_m": 0.29,
+  "cutoff_at": "2023-07-11T09:02:57+05:30",
+  "reason": "forecast_cutoff<2h"
+ },
+ {
+  "edge_id": "osm:9100000026:9100000073:0",
+  "status": "amber",
+  "depth_m": 0.15,
+  "cutoff_at": "2023-07-11T09:50:46+05:30",
+  "reason": "forecast_cutoff<2h"
+ },
+ {
+  "edge_id": "osm:9100000026:9100002945:0",
+  "status": "amber",
+  "depth_m": 0.08,
+  "cutoff_at": "2023-07-11T10:24:09+05:30",
+  "reason": "forecast_cutoff<2h"
+ },
+ {
+  "edge_id": "osm:9100000033:9100000034:0",
+  "status": "amber",
+  "depth_m": 0.17,
+  "cutoff_at": "2023-07-11T09:44:52+05:30",
+  "reason": "forecast_cutoff<2h"
+ },
+ {
+  "edge_id": "osm:9100000033:9100000080:0",
+  "status": "amber",
+  "depth_m": 0.17,
+  "cutoff_at": "2023-07-11T09:44:52+05:30",
+  "reason": "forecast_cutoff<2h"
+ },
+ {
+  "edge_id": "osm:9100000072:9100000073:0",
+  "status": "amber",
+  "depth_m": 0.11,
+  "cutoff_at": "2023-07-11T10:04:22+05:30",
+  "reason": "forecast_cutoff<2h"
+ },
+ {
+  "edge_id": "osm:9100000072:9100000119:0",
+  "status": "amber",
+  "depth_m": 0.2,
+  "cutoff_at": "2023-07-11T09:33:03+05:30",
+  "reason": "forecast_cutoff<2h"
+ },
+ {
+  "edge_id": "osm:9100000072:9100002943:0",
+  "status": "amber",
+  "depth_m": 0.08,
+  "cutoff_at": "2023-07-11T10:29:10+05:30",
+  "reason": "forecast_cutoff<2h"
+ },
+ {
+  "edge_id": "osm:9100000073:9100000120:0",
+  "status": "amber",
+  "depth_m": 0.27,
+  "cutoff_at": "2023-07-11T09:11:20+05:30",
+  "reason": "forecast_cutoff<2h"
+ }
+]

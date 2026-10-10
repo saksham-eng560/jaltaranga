@@ -1,0 +1,63 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "edge_id": {
+      "pattern": "^osm:\\d+:\\d+:\\d+$",
+      "title": "Edge Id",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "green",
+        "amber",
+        "red"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "depth_m": {
+      "minimum": 0,
+      "title": "Depth M",
+      "type": "number"
+    },
+    "cutoff_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cutoff At"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "enum": [
+            "depth>0.3m",
+            "forecast_cutoff<2h",
+            "field_report"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    }
+  },
+  "required": [
+    "edge_id",
+    "status",
+    "depth_m"
+  ],
+  "title": "RoadSegmentStatus",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/road_segment_status.schema.json"
+}

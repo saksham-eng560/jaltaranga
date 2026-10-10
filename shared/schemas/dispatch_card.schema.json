@@ -1,0 +1,194 @@
+{
+  "$defs": {
+    "PlanRef": {
+      "additionalProperties": false,
+      "properties": {
+        "scenario_id": {
+          "title": "Scenario Id",
+          "type": "string"
+        },
+        "colony_id": {
+          "title": "Colony Id",
+          "type": "string"
+        },
+        "computed_at": {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "title": "Computed At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scenario_id",
+        "colony_id",
+        "computed_at"
+      ],
+      "title": "PlanRef",
+      "type": "object"
+    },
+    "Validation": {
+      "additionalProperties": false,
+      "properties": {
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "checks": {
+          "items": {
+            "enum": [
+              "numbers_match",
+              "names_match",
+              "slots_used",
+              "phones_whitelist",
+              "length",
+              "script"
+            ],
+            "type": "string"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "fallback_used": {
+          "title": "Fallback Used",
+          "type": "boolean"
+        },
+        "failed_checks": {
+          "items": {
+            "enum": [
+              "numbers_match",
+              "names_match",
+              "slots_used",
+              "phones_whitelist",
+              "length",
+              "script"
+            ],
+            "type": "string"
+          },
+          "title": "Failed Checks",
+          "type": "array"
+        },
+        "fallback_fields": {
+          "items": {
+            "enum": [
+              "message_hi",
+              "message_en",
+              "sms_hi"
+            ],
+            "type": "string"
+          },
+          "title": "Fallback Fields",
+          "type": "array"
+        },
+        "source": {
+          "default": "template",
+          "enum": [
+            "bedrock",
+            "template",
+            "cache"
+          ],
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "passed",
+        "checks",
+        "fallback_used"
+      ],
+      "title": "Validation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "dispatch_id": {
+      "title": "Dispatch Id",
+      "type": "string"
+    },
+    "plan_ref": {
+      "$ref": "#/$defs/PlanRef"
+    },
+    "alert_type": {
+      "enum": [
+        "URGENT_EVACUATION_DISPATCH",
+        "PREPARE",
+        "ALL_CLEAR",
+        "SHELTER_IN_PLACE"
+      ],
+      "title": "Alert Type",
+      "type": "string"
+    },
+    "message_hi": {
+      "maxLength": 600,
+      "title": "Message Hi",
+      "type": "string"
+    },
+    "message_en": {
+      "maxLength": 600,
+      "title": "Message En",
+      "type": "string"
+    },
+    "sms_hi": {
+      "maxLength": 160,
+      "title": "Sms Hi",
+      "type": "string"
+    },
+    "audio_url_hi": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Audio Url Hi"
+    },
+    "validation": {
+      "$ref": "#/$defs/Validation"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "approved",
+        "sent",
+        "acknowledged"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "approved_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved By"
+    },
+    "ts": {
+      "format": "date-time",
+      "pattern": "\\+05:30$",
+      "title": "Ts",
+      "type": "string"
+    }
+  },
+  "required": [
+    "dispatch_id",
+    "plan_ref",
+    "alert_type",
+    "message_hi",
+    "message_en",
+    "sms_hi",
+    "validation",
+    "status",
+    "ts"
+  ],
+  "title": "DispatchCard",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/dispatch_card.schema.json"
+}

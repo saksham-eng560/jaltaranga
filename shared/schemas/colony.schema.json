@@ -1,0 +1,122 @@
+{
+  "$defs": {
+    "Contact": {
+      "properties": {
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "channel": {
+          "enum": [
+            "email",
+            "sms"
+          ],
+          "title": "Channel",
+          "type": "string"
+        },
+        "address": {
+          "title": "Address",
+          "type": "string"
+        }
+      },
+      "required": [
+        "role",
+        "name",
+        "channel",
+        "address"
+      ],
+      "title": "Contact",
+      "type": "object"
+    },
+    "Vulnerable": {
+      "properties": {
+        "elderly": {
+          "default": 0,
+          "title": "Elderly",
+          "type": "integer"
+        },
+        "disabled": {
+          "default": 0,
+          "title": "Disabled",
+          "type": "integer"
+        },
+        "children_u5": {
+          "default": 0,
+          "title": "Children U5",
+          "type": "integer"
+        },
+        "pregnant": {
+          "default": 0,
+          "title": "Pregnant",
+          "type": "integer"
+        }
+      },
+      "title": "Vulnerable",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "colony_id": {
+      "title": "Colony Id",
+      "type": "string"
+    },
+    "name_en": {
+      "title": "Name En",
+      "type": "string"
+    },
+    "name_hi": {
+      "title": "Name Hi",
+      "type": "string"
+    },
+    "centroid": {
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "title": "Centroid",
+      "type": "array"
+    },
+    "population_est": {
+      "minimum": 0,
+      "title": "Population Est",
+      "type": "integer"
+    },
+    "ground_elev_m": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ground Elev M"
+    },
+    "vulnerable": {
+      "$ref": "#/$defs/Vulnerable"
+    },
+    "contacts": {
+      "items": {
+        "$ref": "#/$defs/Contact"
+      },
+      "title": "Contacts",
+      "type": "array"
+    }
+  },
+  "required": [
+    "colony_id",
+    "name_en",
+    "name_hi",
+    "centroid",
+    "population_est"
+  ],
+  "title": "Colony",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/colony.schema.json"
+}

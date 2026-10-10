@@ -16,8 +16,8 @@ The frontend includes sample July 2023 replay data and does not require a backen
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite (by default, `http://localhost:5173`). Map tiles are provided by OpenStreetMap and require an internet connection; the replay controls, sample colony data, and dispatch demo work locally.
+Open the local URL printed by Vite (by default, `http://localhost:5173`). The dark-blue operations console, historical replay, fixture-backed routes, dispatch preview, report queue, and saved Colony Pack are available locally. Live APIs and an interactive basemap are optional; without a configured basemap, the app shows the route geometry from the selected plan.

@@ -1,187 +1,154 @@
-import React from 'react';
-import { MapView } from '../map/MapView';
-import { TimelineScrubber } from '../components/TimelineScrubber';
-import { DispatchCardView } from '../components/DispatchCard';
-import { useReplayStore } from '../state/replay';
-import { t } from '../i18n/t';
-import { COLONIES, formatTimeToWater, hoursToWater, REPLAY_STEPS, riskForColony } from '../shared/mockData';
+import { useMemo } from 'react';
+import type { DispatchCard, ReplayStep } from '../shared/types';
+import { DispatchPanel } from '../components/DispatchPanel';
+import { GaugeChart } from '../components/GaugeChart';
+import { MapPanel } from '../components/MapPanel';
+import { ReplayControls } from '../components/ReplayControls';
+import { Icon, Panel, Pill, SectionEyebrow } from '../components/Shared';
+import { numberIN } from '../lib/format';
+import { formatCountdown, formatIST } from '../lib/replay';
 
-export const CommandView: React.FC = () => {
-  const { selectedColonyId, setSelectedColonyId, currentTimestamp, language } = useReplayStore();
-  const stage = REPLAY_STEPS.find((step) => step.timestamp === currentTimestamp) ?? REPLAY_STEPS[2];
-  const selectedColony = COLONIES.find((colony) => colony.id === selectedColonyId) ?? COLONIES[0];
-  const atRisk = COLONIES.filter((colony) => riskForColony(stage.level, colony.wetLevelM) !== 'safe');
-  const peopleAtRisk = atRisk.reduce((total, colony) => total + colony.population, 0);
-  const criticalCount = COLONIES.filter(
-    (colony) => riskForColony(stage.level, colony.wetLevelM) === 'critical',
-  ).length;
-  const risk = riskForColony(stage.level, selectedColony.wetLevelM);
-  const hours = (selectedColony.wetLevelM - stage.level) / 0.06;
-  const name = language === 'hi' ? selectedColony.nameHi : selectedColony.name;
-
-  return (
-    <div className="command-view">
-      <section className="command-intro">
-        <div>
-          <p className="eyebrow">{language === 'hi' ? 'दिल्ली · यमुना कॉरिडोर' : 'DELHI · YAMUNA CORRIDOR'}</p>
-          <h1>
-            {language === 'hi' ? (
-              <>नदी को पढ़ें। <span>हर गली को सुरक्षित करें।</span></>
-            ) : (
-              <>Read the river.<br className="desktop-break" /> <span>Protect every street.</span></>
-            )}
-          </h1>
-        </div>
-        <div className="intro-note">
-          <span className="eyebrow">{language === 'hi' ? 'ऐतिहासिक परिदृश्य' : 'HISTORICAL SCENARIO'}</span>
-          <strong>{language === 'hi' ? 'यमुना बाढ़ · जुलाई 2023' : 'Yamuna flood · July 2023'}</strong>
-          <span>{language === 'hi' ? 'डेमो डेटा · लाइव चेतावनी नहीं' : 'Sample replay data · not a live alert'}</span>
-        </div>
-      </section>
-
-      <section className="summary-strip" aria-label="Replay overview">
-        <div className="summary-item">
-          <span className="summary-label">{language === 'hi' ? 'नदी का स्तर' : 'RIVER LEVEL'}</span>
-          <strong>{stage.level.toFixed(2)} <small>m</small></strong>
-          <span className="summary-caption">Delhi Railway Bridge</span>
-        </div>
-        <div className="summary-item">
-          <span className="summary-label">{language === 'hi' ? 'जोखिम में क्षेत्र' : 'AREAS AT RISK'}</span>
-          <strong>{atRisk.length.toString().padStart(2, '0')} <small>/ {COLONIES.length.toString().padStart(2, '0')}</small></strong>
-          <span className="summary-caption">{criticalCount} {language === 'hi' ? 'तत्काल' : 'critical now'}</span>
-        </div>
-        <div className="summary-item">
-          <span className="summary-label">{language === 'hi' ? 'प्रभावित आबादी' : 'PEOPLE IN AT-RISK AREAS'}</span>
-          <strong>{peopleAtRisk.toLocaleString('en-IN')}</strong>
-          <span className="summary-caption">{language === 'hi' ? 'चार कॉलोनियों का डेमो' : 'Across the demo colonies'}</span>
-        </div>
-        <div className="summary-item summary-asof">
-          <span className="summary-label">{language === 'hi' ? 'रीप्ले समय' : 'REPLAYING'}</span>
-          <strong>{stage.label}</strong>
-          <span className="summary-caption">{language === 'hi' ? 'जुलाई 2023 का ऐतिहासिक रीप्ले' : 'Historical replay · July 2023'}</span>
-        </div>
-      </section>
-
-      <section className="command-workspace">
-        <aside className="workspace-panel queue-panel">
-          <div className="panel-heading">
-            <div>
-              <p className="eyebrow">{language === 'hi' ? 'प्राथमिकता सूची' : 'FIELD PRIORITIES'}</p>
-              <h2>{language === 'hi' ? 'निकासी कतार' : 'Evacuation queue'}</h2>
-            </div>
-            <span className="count-pill">{atRisk.length.toString().padStart(2, '0')}</span>
-          </div>
-
-          <div className="colony-list">
-            {COLONIES.map((colony, index) => {
-              const colonyRisk = riskForColony(stage.level, colony.wetLevelM);
-              const isSelected = colony.id === selectedColony.id;
-              return (
-                <button
-                  className={`colony-row risk-${colonyRisk}${isSelected ? ' is-selected' : ''}`}
-                  key={colony.id}
-                  onClick={() => setSelectedColonyId(colony.id)}
-                  aria-pressed={isSelected}
-                >
-                  <span className="queue-rank">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="queue-copy">
-                    <strong>{language === 'hi' ? colony.nameHi : colony.name}</strong>
-                    <span>{colony.population.toLocaleString('en-IN')} {language === 'hi' ? 'निवासी' : 'residents'}</span>
-                  </span>
-                  <span className="queue-time">
-                    <span className="risk-dot" />
-                    {formatTimeToWater(hoursToWater(stage.level, colony.wetLevelM), language)}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="road-alert">
-            <span className="alert-mark" aria-hidden="true">!</span>
-            <div>
-              <strong>{language === 'hi' ? 'सड़क बंद · 0.30 m सीमा' : 'Road cutoff · 0.30 m limit'}</strong>
-              <span>{language === 'hi' ? 'रिंग रोड से बचें। लाल कुआं मार्ग खुला है।' : 'Avoid Ring Road. Lal Kuan Marg remains open.'}</span>
-            </div>
-          </div>
-        </aside>
-
-        <section className="workspace-panel map-panel" aria-label="Yamuna corridor map">
-          <div className="map-heading">
-            <div>
-              <p className="eyebrow">{language === 'hi' ? 'क्षेत्रीय दृश्य' : 'SITUATION MAP'}</p>
-              <h2>{language === 'hi' ? 'यमुना कॉरिडोर' : 'Yamuna corridor'}</h2>
-            </div>
-            <span className="map-live-label"><span className="status-dot" /> {language === 'hi' ? 'रीप्ले' : 'REPLAY'}</span>
-          </div>
-          <div className="map-canvas">
-            <MapView
-              selectedColonyId={selectedColony.id}
-              stageLevel={stage.level}
-              onSelectColony={setSelectedColonyId}
-            />
-            <div className="map-credit">{language === 'hi' ? 'दिल्ली · अनुमानित क्षेत्र' : 'DELHI · APPROXIMATE AREA'}</div>
-          </div>
-          <div className="map-legend">
-            <span><i className="legend-dot legend-critical" /> {language === 'hi' ? 'तत्काल' : 'Critical'}</span>
-            <span><i className="legend-dot legend-watch" /> {language === 'hi' ? 'निगरानी' : 'Watch'}</span>
-            <span><i className="legend-dot legend-safe" /> {language === 'hi' ? 'सुरक्षित' : 'Safe'}</span>
-            <span className="legend-source">{language === 'hi' ? 'नक्शा: OpenStreetMap' : 'Map data © OpenStreetMap'}</span>
-          </div>
-        </section>
-
-        <aside className="workspace-panel detail-panel">
-          <div className="panel-heading detail-heading">
-            <div>
-              <p className="eyebrow">{language === 'hi' ? 'चयनित कॉलोनी' : 'SELECTED COLONY'}</p>
-              <h2>{name}</h2>
-            </div>
-            <span className={`risk-label risk-label-${risk}`}>
-              {risk === 'critical'
-                ? (language === 'hi' ? 'तत्काल' : 'CRITICAL')
-                : risk === 'watch'
-                  ? (language === 'hi' ? 'निगरानी' : 'WATCH')
-                  : (language === 'hi' ? 'सुरक्षित' : 'SAFE')}
-            </span>
-          </div>
-
-          <div className="detail-stats">
-            <div className="detail-stat">
-              <span>{t('time_to_water', language)}</span>
-              <strong className={`time-value text-${risk}`}>{formatTimeToWater(Math.max(0, hours), language)}</strong>
-              <small>{language === 'hi' ? `जलभराव ${selectedColony.wetLevelM.toFixed(2)} m पर` : `Wet threshold ${selectedColony.wetLevelM.toFixed(2)} m`}</small>
-            </div>
-            <div className="detail-stat">
-              <span>{language === 'hi' ? 'आबादी' : 'RESIDENTS'}</span>
-              <strong>{selectedColony.population.toLocaleString('en-IN')}</strong>
-              <small>{language === 'hi' ? 'डेमो कॉलोनी डेटा' : 'Illustrative sample'}</small>
-            </div>
-          </div>
-
-          <div className="route-block">
-            <span className="eyebrow">{t('safe_evac_route', language)}</span>
-            <strong>{language === 'hi' ? selectedColony.routeHi : selectedColony.route}</strong>
-            <span className="avoid-line">
-              {language === 'hi' ? `बचें: ${selectedColony.avoidRoadHi}` : `AVOID · ${selectedColony.avoidRoad}`}
-            </span>
-          </div>
-
-          <div className="shelter-block">
-            <div>
-              <span className="eyebrow">{t('shelter_destination', language)}</span>
-              <strong>{language === 'hi' ? selectedColony.shelterHi : selectedColony.shelter}</strong>
-            </div>
-            <span className="bed-count">
-              <strong>{selectedColony.freeBeds.toLocaleString('en-IN')}</strong>
-              <small>{t('free_beds', language)}</small>
-            </span>
-          </div>
-
-          <DispatchCardView colony={selectedColony} />
-        </aside>
-      </section>
-
-      <TimelineScrubber />
-    </div>
+export function CommandView({ step, selectedColony, onSelectColony, onApproved }: {
+  step: ReplayStep; selectedColony: string; onSelectColony: (id: string) => void; onApproved: (card: DispatchCard) => void;
+}) {
+  const plans = [...step.plans].sort((a, b) => b.priority - a.priority);
+  const selected = plans.find((plan) => plan.colony_id === selectedColony) || plans[0] || null;
+  const shelter = step.shelters.find((item) => item.shelter_id === selected?.primary.shelter_id) || null;
+  const threshold = step.thresholds.find((item) => item.colony_id === selected?.colony_id);
+  const thresholds = step.manifest.thresholds || { warning: 204.5, danger: 205.33, evacuation: 206 };
+  const latestGauge = step.gauges.filter((item) => item.level_m !== null).at(-1);
+  const gaugeLevel = latestGauge?.level_m ?? null;
+  const dangerLevel = thresholds.danger;
+  const gaugeStatus = gaugeLevel === null
+    ? 'UNAVAILABLE'
+    : gaugeLevel >= dangerLevel
+      ? 'EXTREME'
+      : gaugeLevel >= thresholds.warning
+        ? 'WARNING'
+        : 'MONITORING';
+  const countdown = selected ? formatCountdown(step.at, selected.t_submersion) : null;
+  const roadCounts = useMemo(
+    () => (step.roads || []).reduce((counts, edge) => {
+      counts[edge.status] += 1;
+      return counts;
+    }, { green: 0, amber: 0, red: 0 }),
+    [step.roads],
   );
+  const stepTrap = step.trapSummary?.steps.find((item) => item.valid_at === step.at);
+
+  return <main className="page-shell command-page">
+    <header className="page-title-row">
+      <div>
+        <SectionEyebrow>OPERATIONS · YAMUNA CORRIDOR</SectionEyebrow>
+        <h1>Flood response command</h1>
+        <p className="page-subtitle">Translate the river signal into a street plan, one replay step at a time.</p>
+      </div>
+      <Pill tone={step.sourceMode === 'fixture' ? 'violet' : 'green'}>
+        {step.sourceMode === 'fixture' ? 'FIXTURE REPLAY' : 'STATIC DATA'}
+      </Pill>
+    </header>
+
+    <div className="provenance-banner">
+      <Icon name="shield" size={16}/>
+      <span>{step.sourceNote}</span>
+      <span className="provenance-link">Every layer shows its source state below.</span>
+    </div>
+
+    <div className="command-layout">
+      <aside className="plan-rail" aria-label="Colony evacuation plans">
+        <Panel title="Evacuation queue" aside={<Pill tone="neutral">{plans.length} plans</Pill>}>
+          <div className="queue-columns" aria-hidden="true">
+            <span>RANK</span><span>COLONY · POPULATION</span><span>LEAD</span>
+          </div>
+          {plans.length ? <div className="plan-list" role="list">
+            {plans.map((plan, index) => <button
+              key={plan.colony_id}
+              role="listitem"
+              className={`plan-row ${selected?.colony_id === plan.colony_id ? 'plan-row-selected' : ''}`}
+              onClick={() => onSelectColony(plan.colony_id)}
+              aria-pressed={selected?.colony_id === plan.colony_id}
+            >
+              <span className={`plan-rank plan-rank-${index + 1}`}>{String(index + 1).padStart(2, '0')}</span>
+              <span className="plan-row-main">
+                <strong>{plan.colony_id}</strong>
+                <small>{numberIN(plan.ext?.assigned_people)} residents · Priority {Math.round(plan.priority * 100)}%</small>
+              </span>
+              <span className={`plan-lead ${plan.lead_time_h <= 2 ? 'plan-lead-urgent' : ''}`}>{numberIN(plan.lead_time_h, 1)} h</span>
+            </button>)}
+          </div> : <div className="list-empty">No route plan exists for this timestamp.</div>}
+          {step.unreachable.length > 0 && <div className="unreachable-block">
+            <div className="unreachable-title"><Icon name="report" size={15}/>Boat / NDRF needed<Pill tone="red">{step.unreachable.length}</Pill></div>
+            {step.unreachable.map((item) => <div key={item.colony_id} className="unreachable-row">
+              <span>{item.colony_id}</span>
+              <small>{item.reason.replaceAll('_', ' ')}{item.population ? ` · ${numberIN(item.population)} people` : ''}</small>
+            </div>)}
+          </div>}
+        </Panel>
+
+        <Panel title="Road watch" aside={step.roads ? <span className="small-source">{step.roads.length} edges</span> : <Pill>Unavailable</Pill>}>
+          {step.roads ? <div className="road-status-list">
+            {(['red', 'amber', 'green'] as const).map((status) => <div key={status} className={`road-status road-${status}`}>
+              <span className="road-symbol" aria-hidden="true">{status === 'red' ? '×' : status === 'amber' ? '!' : '✓'}</span>
+              <span>{status}</span><b>{roadCounts[status]}</b>
+            </div>)}
+            <p className="road-note">Road status reflects the selected replay timestamp; unavailable road names are not inferred.</p>
+          </div> : <p className="panel-note">No road status artifact is available for this replay step. No previous status is carried forward.</p>}
+        </Panel>
+
+        {step.trapSummary && <Panel title="Flood-blind counterfactual" aside={<Pill tone="violet">{step.sourceMode === 'fixture' ? 'SYNTHETIC' : 'SCENARIO'}</Pill>}>
+          <div className="trap-counter"><strong>{numberIN(stepTrap?.trapped_population)}</strong><span>people the flood-blind plan would have trapped at this step</span></div>
+          <p className="panel-note">{stepTrap?.roads.length ? `Roads in the counterfactual: ${stepTrap.roads.join(', ')}.` : 'No trapped population is reported for this step.'} This is a computed counterfactual, not an observed count.</p>
+        </Panel>}
+      </aside>
+
+      <div className="command-main">
+        <Panel className="map-panel-card">
+          <MapPanel step={step} plan={selected} shelter={shelter}/>
+          {selected && <div className="selected-plan-strip">
+            <div><span className="eyebrow">SELECTED COLONY</span><strong>{selected.colony_id}</strong></div>
+            <div><span className="eyebrow">LEAD TIME</span><strong>{numberIN(selected.lead_time_h, 1)} h</strong></div>
+            <div><span className="eyebrow">ASSIGNED SHELTER</span><strong>{shelter?.name_en || selected.primary.shelter_id}</strong></div>
+            <div><span className="eyebrow">FREE BEDS</span><strong>{numberIN(shelter?.free_beds)}</strong></div>
+          </div>}
+        </Panel>
+
+        <Panel className="chart-panel" title="Gauge & forecast" aside={<span className="chart-station">DELHI RAILWAY BRIDGE <span>· m above MSL</span></span>}>
+          <GaugeChart gauges={step.gauges} forecasts={step.forecasts} at={step.at} thresholds={step.manifest.thresholds} manifest={step.manifest} streetLevel={threshold?.wet_at_level_m}/>
+        </Panel>
+      </div>
+
+      <aside className="command-detail-rail" aria-label="Evacuation plan details and dispatch">
+        <Panel title="Evacuation plan details" aside={<Pill tone={gaugeStatus === 'EXTREME' ? 'red' : gaugeStatus === 'WARNING' ? 'amber' : gaugeStatus === 'MONITORING' ? 'green' : 'neutral'}>{gaugeStatus}</Pill>}>
+          <div className="evacuation-metrics">
+            <div><span>Water level</span><strong>{gaugeLevel === null ? '—' : `${numberIN(gaugeLevel, 2)} m`}</strong><small>Delhi Railway Bridge</small></div>
+            <div><span>Danger threshold</span><strong className="metric-blue">{numberIN(dangerLevel, 2)} m</strong><small>Evacuation {numberIN(thresholds.evacuation, 2)} m</small></div>
+            <div><span>Assigned population</span><strong>{numberIN(selected?.ext?.assigned_people)}</strong><small>{selected?.colony_id || 'No selected plan'}</small></div>
+            <div><span>Boats / NDRF needed</span><strong>{numberIN(step.unreachable.reduce((sum, item) => sum + (item.population || 0), 0))}</strong><small>{step.unreachable.length} unreachable colonies</small></div>
+          </div>
+          <div className="plan-countdown">
+            <span>TIME TO WATER</span>
+            <strong>{countdown?.kind === 'future' ? countdown.text : countdown?.kind === 'elapsed' ? 'Arrived' : 'Unavailable'}</strong>
+            <small>{selected ? `Plan threshold · ${formatIST(selected.t_submersion)}` : 'No timestamp is inferred without an evacuation plan.'}</small>
+          </div>
+          {threshold && <div className="detail-threshold"><span>Street wet threshold</span><strong>{numberIN(threshold.wet_at_level_m, 2)} m</strong></div>}
+          {selected && <div className="route-facts">
+            <div><span>Primary shelter</span><b>{shelter?.name_en || selected.primary.shelter_id}</b><small>{numberIN(selected.primary.distance_m)} m · {numberIN(selected.primary.walk_min)} min</small></div>
+            <div><span>Backup shelter</span><b>{selected.backup?.shelter_id || 'Not provided'}</b><small>{selected.backup ? `${numberIN(selected.backup.distance_m)} m · ${numberIN(selected.backup.walk_min)} min` : 'No alternate route in plan'}</small></div>
+          </div>}
+          <div className="avoid-list">
+            <span className="eyebrow">AVOID</span>
+            {selected?.avoid.length
+              ? selected.avoid.map((item) => <div key={item.name_en}><strong>{item.name_en}</strong><small>Cutoff {formatIST(item.cutoff_at)}</small></div>)
+              : <p>No named road closure in this plan.</p>}
+          </div>
+        </Panel>
+
+        <Panel className="dispatch-wrap">
+          <DispatchPanel at={step.at} plan={selected} sourceMode={step.sourceMode} onApproved={onApproved} compact/>
+        </Panel>
+
+        <ReplayControls/>
+      </aside>
+    </div>
+  </main>;
 }

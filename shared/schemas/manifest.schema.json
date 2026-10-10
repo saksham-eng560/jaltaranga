@@ -1,0 +1,228 @@
+{
+  "$defs": {
+    "ManifestEvent": {
+      "properties": {
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "ts": {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "title": "Ts",
+          "type": "string"
+        },
+        "level_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Level M"
+        },
+        "ts_verified": {
+          "default": true,
+          "title": "Ts Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "ts"
+      ],
+      "title": "ManifestEvent",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "scenario_id": {
+      "title": "Scenario Id",
+      "type": "string"
+    },
+    "mode": {
+      "default": "replay",
+      "enum": [
+        "replay",
+        "live"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "title_en": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Title En"
+    },
+    "title_hi": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Title Hi"
+    },
+    "start": {
+      "format": "date-time",
+      "pattern": "\\+05:30$",
+      "title": "Start",
+      "type": "string"
+    },
+    "end": {
+      "format": "date-time",
+      "pattern": "\\+05:30$",
+      "title": "End",
+      "type": "string"
+    },
+    "step_min": {
+      "default": 60,
+      "title": "Step Min",
+      "type": "integer"
+    },
+    "valid_at": {
+      "items": {
+        "format": "date-time",
+        "pattern": "\\+05:30$",
+        "type": "string"
+      },
+      "title": "Valid At",
+      "type": "array"
+    },
+    "issued_at": {
+      "items": {
+        "format": "date-time",
+        "pattern": "\\+05:30$",
+        "type": "string"
+      },
+      "title": "Issued At",
+      "type": "array"
+    },
+    "default_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Default At"
+    },
+    "ref_station": {
+      "default": "DELHI_RLY_BRIDGE",
+      "title": "Ref Station",
+      "type": "string"
+    },
+    "thresholds": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Thresholds",
+      "type": "object"
+    },
+    "events": {
+      "items": {
+        "$ref": "#/$defs/ManifestEvent"
+      },
+      "title": "Events",
+      "type": "array"
+    },
+    "artefacts": {
+      "additionalProperties": {
+        "enum": [
+          "real",
+          "fixture",
+          "missing"
+        ],
+        "type": "string"
+      },
+      "title": "Artefacts",
+      "type": "object"
+    },
+    "context": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Context"
+    },
+    "sources": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Sources",
+      "type": "array"
+    },
+    "built_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Built At"
+    },
+    "git_sha": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Git Sha"
+    },
+    "data_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Data Version"
+    }
+  },
+  "required": [
+    "scenario_id",
+    "start",
+    "end",
+    "valid_at"
+  ],
+  "title": "Manifest",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/manifest.schema.json"
+}

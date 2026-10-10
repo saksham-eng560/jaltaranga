@@ -1,0 +1,132 @@
+{
+  "$defs": {
+    "FieldReport": {
+      "additionalProperties": false,
+      "properties": {
+        "report_id": {
+          "title": "Report Id",
+          "type": "string"
+        },
+        "ts": {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "title": "Ts",
+          "type": "string"
+        },
+        "location": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "title": "Location",
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "water_depth",
+            "road_blocked",
+            "shelter_full",
+            "sos"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "depth_cm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Depth Cm"
+        },
+        "photo_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Photo Key"
+        },
+        "reporter_id": {
+          "title": "Reporter Id",
+          "type": "string"
+        },
+        "trust": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Trust",
+          "type": "number"
+        },
+        "verified": {
+          "default": false,
+          "title": "Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "report_id",
+        "ts",
+        "location",
+        "kind",
+        "reporter_id",
+        "trust"
+      ],
+      "title": "FieldReport",
+      "type": "object"
+    },
+    "PresignedPost": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "fields": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Fields",
+          "type": "object"
+        }
+      },
+      "required": [
+        "url",
+        "fields"
+      ],
+      "title": "PresignedPost",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "report": {
+      "$ref": "#/$defs/FieldReport"
+    },
+    "upload": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PresignedPost"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "report"
+  ],
+  "title": "ReportPostResponse",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/report_post_response.schema.json"
+}
