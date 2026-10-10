@@ -8,9 +8,9 @@ Flood evacuation intelligence for the Yamuna corridor in Delhi. Built by team **
 | [`SHARED_RESOURCES.md`](SHARED_RESOURCES.md) | Contracts every workstream builds against: schemas, API, S3, AWS naming |
 | [`INTEGRATION_PLAN.md`](INTEGRATION_PLAN.md) | Merge order, integration tests, deployment, demo-video script |
 
-Workstream plans and their quality reviews live on the branches `feature/arjav`, `feature/vaibhav`, `feature/shivansh` and `feature/saksham`, as `IMPLEMENTATION_PLAN.md` and `QUALITY_REVIEW.md`.
+Workstream plans and quality reviews are grouped by owner under `docs/workstreams/<owner>/` . The separate folders let all four workstreams merge without overwriting one another.
 
-## Routing & Alerting on this branch (`feature/saksham`)
+## Routing & Alerting (Saksham)
 
 | Path | What |
 |---|---|
