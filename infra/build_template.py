@@ -19,6 +19,8 @@ Outputs:
     Value: !Ref RoutingFunction
   AlertsFunctionName:
     Value: !Ref AlertsFunction
+  ForecastFunctionName:
+    Value: !Ref ForecastFunction
 """
 
 

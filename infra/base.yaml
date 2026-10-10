@@ -37,6 +37,9 @@ Conditions:
 Globals:
   Function:
     Tags: {project: jaltaranga, env: !Ref Env}
+  HttpApi:
+    Auth:
+      EnableIamAuthorizer: true
 
 Resources:
 # --- shared (Shivansh) ------------------------------------------------------------------------
