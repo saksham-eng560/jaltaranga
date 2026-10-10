@@ -188,7 +188,7 @@
       LogGroupName: !Sub /aws/lambda/jt-${Env}-alerts-fn
       RetentionInDays: 7
 
-# Outputs to add:
+# Outputs (added by build_template.py):
 #   RoutingFunctionName: !Ref RoutingFunction
 #   AlertsFunctionName:  !Ref AlertsFunction
 # --- end routing/alerts (Saksham) -------------------------------------------------------------

@@ -12,8 +12,15 @@ class _Loader(yaml.SafeLoader):
     pass
 
 
-for _tag in ("!Ref", "!Sub", "!GetAtt"):
-    _Loader.add_constructor(_tag, lambda loader, node: loader.construct_scalar(node))
+def _any_tag(loader, suffix, node):
+    if isinstance(node, yaml.ScalarNode):
+        return loader.construct_scalar(node)
+    if isinstance(node, yaml.SequenceNode):
+        return loader.construct_sequence(node)
+    return loader.construct_mapping(node)
+
+
+_Loader.add_multi_constructor("!", _any_tag)
 
 
 def _routes(path):
@@ -39,3 +46,14 @@ def test_sam_section_matches_handlers():
             pat = "^" + re.sub(r"\{(\w+)\}", r"(?P<\1>[^/]+)", path) + "/?$"
             assert (method, pat) in router, (method, path)
     assert res["AlertsFunction"]["Properties"]["Timeout"] == 25
+
+
+def test_merged_template_is_current():
+    spec = importlib.util.spec_from_file_location("build_template", ROOT / "infra" / "build_template.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert (ROOT / "infra" / "template.yaml").read_text() == mod.build(), "run python infra/build_template.py"
+    doc = yaml.load((ROOT / "infra" / "template.yaml").read_text(), Loader=_Loader)
+    needed = {"DataBucket", "HttpApi", "DispatchTopic", "SheltersTable", "DispatchesTable", "ReportsTable",
+              "ScenarioStateTable", "JtSharedLayer", "RoutingFunction", "AlertsFunction"}
+    assert needed <= set(doc["Resources"])

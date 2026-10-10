@@ -3,7 +3,7 @@
 This tracks the implementation against [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md), the [`QUALITY_REVIEW.md`](QUALITY_REVIEW.md)
 actions and SHARED_RESOURCES §11.8 (v1.2). Branch `feature/saksham`.
 
-**How to verify:** `pip install -r routing/requirements-offline.txt && pytest` (134 tests, ~30 s), then
+**How to verify:** `pip install -r routing/requirements-offline.txt && pytest` (136 tests, ~30 s), then
 `make -C routing demo-local` (the full offline chain, ~25 s, no AWS credentials).
 
 ## Built and tested
@@ -27,7 +27,7 @@ actions and SHARED_RESOURCES §11.8 (v1.2). Branch `feature/saksham`.
 | Safety invariants inline in precompute (non-zero exit) | Must | `plan.py::check_invariants` | `test_invariants.py` |
 | Slot-filled drafter (forced tool, T=0, model sees no facts), one repair if ≥ 8 s left, per-field fallback, 18 s budget | Must | `alerts/jt_alerts/drafter.py` | `test_drafter.py` (recorded + deadline) |
 | Validator (6 checks) + ≥ 40 mutation tests | Must | `validator.py` | `test_validator_mutations.py` (57 cases) |
-| Templates hi/en/SMS incl. **SHELTER_IN_PLACE** (wet / no safe route) and **imminent** (< 1 h) wording (review defect 1) | Must | `templates.py` | `test_templates.py` |
+| Templates hi/en/SMS (reviewed: [`HINDI_TEMPLATE_REVIEW.md`](HINDI_TEMPLATE_REVIEW.md)) incl. **SHELTER_IN_PLACE** (wet / no safe route) and **imminent** (< 1 h) wording (review defect 1) | Must | `templates.py` | `test_templates.py` |
 | Lifecycle `alert_type`; dedup key + plan hash + 60 min cooldown; ALL_CLEAR | Must / Should (F4) | `lifecycle.py`, `service.py` | `test_lifecycle.py`, handler dedup test |
 | Draft / approve (idempotent) / list / ack API, DynamoDB or local store | Must (+ Could ack) | `alerts/handlers/api.py`, `service.py`, `store.py` | `test_alerts_handlers.py` |
 | SNS email: ASCII subject < 100, Hindi body; offline `.eml` outbox | Must | `notify.py` | `test_alerts_handlers.py`, `test_alerts_misc.py` |
@@ -37,7 +37,7 @@ actions and SHARED_RESOURCES §11.8 (v1.2). Branch `feature/saksham`.
 | `GET roads/plans` passthrough, `GET/PATCH /shelters` (§11.4 conditional form, 409), `POST /reports` (presigned POST) | Must / Should | `routing/handlers/api.py`, `serving.py` | `test_routing_handlers.py` |
 | F2b offline field-report reroute (`REPORTS=` file → `reason=field_report`, `ext.replanned_due_to`) | Could | `precompute.py` | `test_field_reports.py` |
 | Observability: EMF `DraftLatencyMs`, `FallbackUsed`, `ValidatorFail_<check>` (review action 8) | — | `metrics.py` | `test_alerts_misc.py` |
-| SAM section (2 Lambdas, least-privilege IAM, documented 3-statement global-profile Bedrock policy §11.8-11) | Must | `infra/sections/routing_alerts.yaml` | — (needs Shivansh's template + `sam validate`) |
+| SAM section (2 Lambdas, least-privilege IAM, documented 3-statement global-profile Bedrock policy §11.8-11), **merged** into `infra/template.yaml` with the shared resources (bucket, 5 tables, SNS + email subscription, HTTP API, jt_shared layer, USD 10 budget) | Must | `infra/sections/routing_alerts.yaml`, `infra/base.yaml` → `infra/build_template.py` → `infra/template.yaml` | `test_sam_section.py`; `cfn-lint` (incl. SAM transform) clean; SAM translator → 28 resources, 10 routes (CI step) |
 | Fixtures from the real writers | Must | `routing/scripts/make_fixtures.py` → `shared/fixtures/` | `shared/py/tests/test_fixtures.py` |
 | §11.5 make targets (no AWS creds; `publish` separate) | Must | `routing/Makefile`, `alerts/Makefile` | CI |
 
@@ -53,16 +53,23 @@ So this branch also carries:
   rasters, forecasts and colony thresholds, so routing and alerts run end to end. Replace with the real artefacts by
   pointing `JT_LOCAL_DATA` at the data Shivansh and Vaibhav build. Nothing else changes.
 
-## Needs AWS access or a teammate (cannot be done from this branch)
+## Blocked: needs valid AWS credentials
 
-| Item | Who / when | Command |
-|---|---|---|
-| Bedrock probe → `JT_BEDROCK_REGION` / `JT_BEDROCK_MODEL_ID` (also with the Lambda role) | Saksham, with credentials | `make -C alerts probe` |
-| 20 live Nova drafts, recorded for CI | Saksham | `make -C alerts halluc-live N=20` |
-| Merge the SAM block into `infra/template.yaml`, then `sam validate`, deploy `demo`, curl smoke | Shivansh + Saksham | see INTEGRATION_PLAN §4 |
-| Re-run on real data: `make -C routing precompute && make -C routing hero WRITE_MANIFEST=1 && make -C alerts predraft` | after Vaibhav's publish | — |
-| Native-Hindi review of `alerts/jt_alerts/templates.py` | team | — |
-| SNS email subscription confirmation, Polly audio check | deploy day | — |
+The container has `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` set, but AWS rejects them
+(`sts:GetCallerIdentity` returns `InvalidClientTokenId`). The steps below are scripted and ready. They cannot honestly be run or
+faked without a real account. Add valid keys in the environment settings (Network secrets / environment variables)
+and run, in order:
+
+```bash
+make -C alerts probe                          # → JT_BEDROCK_REGION / JT_BEDROCK_MODEL_ID
+cd infra && sam build --use-container && sam deploy --guided --stack-name jt-demo \
+  --parameter-overrides Env=demo BedrockRegion=<probe> BedrockModelId=<probe> DispatchEmail=<team inbox> BudgetEmail=<you>
+make -C routing publish BUCKET=jt-demo-data-<acct> && make -C alerts publish BUCKET=jt-demo-data-<acct>
+make -C alerts halluc-live N=20               # records real Nova drafts into alerts/tests/recorded/
+```
+
+When Shivansh's `pipeline/` and Vaibhav's `ml/` outputs exist, point `JT_LOCAL_DATA` at them and re-run
+`make -C routing precompute && make -C routing hero WRITE_MANIFEST=1 && make -C alerts predraft`.
 
 ## Deviations (declared)
 

@@ -2,7 +2,7 @@
 
 The template text contains no digit, number word, name or landmark noun; every fact enters through a
 slot (SHARED §11.6). SMS variants are tried longest first until one fits in 160 code points.
-Native-Hindi review: plan §6 (Fri 19:15).
+Hindi review: docs/workstreams/saksham/HINDI_TEMPLATE_REVIEW.md.
 """
 
 from __future__ import annotations
@@ -16,6 +16,10 @@ SMS_MAX = 160
 # F1: fixed, validated sentence appended by code for high-vulnerability colonies.
 VULNERABLE_HI = " पहले बुज़ुर्गों, गर्भवती महिलाओं और बच्चों को निकालें ({ELDERLY} बुज़ुर्ग)।"
 VULNERABLE_EN = " Help the elderly, pregnant women and young children leave before others ({ELDERLY} elderly residents)."
+
+
+def _plural_avoid(f: DispatchFacts) -> bool:
+    return len(f.avoid) > 1
 
 
 def _vulnerable(f: DispatchFacts) -> bool:
@@ -39,10 +43,11 @@ def message_hi(f: DispatchFacts) -> str:
         parts.append("सूचना: {COLONY} में {LEAD} घंटे में ({TSUB} तक) पानी आ सकता है।"
                      " ज़रूरी सामान, दवाइयां और कागज़ात तैयार रखें।")
     if f.has_avoid:
-        parts.append(" {AVOID} {CUT} से बंद है, उधर न जाएं।")
+        parts.append(" {AVOID} {CUT} से बंद हैं, उन रास्तों से न जाएं।" if _plural_avoid(f)
+                     else " {AVOID} {CUT} से बंद है, उस रास्ते से न जाएं।")
     go = "तुरंत" if f.alert_type == URGENT else "ज़रूरत पड़ने पर"
-    parts.append(f" {go} {{VIA}} होकर {{SHELTER}} जाएं ({{BEDS}} जगह खाली)।" if f.has_via
-                 else f" {go} {{SHELTER}} जाएं ({{BEDS}} जगह खाली)।")
+    parts.append(f" {go} {{VIA}} होकर पैदल {{SHELTER}} जाएं (खाली जगह: {{BEDS}})।" if f.has_via
+                 else f" {go} पैदल {{SHELTER}} जाएं (खाली जगह: {{BEDS}})।")
     if _vulnerable(f):
         parts.append(VULNERABLE_HI)
     parts.append(" मदद: {HELP}")
@@ -61,15 +66,16 @@ def message_en(f: DispatchFacts) -> str:
     parts = []
     if f.alert_type == URGENT:
         parts.append("LEAVE NOW: Water may reach {COLONY} at any time (by {TSUB})." if f.imminent
-                     else "WARNING: Water is likely to reach {COLONY} in about {LEAD} hours, by {TSUB}.")
+                     else "WARNING: Water is likely to reach {COLONY} by {TSUB} (in about {LEAD} h).")
     else:
-        parts.append("NOTICE: Water may reach {COLONY} in about {LEAD} hours (by {TSUB})."
+        parts.append("NOTICE: Water may reach {COLONY} by {TSUB} (in about {LEAD} h)."
                      " Keep medicines, documents and essentials ready.")
     if f.has_avoid:
-        parts.append(" {AVOID} is closed from {CUT}; do not use it.")
+        parts.append(" {AVOID} are closed from {CUT}; do not use them." if _plural_avoid(f)
+                     else " {AVOID} is closed from {CUT}; do not use it.")
     lead = "Walk now" if f.alert_type == URGENT else "If asked to leave, walk"
-    parts.append(f" {lead} via {{VIA}} to {{SHELTER}} ({{BEDS}} places free)." if f.has_via
-                 else f" {lead} to {{SHELTER}} ({{BEDS}} places free).")
+    parts.append(f" {lead} via {{VIA}} to {{SHELTER}} (free places: {{BEDS}})." if f.has_via
+                 else f" {lead} to {{SHELTER}} (free places: {{BEDS}}).")
     if _vulnerable(f):
         parts.append(VULNERABLE_EN)
     parts.append(" Help: {HELP}")
@@ -84,11 +90,11 @@ def sms_variants(f: DispatchFacts) -> list[str]:
     if f.alert_type == ALL_CLEAR:
         return ["{COLONY}: खतरा कम, सावधानी से लौटें। मदद {HELP}", "खतरा कम, सावधानी से लौटें। मदद {HELP}"]
     if f.alert_type == URGENT:
-        head = "{COLONY}: पानी कभी भी।" if f.imminent else "{COLONY}: {LEAD} घंटे में पानी।"
-        short_head = "पानी कभी भी।" if f.imminent else "{LEAD} घंटे में पानी।"
+        head = "{COLONY}: पानी कभी भी आ सकता है।" if f.imminent else "{COLONY}: {LEAD} घंटे में पानी।"
+        short_head = "पानी कभी भी आ सकता है।" if f.imminent else "{LEAD} घंटे में पानी।"
     else:
         head, short_head = "{COLONY}: {LEAD} घंटे में पानी संभव।", "पानी संभव।"
-    avoid = " {AVOID} न जाएं।" if f.has_avoid else ""
+    avoid = " {AVOID} पर न जाएं।" if f.has_avoid else ""
     via = " {VIA} से" if f.has_via else ""
     return [
         f"{head}{avoid}{via} {{SHELTER}} जाएं। मदद {{HELP}}",

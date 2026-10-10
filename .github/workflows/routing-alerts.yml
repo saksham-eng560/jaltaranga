@@ -2,9 +2,9 @@ name: routing-alerts (Saksham)
 
 on:
   push:
-    paths: ["routing/**", "alerts/**", "shared/**", "conftest.py", "pytest.ini", ".github/workflows/routing-alerts.yml"]
+    paths: ["routing/**", "alerts/**", "shared/**", "infra/**", "conftest.py", "pytest.ini", ".github/workflows/routing-alerts.yml"]
   pull_request:
-    paths: ["routing/**", "alerts/**", "shared/**", "conftest.py", "pytest.ini", ".github/workflows/routing-alerts.yml"]
+    paths: ["routing/**", "alerts/**", "shared/**", "infra/**", "conftest.py", "pytest.ini", ".github/workflows/routing-alerts.yml"]
 
 jobs:
   test:
@@ -18,11 +18,13 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -r routing/requirements-offline.txt jsonschema ruff
+      - run: pip install -r routing/requirements-offline.txt jsonschema ruff cfn-lint
       - name: Lint
         run: ruff check --select F,E9,B --ignore B905 --line-length 120 shared routing alerts conftest.py
       - name: Schema drift
         run: cd shared/py && python -m jt_shared.export_schemas >/dev/null && git diff --exit-code ../schemas
+      - name: SAM template (merged sections, cfn-lint incl. SAM transform)
+        run: python infra/build_template.py --check && cfn-lint infra/template.yaml
       - name: Unit + integration tests (schemas, invariants, mutations, handlers)
         run: pytest -q
       - name: Offline chain (dev world → precompute → T_hero → predraft)

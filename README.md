@@ -22,6 +22,6 @@ Workstream plans and their quality reviews live on the branches `feature/arjav`,
 
 ```bash
 pip install -r routing/requirements-offline.txt jsonschema
-pytest                              # 134 tests: invariants, validator mutations, handlers, schemas
+pytest                              # 136 tests: invariants, validator mutations, handlers, schemas
 make -C routing demo-local          # synthetic dev world → precompute → T_hero → predraft, offline, ~25 s
 ```

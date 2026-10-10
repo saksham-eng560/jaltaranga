@@ -59,3 +59,16 @@ def test_imminent_and_wet_wording(toy_gaz):
     assert "पानी आ चुका है" in validate(template_texts(sip), sip, toy_gaz)["message_hi"].final
     sip.wet = False
     assert "सुरक्षित पैदल रास्ता" in validate(template_texts(sip), sip, toy_gaz)["message_hi"].final
+
+
+def test_plural_agreement_and_bed_phrasing(toy_gaz):
+    two = long_facts("URGENT_EVACUATION_DISPATCH")
+    res = validate(template_texts(two), two, toy_gaz)
+    assert "बंद हैं, उन रास्तों से न जाएं" in res["message_hi"].final
+    assert "are closed from" in res["message_en"].final and "(free places: 1234)" in res["message_en"].final
+    one = long_facts("URGENT_EVACUATION_DISPATCH")
+    one.avoid = one.avoid[:1]
+    one.free_beds = 1
+    res = validate(template_texts(one), one, toy_gaz)
+    assert "बंद है, उस रास्ते से न जाएं" in res["message_hi"].final and "(खाली जगह: 1)" in res["message_hi"].final
+    assert "is closed from" in res["message_en"].final and "in about 3.5 h" in res["message_en"].final
