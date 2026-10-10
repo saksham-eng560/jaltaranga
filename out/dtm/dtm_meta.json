@@ -1,0 +1,25 @@
+{
+  "synthetic": false,
+  "raw_dem_source": "Copernicus GLO-30 DSM (AWS Open Data Registry)",
+  "lat_min": 28.53,
+  "lat_max": 28.72,
+  "lon_min": 77.18,
+  "lon_max": 77.34,
+  "rows": 683,
+  "cols": 576,
+  "resolution_m": 30.0,
+  "elevation_min": 197.5,
+  "elevation_max": 264.0396423339844,
+  "pits_clamped_below_197p5m": 5002,
+  "delta_m": 0.0,
+  "calibrated_by": "fixed_zero_baseline",
+  "burn_floor_space": "gauge",
+  "calibration_warning": null,
+  "bridge_passages_carved": 9,
+  "golden": {
+    "passed": true,
+    "pushta_depth_m": 1.77,
+    "connaught_place_depth_m": 0.0,
+    "report": "Golden Check at 208.66m: Yamuna Pushta depth=1.77m (expected >0.3m), Connaught Place depth=0.00m (expected 0.0m). Result: PASS"
+  }
+}

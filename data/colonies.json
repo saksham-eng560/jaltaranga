@@ -1,0 +1,202 @@
+[
+  {
+    "colony_id": "DEL-YP-04",
+    "name_en": "Yamuna Pushta (Bela Ghat)",
+    "name_hi": "यमुना पुश्ता",
+    "centroid": [
+      77.245,
+      28.655
+    ],
+    "population_est": 12500,
+    "ground_elev_m": null,
+    "vulnerable": {
+      "elderly": 1812,
+      "disabled": 512,
+      "children_u5": 1400,
+      "pregnant": 400
+    },
+    "contacts": [
+      {
+        "role": "Nodal Officer",
+        "name": "Devendra Sharma",
+        "channel": "email",
+        "address": "nodal.yp@delhi.gov.in"
+      }
+    ]
+  },
+  {
+    "colony_id": "DEL-MON-03",
+    "name_en": "Monastery Market / ISBT Khadar",
+    "name_hi": "मोनेस्ट्री मार्केट",
+    "centroid": [
+      77.2305,
+      28.6705
+    ],
+    "population_est": 4800,
+    "ground_elev_m": null,
+    "vulnerable": {
+      "elderly": 768,
+      "disabled": 182,
+      "children_u5": 408,
+      "pregnant": 100
+    },
+    "contacts": [
+      {
+        "role": "Market Association Secretary",
+        "name": "Tenzing Norbu",
+        "channel": "email",
+        "address": "secretary.monastery@delhi.gov.in"
+      }
+    ]
+  },
+  {
+    "colony_id": "DEL-MKT-01",
+    "name_en": "Majnu Ka Tila Settlement",
+    "name_hi": "मजनू का टीला",
+    "centroid": [
+      77.228,
+      28.7
+    ],
+    "population_est": 6500,
+    "ground_elev_m": null,
+    "vulnerable": {
+      "elderly": 1183,
+      "disabled": 227,
+      "children_u5": 455,
+      "pregnant": 162
+    },
+    "contacts": [
+      {
+        "role": "Resident Welfare Representative",
+        "name": "Karma Lobsang",
+        "channel": "email",
+        "address": "rwa.mkt@delhi.gov.in"
+      }
+    ]
+  },
+  {
+    "colony_id": "DEL-USM-05",
+    "name_en": "Usmanpur Floodplain Basti",
+    "name_hi": "उस्मानपुर बस्ती",
+    "centroid": [
+      77.252,
+      28.685
+    ],
+    "population_est": 9200,
+    "ground_elev_m": null,
+    "vulnerable": {
+      "elderly": 1104,
+      "disabled": 460,
+      "children_u5": 1242,
+      "pregnant": 368
+    },
+    "contacts": [
+      {
+        "role": "Community Volunteer",
+        "name": "Mohammad Irfan",
+        "channel": "email",
+        "address": "vol.usmanpur@delhi.gov.in"
+      }
+    ]
+  },
+  {
+    "colony_id": "DEL-GC-06",
+    "name_en": "Geeta Colony Khadar",
+    "name_hi": "गीता कॉलोनी खादर",
+    "centroid": [
+      77.26,
+      28.648
+    ],
+    "population_est": 8100,
+    "ground_elev_m": null,
+    "vulnerable": {
+      "elderly": 1117,
+      "disabled": 340,
+      "children_u5": 842,
+      "pregnant": 251
+    },
+    "contacts": [
+      {
+        "role": "Khadar Farmers Union Rep",
+        "name": "Suresh Singh",
+        "channel": "email",
+        "address": "kisan.geetacolony@delhi.gov.in"
+      }
+    ]
+  },
+  {
+    "colony_id": "DEL-BE-07",
+    "name_en": "Bela Estate / Kisan Basti",
+    "name_hi": "बेला एस्टेट",
+    "centroid": [
+      77.251,
+      28.641
+    ],
+    "population_est": 5400,
+    "ground_elev_m": null,
+    "vulnerable": {
+      "elderly": 815,
+      "disabled": 259,
+      "children_u5": 648,
+      "pregnant": 189
+    },
+    "contacts": [
+      {
+        "role": "Field Coordinator",
+        "name": "Mahesh Chand",
+        "channel": "email",
+        "address": "coord.bela@delhi.gov.in"
+      }
+    ]
+  },
+  {
+    "colony_id": "DEL-MV-02",
+    "name_en": "Mayur Vihar Phase 1 Khadar",
+    "name_hi": "मयूर विहार खादर",
+    "centroid": [
+      77.295,
+      28.605
+    ],
+    "population_est": 7200,
+    "ground_elev_m": null,
+    "vulnerable": {
+      "elderly": 792,
+      "disabled": 230,
+      "children_u5": 684,
+      "pregnant": 201
+    },
+    "contacts": [
+      {
+        "role": "Relief Marshal",
+        "name": "Anita Verma",
+        "channel": "email",
+        "address": "marshal.mv@delhi.gov.in"
+      }
+    ]
+  },
+  {
+    "colony_id": "DEL-CP-01",
+    "name_en": "Connaught Place Benchmark",
+    "name_hi": "कनॉट प्लेस",
+    "centroid": [
+      77.219,
+      28.632
+    ],
+    "population_est": 25000,
+    "ground_elev_m": null,
+    "vulnerable": {
+      "elderly": 2000,
+      "disabled": 500,
+      "children_u5": 1250,
+      "pregnant": 375
+    },
+    "contacts": [
+      {
+        "role": "NDMC Control Room",
+        "name": "Control Officer",
+        "channel": "email",
+        "address": "control.ndmc@delhi.gov.in"
+      }
+    ]
+  }
+]

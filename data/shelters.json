@@ -1,0 +1,154 @@
+[
+  {
+    "shelter_id": "SH-KG-01",
+    "name_en": "Kashmiri Gate Community Hall",
+    "name_hi": "कश्मीरी गेट कम्युनिटी हॉल",
+    "lat": 28.6665,
+    "lon": 77.2255,
+    "location": [
+      77.2255,
+      28.6665
+    ],
+    "ground_elevation_m": 214.2,
+    "capacity": 1200,
+    "occupied": 300,
+    "free_beds": 900,
+    "type": "community_hall",
+    "is_accessible": true,
+    "has_medical_post": true,
+    "contact_phone": "+91-11-23961122"
+  },
+  {
+    "shelter_id": "SH-CL-02",
+    "name_en": "Civil Lines Govt School",
+    "name_hi": "सिविल लाइन्स गवर्नमेंट स्कूल",
+    "lat": 28.6815,
+    "lon": 77.2205,
+    "location": [
+      77.2205,
+      28.6815
+    ],
+    "ground_elevation_m": 216.5,
+    "capacity": 2000,
+    "occupied": 400,
+    "free_beds": 1600,
+    "type": "school",
+    "is_accessible": true,
+    "has_medical_post": true,
+    "contact_phone": "+91-11-23974411"
+  },
+  {
+    "shelter_id": "SH-DG-03",
+    "name_en": "Daryaganj Relief Camp",
+    "name_hi": "दरियागंज रिलीफ कैंप",
+    "lat": 28.643,
+    "lon": 77.2325,
+    "location": [
+      77.2325,
+      28.643
+    ],
+    "ground_elevation_m": 213.8,
+    "capacity": 1500,
+    "occupied": 300,
+    "free_beds": 1200,
+    "type": "relief_camp",
+    "is_accessible": true,
+    "has_medical_post": true,
+    "contact_phone": "+91-11-23315588"
+  },
+  {
+    "shelter_id": "SH-SH-04",
+    "name_en": "Shahdara Community Hall",
+    "name_hi": "शाहदरा कम्युनिटी हॉल",
+    "lat": 28.6735,
+    "lon": 77.2925,
+    "location": [
+      77.2925,
+      28.6735
+    ],
+    "ground_elevation_m": 212.0,
+    "capacity": 1800,
+    "occupied": 500,
+    "free_beds": 1300,
+    "type": "community_hall",
+    "is_accessible": true,
+    "has_medical_post": true,
+    "contact_phone": "+91-11-22851166"
+  },
+  {
+    "shelter_id": "SH-LN-05",
+    "name_en": "Laxmi Nagar School",
+    "name_hi": "लक्ष्मी नगर स्कूल",
+    "lat": 28.6315,
+    "lon": 77.283,
+    "location": [
+      77.283,
+      28.6315
+    ],
+    "ground_elevation_m": 211.5,
+    "capacity": 1200,
+    "occupied": 400,
+    "free_beds": 800,
+    "type": "school",
+    "is_accessible": true,
+    "has_medical_post": true,
+    "contact_phone": "+91-11-22442299"
+  },
+  {
+    "shelter_id": "SH-BH-06",
+    "name_en": "Bhajanpura Relief Camp",
+    "name_hi": "भजनपुरा रिलीफ कैंप",
+    "lat": 28.7,
+    "lon": 77.271,
+    "location": [
+      77.271,
+      28.7
+    ],
+    "ground_elevation_m": 212.5,
+    "capacity": 1500,
+    "occupied": 300,
+    "free_beds": 1200,
+    "type": "relief_camp",
+    "is_accessible": true,
+    "has_medical_post": true,
+    "contact_phone": "+91-11-22557788"
+  },
+  {
+    "shelter_id": "SH-TM-07",
+    "name_en": "Timarpur School",
+    "name_hi": "तिमारपुर स्कूल",
+    "lat": 28.7065,
+    "lon": 77.2215,
+    "location": [
+      77.2215,
+      28.7065
+    ],
+    "ground_elevation_m": 215.0,
+    "capacity": 1200,
+    "occupied": 300,
+    "free_beds": 900,
+    "type": "school",
+    "is_accessible": true,
+    "has_medical_post": true,
+    "contact_phone": "+91-11-23812233"
+  },
+  {
+    "shelter_id": "SH-PV-08",
+    "name_en": "Preet Vihar Medical Camp",
+    "name_hi": "प्रीत विहार मेडिकल कैंप",
+    "lat": 28.642,
+    "lon": 77.302,
+    "location": [
+      77.302,
+      28.642
+    ],
+    "ground_elevation_m": 213.0,
+    "capacity": 400,
+    "occupied": 100,
+    "free_beds": 300,
+    "type": "medical",
+    "is_accessible": true,
+    "has_medical_post": true,
+    "contact_phone": "+91-11-22501144"
+  }
+]

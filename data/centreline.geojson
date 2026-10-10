@@ -1,0 +1,40 @@
+{
+  "type": "FeatureCollection",
+  "name": "yamuna_centreline",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "reach": "Delhi Yamuna Floodplain",
+        "upstream": "Wazirabad Barrage",
+        "downstream": "Okhla Barrage",
+        "length_km": 22.0,
+        "chainage_start_lat": 28.7115,
+        "chainage_end_lat": 28.5460
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.2340, 28.7115],
+          [77.2318, 28.7002],
+          [77.2310, 28.6850],
+          [77.2335, 28.6720],
+          [77.2430, 28.6620],
+          [77.2475, 28.6500],
+          [77.2515, 28.6475],
+          [77.2505, 28.6300],
+          [77.2520, 28.6180],
+          [77.2560, 28.5880],
+          [77.2750, 28.5720],
+          [77.3090, 28.5460]
+        ]
+      }
+    }
+  ]
+}

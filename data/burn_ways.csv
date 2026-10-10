@@ -1,0 +1,6 @@
+way_id,name,highway_class,length_m,crest_elev_m,lat_start,lon_start,lat_end,lon_end
+osm_way_101,Left Bank Marginal Bund (Shahdara - Shastri Park),primary,4850,210.0,28.6920,77.2420,28.6500,77.2620
+osm_way_102,Left Bank Marginal Bund South (Geeta Colony - Mayur Vihar),secondary,4200,210.0,28.6500,77.2620,28.6100,77.2850
+osm_way_201,Civil Lines Flood Protection Embankment (Ring Road Outer Wall),primary,3600,209.8,28.7050,77.2240,28.6750,77.2260
+osm_way_202,Bela Road Flood Retaining Wall,secondary,2100,209.5,28.6750,77.2260,28.6580,77.2320
+osm_way_203,Ring Road Flood Embankment (IP Estate),primary,3100,209.5,28.6400,77.2450,28.6150,77.2470

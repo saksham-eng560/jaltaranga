@@ -1,0 +1,551 @@
+{
+  "scenario_id": "yamuna-2023-07",
+  "name": "July 2023 Yamuna All-Time Record Flood",
+  "total_timesteps": 27,
+  "steps_evaluated": 1,
+  "danger_mark_m": 205.33,
+  "all_time_peak_m": 208.66,
+  "hero_timestamp": "2023-07-13T18:00:00+05:30",
+  "rainfall_disclaimer": "ERA5 reanalysis - not IMD",
+  "steps": [
+    {
+      "step_index": 18,
+      "timestamp": "2023-07-13T18:00:00+05:30",
+      "gauge_drb_m": 208.66,
+      "hathnikund_cusecs": 120000,
+      "delta_danger_m": 3.33,
+      "status": "ALL_TIME_RECORD_PEAK",
+      "rainfall_hourly_mm": 0.0,
+      "rainfall_cumulative_mm": 106.1,
+      "rainfall_source": "ERA5 reanalysis - not IMD",
+      "inundated_facilities": [
+        {
+          "id": "osm_8266909244",
+          "name": "Max Superspeciality Hospital",
+          "category": "hospital",
+          "depth_m": 8.91,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6537285485",
+          "name": "Botanical Garden (Blue Line)",
+          "category": "metro_station",
+          "depth_m": 6.2,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_2833531907",
+          "name": "Trilokpuri Sanjay Lake",
+          "category": "metro_station",
+          "depth_m": 5.85,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7138534434",
+          "name": "Sankhwar Hospital",
+          "category": "hospital",
+          "depth_m": 5.65,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_2084317885",
+          "name": "Bhardwaj Hospital",
+          "category": "hospital",
+          "depth_m": 5.05,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_2833971689",
+          "name": "Karkarduma (Pink Line)",
+          "category": "metro_station",
+          "depth_m": 4.8,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "metro_shastri_park",
+          "name": "Shastri Park Metro Station (Red Line)",
+          "category": "metro_station",
+          "depth_m": 4.74,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_1355998753",
+          "name": "Yashoda Super Speciality Hospital, Anand Vihar",
+          "category": "hospital",
+          "depth_m": 4.73,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7020925951",
+          "name": "Government District Hospital, Gautam Buddha Nagar",
+          "category": "hospital",
+          "depth_m": 4.62,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6537196022",
+          "name": "New Ashok Nagar",
+          "category": "metro_station",
+          "depth_m": 4.57,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_2833058715",
+          "name": "Okhla Bird Sanctuary",
+          "category": "metro_station",
+          "depth_m": 4.5,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7037320325",
+          "name": "Indo Gulf Hospital & Diagnostics",
+          "category": "hospital",
+          "depth_m": 4.2,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_10314380322",
+          "name": "Vaishali",
+          "category": "metro_station",
+          "depth_m": 4.19,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6049373298",
+          "name": "Krishna Nagar",
+          "category": "metro_station",
+          "depth_m": 4.07,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7138632162",
+          "name": "Government Hospital",
+          "category": "hospital",
+          "depth_m": 3.98,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_12897313095",
+          "name": "Metro Heart Institute",
+          "category": "hospital",
+          "depth_m": 3.95,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7138632200",
+          "name": "Red Cross Hospital Society Mat. Welfare and Child Care Hospital",
+          "category": "hospital",
+          "depth_m": 3.86,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7544955481",
+          "name": "Virmani Hospital",
+          "category": "hospital",
+          "depth_m": 3.82,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_252584508",
+          "name": "Anand Vihar",
+          "category": "metro_station",
+          "depth_m": 3.6,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7035451664",
+          "name": "Metro Hospitals and Heart Institute (Cardiology Wing)",
+          "category": "hospital",
+          "depth_m": 3.45,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6397652316",
+          "name": "Shaheed Nagar",
+          "category": "metro_station",
+          "depth_m": 3.19,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "wtp_okhla",
+          "name": "Okhla Water Treatment Plant",
+          "category": "water_treatment_plant",
+          "depth_m": 3.18,
+          "criticality": "HIGH"
+        },
+        {
+          "id": "osm_7038608967",
+          "name": "Kamal Hospital, Ghaziabad",
+          "category": "hospital",
+          "depth_m": 3.17,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_4676900933",
+          "name": "East Vinod Nagar - Mayur Vihar - II",
+          "category": "metro_station",
+          "depth_m": 3.17,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7025153786",
+          "name": "Icare Eye Hospital And Post Graduate Institute Glaucoma Research Centre",
+          "category": "hospital",
+          "depth_m": 2.9,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6049373295",
+          "name": "Jaffrabad",
+          "category": "metro_station",
+          "depth_m": 2.43,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_11690583075",
+          "name": "INDIAN BAGHEERA VETERINARY HOSPITAL",
+          "category": "hospital",
+          "depth_m": 2.42,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7024789288",
+          "name": "Aasha Deep Hospital",
+          "category": "hospital",
+          "depth_m": 2.36,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6049373293",
+          "name": "Gokulpuri",
+          "category": "metro_station",
+          "depth_m": 2.28,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7028292035",
+          "name": "Metro Heart Institute and Metro Multi Speciality Hospital",
+          "category": "hospital",
+          "depth_m": 2.21,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7544955517",
+          "name": "Apex Citi Hospital",
+          "category": "hospital",
+          "depth_m": 2.18,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7028082114",
+          "name": "Ajit Surgical and Maternity Centre",
+          "category": "hospital",
+          "depth_m": 2.17,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7027932255",
+          "name": "Sarvodaya Hospital and Trauma Centre",
+          "category": "hospital",
+          "depth_m": 2.16,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7138632194",
+          "name": "IG ESI Hospital",
+          "category": "hospital",
+          "depth_m": 2.15,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_11982201439",
+          "name": "IndraGandhi ESI HOSPITAL",
+          "category": "hospital",
+          "depth_m": 2.15,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_12897313097",
+          "name": "Metro Multi-speciality Hospital",
+          "category": "hospital",
+          "depth_m": 2.11,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_2833058720",
+          "name": "Okhla Vihar",
+          "category": "metro_station",
+          "depth_m": 1.98,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6049373296",
+          "name": "Welcome (Pink Line)",
+          "category": "metro_station",
+          "depth_m": 1.72,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6458130120",
+          "name": "Karkarduma (Blue Line)",
+          "category": "metro_station",
+          "depth_m": 1.68,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7031558968",
+          "name": "Parakh Hospital, Ghaziabad",
+          "category": "hospital",
+          "depth_m": 1.68,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6537193575",
+          "name": "Indraprastha",
+          "category": "metro_station",
+          "depth_m": 1.67,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_5215706782",
+          "name": "Bhajanpura",
+          "category": "metro_station",
+          "depth_m": 1.65,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7138534366",
+          "name": "Malhotra Nursing Home",
+          "category": "hospital",
+          "depth_m": 1.62,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7029420523",
+          "name": "Diveeksha Eye clinic",
+          "category": "hospital",
+          "depth_m": 1.59,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7544955467",
+          "name": "Taravati Hospital",
+          "category": "hospital",
+          "depth_m": 1.59,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7030575139",
+          "name": "Apollo Hospitals , Noida",
+          "category": "hospital",
+          "depth_m": 1.53,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6196100480",
+          "name": "Sarai Kale Khan - Nizamuddin",
+          "category": "metro_station",
+          "depth_m": 1.52,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_663759851",
+          "name": "Jhilmil",
+          "category": "metro_station",
+          "depth_m": 1.37,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7544955514",
+          "name": "Guru Harkrishan Hospital",
+          "category": "hospital",
+          "depth_m": 1.26,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7037813514",
+          "name": "Vaishali Health Clinic",
+          "category": "hospital",
+          "depth_m": 1.15,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_11690527372",
+          "name": "KK SURGICAL CENTRE",
+          "category": "hospital",
+          "depth_m": 1.15,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_2833058723",
+          "name": "Jasola Vihar Shaheen Bagh",
+          "category": "metro_station",
+          "depth_m": 1.14,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_10700089586",
+          "name": "Sarai Kale Khan",
+          "category": "metro_station",
+          "depth_m": 1.12,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7024852288",
+          "name": "S.S. Medicare Centre",
+          "category": "hospital",
+          "depth_m": 1.07,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_5914729083",
+          "name": "Dr. Bhimrao Ambedkar Multispeciality Hospital",
+          "category": "hospital",
+          "depth_m": 1.05,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_1305488151",
+          "name": "Dr. Shyama Prasad Mukherjee Chest Hospital",
+          "category": "hospital",
+          "depth_m": 1.04,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6539745133",
+          "name": "Mayur Vihar - I (Blue Line)",
+          "category": "metro_station",
+          "depth_m": 1.04,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "underpass_ito",
+          "name": "ITO Ring Road Underpass",
+          "category": "underpass",
+          "depth_m": 0.91,
+          "criticality": "HIGH"
+        },
+        {
+          "id": "osm_5534273697",
+          "name": "Tirath Ram Hospital",
+          "category": "hospital",
+          "depth_m": 0.89,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_4676900919",
+          "name": "Karkarduma Court",
+          "category": "metro_station",
+          "depth_m": 0.85,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7544955492",
+          "name": "Muskan Hospital",
+          "category": "hospital",
+          "depth_m": 0.85,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_4676900918",
+          "name": "IP Extension",
+          "category": "metro_station",
+          "depth_m": 0.83,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_5215706770",
+          "name": "Yamuna Vihar",
+          "category": "metro_station",
+          "depth_m": 0.82,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7025804773",
+          "name": "Sparsh Multispeciality Hospital",
+          "category": "hospital",
+          "depth_m": 0.82,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_944845341",
+          "name": "Anand Vihar Terminal",
+          "category": "metro_station",
+          "depth_m": 0.74,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7138534363",
+          "name": "Raj Rani Hospital",
+          "category": "hospital",
+          "depth_m": 0.7,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6049373292",
+          "name": "Johri Enclave",
+          "category": "metro_station",
+          "depth_m": 0.65,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6454015469",
+          "name": "Anand Vihar (Pink Line)",
+          "category": "metro_station",
+          "depth_m": 0.56,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_2833058718",
+          "name": "Kalindi Kunj",
+          "category": "metro_station",
+          "depth_m": 0.56,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_10314380323",
+          "name": "Kaushambi",
+          "category": "metro_station",
+          "depth_m": 0.53,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_13887018882",
+          "name": "Dr Sarita Jaiswal",
+          "category": "hospital",
+          "depth_m": 0.29,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_663758998",
+          "name": "Shahdara",
+          "category": "metro_station",
+          "depth_m": 0.29,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_6049373297",
+          "name": "East Azad Nagar",
+          "category": "metro_station",
+          "depth_m": 0.23,
+          "criticality": "MEDIUM"
+        },
+        {
+          "id": "osm_7138632165",
+          "name": "Chandiwala Hospital Shahdara",
+          "category": "hospital",
+          "depth_m": 0.11,
+          "criticality": "MEDIUM"
+        }
+      ],
+      "affected_colonies": [
+        "Yamuna Pushta (Bela Ghat)",
+        "Monastery Market / ISBT Lowlands",
+        "Usmanpur Floodplain Basti",
+        "Majnu Ka Tila Tibetan Settlement",
+        "Geeta Colony Khadar",
+        "WHO Building / Drain 12 Regulator"
+      ]
+    }
+  ]
+}

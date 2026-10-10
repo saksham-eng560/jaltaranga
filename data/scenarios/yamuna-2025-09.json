@@ -1,0 +1,28 @@
+{
+  "scenario_id": "yamuna-2025-09",
+  "name": "September 2025 Late Monsoon Yamuna Flood Event",
+  "river": "Yamuna",
+  "gauge_station": "Old Delhi Railway Bridge (Loha Pul, CWC Code: 004-MDDEL)",
+  "warning_level_m": 204.50,
+  "danger_level_m": 205.33,
+  "evacuation_level_m": 206.00,
+  "peak_level_m": 207.48,
+  "peak_time": "2025-09-04T16:00:00+05:30",
+  "hero_timestamp": "2025-09-04T14:00:00+05:30",
+  "source": "Central Water Commission & Delhi Flood Control Control Room",
+  "licence": "Government Open Data Licence - India",
+  "qc_flag": "digitized",
+  "qc_notes": "Late-monsoon upstream cloudburst release scenario peaking at 207.48m",
+  "timesteps": [
+    {"timestamp": "2025-09-02T06:00:00+05:30", "gauge_level_drb_m": 203.80, "hathnikund_cusecs": 55000, "status": "NORMAL"},
+    {"timestamp": "2025-09-02T18:00:00+05:30", "gauge_level_drb_m": 204.40, "hathnikund_cusecs": 120000, "status": "APPROACHING_WARNING"},
+    {"timestamp": "2025-09-03T06:00:00+05:30", "gauge_level_drb_m": 205.15, "hathnikund_cusecs": 185000, "status": "WARNING_ACTIVE"},
+    {"timestamp": "2025-09-03T18:00:00+05:30", "gauge_level_drb_m": 205.80, "hathnikund_cusecs": 240000, "status": "DANGER_BREACHED"},
+    {"timestamp": "2025-09-04T06:00:00+05:30", "gauge_level_drb_m": 206.70, "hathnikund_cusecs": 280000, "status": "EVACUATION_URGENT"},
+    {"timestamp": "2025-09-04T14:00:00+05:30", "gauge_level_drb_m": 207.30, "hathnikund_cusecs": 275000, "status": "HIGH_SURGE"},
+    {"timestamp": "2025-09-04T16:00:00+05:30", "gauge_level_drb_m": 207.48, "hathnikund_cusecs": 260000, "status": "EVENT_PEAK"},
+    {"timestamp": "2025-09-05T00:00:00+05:30", "gauge_level_drb_m": 207.20, "hathnikund_cusecs": 210000, "status": "CRESTING"},
+    {"timestamp": "2025-09-05T12:00:00+05:30", "gauge_level_drb_m": 206.40, "hathnikund_cusecs": 140000, "status": "RECEDING"},
+    {"timestamp": "2025-09-06T00:00:00+05:30", "gauge_level_drb_m": 205.50, "hathnikund_cusecs": 85000, "status": "RECEDING"}
+  ]
+}

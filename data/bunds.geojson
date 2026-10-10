@@ -1,0 +1,119 @@
+{
+  "type": "FeatureCollection",
+  "name": "delhi_yamuna_embankments",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "bund_id": "bund_left_marginal_shahdara",
+        "name": "Left Bank Marginal Bund (Shahdara - Shastri Park)",
+        "agency": "Delhi Irrigation & Flood Control Department (I&FC)",
+        "crest_elevation_m": 210.0,
+        "design_hfl_m": 208.66,
+        "freeboard_m": 1.34,
+        "source": "Delhi Master Plan 2021 Flood Embankment Schedule & Survey of India 1:25000",
+        "qc_flag": "ok"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.2420, 28.6920],
+          [77.2480, 28.6780],
+          [77.2550, 28.6650],
+          [77.2620, 28.6500]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "bund_id": "bund_left_marginal_geeta_colony",
+        "name": "Left Bank Marginal Bund South (Geeta Colony - Mayur Vihar)",
+        "agency": "Delhi Irrigation & Flood Control Department (I&FC)",
+        "crest_elevation_m": 210.0,
+        "design_hfl_m": 208.66,
+        "freeboard_m": 1.34,
+        "source": "Delhi I&FC Department Embankment Ledger",
+        "qc_flag": "ok"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.2620, 28.6500],
+          [77.2710, 28.6350],
+          [77.2800, 28.6200],
+          [77.2850, 28.6100]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "bund_id": "bund_right_civil_lines_wall",
+        "name": "Civil Lines Flood Protection Embankment (Ring Road Outer Wall)",
+        "agency": "Public Works Department (PWD) Delhi",
+        "crest_elevation_m": 209.8,
+        "design_hfl_m": 208.66,
+        "freeboard_m": 1.14,
+        "source": "PWD Delhi Civil Lines Riverfront Barrier Survey",
+        "qc_flag": "ok"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.2240, 28.7050],
+          [77.2250, 28.6900],
+          [77.2260, 28.6750]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "bund_id": "bund_right_bela_road_wall",
+        "name": "Bela Road Flood Retaining Wall (ISBT to Old Delhi Bridge)",
+        "agency": "Delhi Disaster Management Authority & PWD",
+        "crest_elevation_m": 209.5,
+        "design_hfl_m": 208.66,
+        "freeboard_m": 0.84,
+        "source": "DDMA Flood Vulnerability Assessment Document 2023",
+        "qc_flag": "ok"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.2260, 28.6750],
+          [77.2290, 28.6660],
+          [77.2320, 28.6580]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "bund_id": "bund_right_ip_estate_wall",
+        "name": "Ring Road Flood Embankment (IP Estate / WHO Drain 12 Reach)",
+        "agency": "Delhi I&FC / Military Engineers Section",
+        "crest_elevation_m": 209.5,
+        "design_hfl_m": 208.66,
+        "freeboard_m": 0.84,
+        "source": "Post-July 2023 Breach Engineering Reconstruction Records",
+        "qc_flag": "ok"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.2450, 28.6400],
+          [77.2460, 28.6280],
+          [77.2470, 28.6150]
+        ]
+      }
+    }
+  ]
+}

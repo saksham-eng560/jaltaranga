@@ -1,0 +1,122 @@
+{
+  "type": "FeatureCollection",
+  "name": "jaltaranga_published_exclusions",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "exclusion_id": "excl_metro_red_viaduct",
+        "name": "Delhi Metro Red Line Viaduct (Kashmere Gate to Shastri Park)",
+        "type": "elevated_transit",
+        "deck_elevation_m": 218.0,
+        "rationale": "Elevated concrete viaduct on deep pile foundations 12m+ above Yamuna floodplain. Surface flooding does not impede track or train transit."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.230, 28.668],
+            [77.253, 28.675],
+            [77.254, 28.673],
+            [77.231, 28.666],
+            [77.230, 28.668]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "exclusion_id": "excl_metro_blue_viaduct",
+        "name": "Delhi Metro Blue Line Viaduct (Indraprastha to Yamuna Bank)",
+        "type": "elevated_transit",
+        "deck_elevation_m": 216.5,
+        "rationale": "High-clearance pier-supported viaduct across Yamuna. Tracks remain operational above flood stage."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.248, 28.621],
+            [77.263, 28.625],
+            [77.264, 28.622],
+            [77.249, 28.619],
+            [77.248, 28.621]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "exclusion_id": "excl_barapullah_elevated",
+        "name": "Barapullah Elevated Corridor",
+        "type": "elevated_highway",
+        "deck_elevation_m": 215.0,
+        "rationale": "Continuous grade-separated elevated expressway crossing Barapullah nallah and Yamuna floodplain."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.240, 28.585],
+            [77.265, 28.590],
+            [77.266, 28.587],
+            [77.241, 28.582],
+            [77.240, 28.585]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "exclusion_id": "excl_signature_approach",
+        "name": "Signature Bridge Northern Approach Viaduct",
+        "type": "elevated_highway",
+        "deck_elevation_m": 216.0,
+        "rationale": "Grade-separated viaduct carrying traffic directly over low-lying Wazirabad/Timarpur banks."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.225, 28.702],
+            [77.236, 28.699],
+            [77.237, 28.696],
+            [77.226, 28.700],
+            [77.225, 28.702]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "exclusion_id": "excl_who_bund_revetment",
+        "name": "WHO Building / Drain 12 Engineered Floodwall",
+        "type": "engineered_barrier",
+        "deck_elevation_m": 210.5,
+        "rationale": "Engineered revetment and sheet pile barrier preventing flood propagation into Central Secretariat."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.245, 28.629],
+            [77.250, 28.629],
+            [77.250, 28.625],
+            [77.245, 28.625],
+            [77.245, 28.629]
+          ]
+        ]
+      }
+    }
+  ]
+}
