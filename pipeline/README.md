@@ -28,3 +28,20 @@ This module handles the geospatial, data extraction, calibration, infrastructure
 - **Python Version**: 3.11+
 - **Offline First**: All pipeline runs can be executed locally with synthetic/cached fixtures.
 - **Traceability**: Zero silent synthetic data; all outputs registered with explicit QC flags (`ok`, `suspect`, `synthetic`, `digitized`).
+
+## Local entry points
+
+The repository does not currently provide a pipeline-specific Makefile. Run
+the replay CLI from the repository root:
+
+```bash
+python -m pipeline.replay --scenario yamuna-2023-07
+python -m pipeline.replay --scenario yamuna-2025-09 --step 18
+```
+
+The replay uses cached scenario rainfall when present. If the elevation tile
+is not cached under `data/dem/`, the DTM builder downloads the Copernicus
+GLO-30 tile; check network access and available disk space before running it.
+The other pipeline modules provide focused CLIs, including
+`python -m pipeline.rainfall --scenario yamuna-2023-07` and
+`python -m pipeline.exposure`.

@@ -102,8 +102,13 @@ Run focused component tests:
 ```bash
 make -C routing test
 make -C alerts test
-python -m pytest tests pipeline
+python -m pytest -q
 ```
+
+The repository pytest configuration covers shared contracts, routing, alerts,
+ML, and infrastructure tests. Additional pipeline test files are under
+`tests/`; some are legacy checks for an earlier shared-package layout and are
+not part of the configured default suite.
 
 Additional workflows and dependency setup are documented in
 [`pipeline/README.md`](pipeline/README.md),
@@ -111,20 +116,16 @@ Additional workflows and dependency setup are documented in
 [`alerts/README.md`](alerts/README.md). The ML package defines its optional
 development dependencies in `ml/pyproject.toml`.
 
-To build a scenario from local/cached inputs, use the pipeline's documented
-entry points and set `JT_LOCAL_DATA` to the local artefact root when chaining
-pipeline, ML, routing, and alerts. A typical full replay chain is:
+The pipeline replay CLI is available as:
 
 ```bash
-make -C pipeline scenario SCENARIO=yamuna-2023-07
-make -C ml replay-local SCENARIO=yamuna-2023-07
-make -C routing precompute SCENARIO=yamuna-2023-07
-make -C alerts predraft
+python -m pipeline.replay --scenario yamuna-2023-07
 ```
 
-Some targets and datasets depend on optional geospatial libraries and local
-source data. Check each component README and target help before running a
-pipeline that downloads external datasets.
+This pipeline may fetch the Copernicus elevation tile and ERA5 rainfall data
+when their local caches are missing. Review its source-data notes and run it
+only when those inputs are available. Routing and alert demos have a separate
+synthetic offline workflow documented in their component READMEs.
 
 ## Configuration and deployment
 
