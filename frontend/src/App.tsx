@@ -8,84 +8,52 @@ export const App: React.FC = () => {
   const { activeView, setActiveView, language, setLanguage } = useReplayStore();
 
   return (
-    <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
-      {/* Top Navbar */}
-      <nav
-        style={{
-          background: '#0f172a',
-          borderBottom: '1px solid #334155',
-          padding: '10px 20px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          height: '56px',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <h1 style={{ fontSize: '1.2rem', color: '#38bdf8', fontWeight: 800 }}>
-            🌊 जलतरंग (Jaltaranga)
-          </h1>
-          <span
-            style={{
-              fontSize: '0.75rem',
-              background: '#b91c1c',
-              color: '#ffffff',
-              padding: '2px 8px',
-              borderRadius: '4px',
-              fontWeight: 700,
-            }}
-          >
-            DEMO REPLAY
+    <div className="app-shell">
+      <header className="site-header">
+        <a className="brand" href="#" aria-label="Jaltaranga home">
+          <span className="brand-mark" aria-hidden="true">J</span>
+          <span className="brand-wordmark">
+            <strong>जलतरंग</strong>
+            <span>JALTARANGA / DELHI</span>
           </span>
-        </div>
+        </a>
 
-        {/* View Switcher Chips */}
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <nav className="view-switcher" aria-label="Choose dashboard view">
           <button
+            className={activeView === 'command' ? 'view-tab is-active' : 'view-tab'}
             onClick={() => setActiveView('command')}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '6px',
-              fontSize: '0.85rem',
-              fontWeight: 600,
-              background: activeView === 'command' ? '#0284c7' : '#1e293b',
-              color: activeView === 'command' ? '#ffffff' : '#94a3b8',
-            }}
+            aria-current={activeView === 'command' ? 'page' : undefined}
           >
+            <span className="tab-index">01</span>
             {t('command_view', language)}
           </button>
           <button
+            className={activeView === 'colony' ? 'view-tab is-active' : 'view-tab'}
             onClick={() => setActiveView('colony')}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '6px',
-              fontSize: '0.85rem',
-              fontWeight: 600,
-              background: activeView === 'colony' ? '#0284c7' : '#1e293b',
-              color: activeView === 'colony' ? '#ffffff' : '#94a3b8',
-            }}
+            aria-current={activeView === 'colony' ? 'page' : undefined}
           >
+            <span className="tab-index">02</span>
             {t('colony_view', language)}
           </button>
+        </nav>
+
+        <div className="header-actions">
+          <span className="replay-indicator">
+            <span className="status-dot" />
+            {language === 'hi' ? 'डेमो रीप्ले' : 'DEMO REPLAY'}
+          </span>
+          <button
+            className="language-button"
+            onClick={() => setLanguage(language === 'hi' ? 'en' : 'hi')}
+            aria-label={language === 'hi' ? 'Switch to English' : 'हिंदी में बदलें'}
+          >
+            {language === 'hi' ? 'EN' : 'हि'}
+            <span aria-hidden="true">↗</span>
+          </button>
         </div>
+      </header>
 
-        {/* Language Toggle */}
-        <button
-          onClick={() => setLanguage(language === 'hi' ? 'en' : 'hi')}
-          style={{
-            padding: '4px 10px',
-            borderRadius: '6px',
-            fontSize: '0.8rem',
-            background: '#334155',
-            color: '#f8fafc',
-          }}
-        >
-          {language === 'hi' ? 'English' : 'हिंदी'}
-        </button>
-      </nav>
-
-      {/* Main View Area */}
-      <main style={{ flex: 1, overflow: 'hidden' }}>
+      <main className="app-main">
         {activeView === 'command' ? <CommandView /> : <ColonyView />}
       </main>
     </div>

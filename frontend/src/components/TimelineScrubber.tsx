@@ -1,61 +1,89 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useReplayStore } from '../state/replay';
-import { t } from '../i18n/t';
-
-const TIMESTAMPS = [
-  { label: '12 Jul 12:00', ts: '2023-07-12T12:00:00+05:30', level: '207.54 m' },
-  { label: '12 Jul 18:00', ts: '2023-07-12T18:00:00+05:30', level: '207.81 m' },
-  { label: '13 Jul 00:00 (Golden)', ts: '2023-07-13T00:00:00+05:30', level: '208.20 m' },
-  { label: '13 Jul 06:00', ts: '2023-07-13T06:00:00+05:30', level: '208.40 m' },
-  { label: '13 Jul 10:00', ts: '2023-07-13T10:00:00+05:30', level: '208.53 m' },
-  { label: '13 Jul 18:00 (Peak HFL)', ts: '2023-07-13T18:00:00+05:30', level: '208.66 m' },
-];
+import { REPLAY_STEPS } from '../shared/mockData';
 
 export const TimelineScrubber: React.FC = () => {
-  const { currentTimestamp, setCurrentTimestamp, language } = useReplayStore();
+  const { currentTimestamp, setCurrentTimestamp, isPlaying, setIsPlaying, language } = useReplayStore();
+  const currentIndex = Math.max(0, REPLAY_STEPS.findIndex((step) => step.timestamp === currentTimestamp));
+  const activeStep = REPLAY_STEPS[currentIndex];
 
-  const currentIndex = TIMESTAMPS.findIndex((item) => item.ts === currentTimestamp);
-  const activeItem = TIMESTAMPS[currentIndex >= 0 ? currentIndex : 2];
+  useEffect(() => {
+    if (!isPlaying) return undefined;
+
+    const timer = window.setInterval(() => {
+      const nextIndex = REPLAY_STEPS.findIndex((step) => step.timestamp === currentTimestamp) + 1;
+      if (nextIndex >= REPLAY_STEPS.length) {
+        setIsPlaying(false);
+        return;
+      }
+      setCurrentTimestamp(REPLAY_STEPS[nextIndex].timestamp);
+    }, 1400);
+
+    return () => window.clearInterval(timer);
+  }, [currentTimestamp, isPlaying, setCurrentTimestamp, setIsPlaying]);
+
+  const moveToStep = (index: number) => {
+    setCurrentTimestamp(REPLAY_STEPS[index].timestamp);
+    if (index === REPLAY_STEPS.length - 1) setIsPlaying(false);
+  };
 
   return (
-    <div
-      style={{
-        padding: '12px 24px',
-        background: '#1e293b',
-        borderTop: '1px solid #334155',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
-            {t('replay_badge', language)}
-          </span>
-          <h3 style={{ fontSize: '1.1rem', color: '#38bdf8' }}>
-            {activeItem.label} · Stage: {activeItem.level}
-          </h3>
+    <section className="timeline-panel" aria-label={language === 'hi' ? 'ऐतिहासिक बाढ़ रीप्ले' : 'Historical flood replay'}>
+      <div className="timeline-topline">
+        <div className="timeline-title">
+          <span className="timeline-symbol" aria-hidden="true">↗</span>
+          <div>
+            <span className="eyebrow">{language === 'hi' ? 'रीप्ले कंट्रोल' : 'REPLAY CONTROL'}</span>
+            <strong>{language === 'hi' ? 'जुलाई 2023 · यमुना बाढ़' : 'July 2023 · Yamuna flood'}</strong>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          {TIMESTAMPS.map((item, idx) => (
-            <button
-              key={item.ts}
-              onClick={() => setCurrentTimestamp(item.ts)}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '6px',
-                fontSize: '0.8rem',
-                backgroundColor: item.ts === currentTimestamp ? '#0284c7' : '#334155',
-                color: '#ffffff',
-                transition: 'background 0.2s',
-              }}
-            >
-              {item.label}
-            </button>
-          ))}
+        <div className="timeline-current">
+          <span>{activeStep.label}</span>
+          <strong>{activeStep.level.toFixed(2)} <small>m</small></strong>
         </div>
+        <button
+          className="play-button"
+          onClick={() => {
+            if (currentIndex === REPLAY_STEPS.length - 1) moveToStep(0);
+            setIsPlaying(!isPlaying);
+          }}
+          aria-pressed={isPlaying}
+        >
+          <span aria-hidden="true">{isPlaying ? 'Ⅱ' : '▶'}</span>
+          {isPlaying
+            ? (language === 'hi' ? 'रोकें' : 'Pause')
+            : (language === 'hi' ? 'रीप्ले चलाएं' : 'Play replay')}
+        </button>
       </div>
-    </div>
+
+      <div className="timeline-control">
+        <span className="timeline-end">{language === 'hi' ? '12 जुलाई' : '12 JUL'}</span>
+        <input
+          type="range"
+          min={0}
+          max={REPLAY_STEPS.length - 1}
+          step={1}
+          value={currentIndex}
+          onChange={(event) => moveToStep(Number(event.currentTarget.value))}
+          aria-label={language === 'hi' ? 'रीप्ले समय चुनें' : 'Choose replay time'}
+          aria-valuetext={`${activeStep.label}, ${activeStep.level.toFixed(2)} metres`}
+        />
+        <span className="timeline-end">{language === 'hi' ? '13 जुलाई' : '13 JUL'}</span>
+      </div>
+
+      <div className="timeline-stops" role="group" aria-label={language === 'hi' ? 'रीप्ले चरण' : 'Replay steps'}>
+        {REPLAY_STEPS.map((step, index) => (
+          <button
+            key={step.timestamp}
+            className={index === currentIndex ? 'timeline-stop is-current' : 'timeline-stop'}
+            onClick={() => moveToStep(index)}
+            aria-pressed={index === currentIndex}
+          >
+            <span className="stop-marker" />
+            <span>{step.label.slice(7)}</span>
+          </button>
+        ))}
+      </div>
+    </section>
   );
 };

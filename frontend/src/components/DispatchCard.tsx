@@ -1,116 +1,85 @@
-import React, { useState } from 'react';
-import { DispatchCard } from '../shared/types';
+import React, { useEffect, useState } from 'react';
 import { t } from '../i18n/t';
 import { useReplayStore } from '../state/replay';
+import { ColonyScenario } from '../shared/mockData';
 
 interface DispatchCardProps {
-  colonyName: string;
+  colony: ColonyScenario;
 }
 
-export const DispatchCardView: React.FC<DispatchCardProps> = ({ colonyName }) => {
+export const DispatchCardView: React.FC<DispatchCardProps> = ({ colony }) => {
   const { language } = useReplayStore();
   const [status, setStatus] = useState<'draft' | 'approved' | 'sent'>('draft');
+  const colonyName = language === 'hi' ? colony.nameHi : colony.name;
+  const route = language === 'hi' ? colony.routeHi : colony.route;
+  const avoidRoad = language === 'hi' ? colony.avoidRoadHi : colony.avoidRoad;
+  const message =
+    language === 'hi'
+      ? `बाढ़ सूचना: ${colonyName} में पानी बढ़ने का अनुमान है। कृपया ${route} से ${colony.shelterHi} जाएं। ${avoidRoad} से बचें। आपातकालीन हेल्पलाइन 1077।`
+      : `Flood advisory: Water is expected to rise near ${colonyName}. Please use ${route} to reach ${colony.shelter}. Avoid ${avoidRoad}. Emergency helpline: 1077.`;
 
-  const messageHi = `बाढ़ चेतावनी: ${colonyName} में अगले 3 घंटे में पानी का स्तर बढ़ने की संभावना है। कृपया सुरक्षित निकासी मार्ग से सामुदायिक केंद्र राहत शिविर में जाएं। रिंग रोड का उपयोग न करें। आपात स्थिति में 1077 पर संपर्क करें।`;
-  const messageEn = `Flood Warning: Water level expected to rise at ${colonyName} within 3 hours. Please evacuate via designated route to Community Centre Shelter. Avoid Ring Road. Emergency helpline: 1077.`;
+  useEffect(() => {
+    setStatus('draft');
+  }, [colony.id]);
+
+  const listen = () => {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = language === 'hi' ? 'hi-IN' : 'en-IN';
+    window.speechSynthesis.speak(utterance);
+  };
 
   return (
-    <div
-      style={{
-        background: '#0f172a',
-        padding: '16px',
-        borderRadius: '8px',
-        border: '1px solid #334155',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h4 style={{ color: '#38bdf8', fontSize: '1rem' }}>
-          {status === 'sent' ? `✅ ${t('status_sent', language)}` : t('draft_dispatch', language)}
-        </h4>
-        <span
-          style={{
-            fontSize: '0.75rem',
-            padding: '2px 8px',
-            borderRadius: '12px',
-            background: status === 'sent' ? '#065f46' : '#854d0e',
-            color: '#f8fafc',
-          }}
-        >
-          {status.toUpperCase()}
+    <section className="dispatch-card">
+      <div className="dispatch-heading">
+        <div>
+          <span className="eyebrow">{language === 'hi' ? 'संदेश पूर्वावलोकन' : 'MESSAGE PREVIEW'}</span>
+          <h3>{t('draft_dispatch', language)}</h3>
+        </div>
+        <span className={`dispatch-status status-${status}`}>
+          {status === 'draft'
+            ? (language === 'hi' ? 'ड्राफ्ट' : 'DRAFT')
+            : status === 'approved'
+              ? (language === 'hi' ? 'स्वीकृत' : 'APPROVED')
+              : (language === 'hi' ? 'भेजा गया · डेमो' : 'SENT · DEMO')}
         </span>
       </div>
 
-      <div
-        style={{
-          background: '#1e293b',
-          padding: '12px',
-          borderRadius: '6px',
-          fontSize: '0.9rem',
-          lineHeight: '1.4',
-          color: '#e2e8f0',
-        }}
-      >
-        {language === 'hi' ? messageHi : messageEn}
+      <p className="dispatch-message">{message}</p>
+
+      <div className="validation-row">
+        <span><i aria-hidden="true">✓</i> {language === 'hi' ? 'तथ्य जांच' : 'Facts checked'}</span>
+        <span><i aria-hidden="true">✓</i> {language === 'hi' ? 'हिंदी + अंग्रेज़ी' : 'Hindi + English'}</span>
       </div>
 
-      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-        <span style={{ fontSize: '0.75rem', color: '#10b981' }}>✓ Slots Validated</span>
-        <span style={{ fontSize: '0.75rem', color: '#10b981' }}>✓ No Hallucinations</span>
-        <span style={{ fontSize: '0.75rem', color: '#10b981' }}>✓ Dual Script</span>
-      </div>
-
-      <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+      <div className="dispatch-actions">
         {status === 'draft' && (
-          <button
-            onClick={() => setStatus('approved')}
-            style={{
-              flex: 1,
-              padding: '8px',
-              borderRadius: '6px',
-              background: '#0284c7',
-              color: '#ffffff',
-              fontWeight: '600',
-            }}
-          >
-            {t('approve_dispatch', language)}
+          <button className="button-primary" onClick={() => setStatus('approved')}>
+            {language === 'hi' ? 'ड्राफ्ट स्वीकृत करें' : 'Approve draft'}
+            <span aria-hidden="true">↗</span>
           </button>
         )}
-
         {status === 'approved' && (
-          <button
-            onClick={() => setStatus('sent')}
-            style={{
-              flex: 1,
-              padding: '8px',
-              borderRadius: '6px',
-              background: '#10b981',
-              color: '#ffffff',
-              fontWeight: '600',
-            }}
-          >
-            🚀 Push SNS & Radio Broadcast
+          <button className="button-primary" onClick={() => setStatus('sent')}>
+            {language === 'hi' ? 'भेजने का डेमो चलाएं' : 'Simulate sending'}
+            <span aria-hidden="true">↗</span>
           </button>
         )}
-
+        {status === 'sent' && (
+          <span className="sent-confirmation">
+            {language === 'hi' ? 'केवल इस डेमो में चिह्नित · कोई अलर्ट नहीं भेजा गया' : 'Marked in this demo only · no alert was sent'}
+          </span>
+        )}
         <button
-          onClick={() => {
-            const utterance = new SpeechSynthesisUtterance(language === 'hi' ? messageHi : messageEn);
-            utterance.lang = language === 'hi' ? 'hi-IN' : 'en-IN';
-            window.speechSynthesis.speak(utterance);
-          }}
-          style={{
-            padding: '8px 14px',
-            borderRadius: '6px',
-            background: '#334155',
-            color: '#f8fafc',
-          }}
+          className="button-listen"
+          onClick={listen}
+          disabled={!('speechSynthesis' in window)}
+          title={!('speechSynthesis' in window) ? 'Speech playback is not available in this browser' : undefined}
         >
-          🔊 {t('listen_audio', language)}
+          <span aria-hidden="true">◖</span>
+          {t('listen_audio', language)}
         </button>
       </div>
-    </div>
+    </section>
   );
 };

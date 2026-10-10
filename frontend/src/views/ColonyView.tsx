@@ -1,169 +1,106 @@
 import React from 'react';
+import { TimelineScrubber } from '../components/TimelineScrubber';
 import { useReplayStore } from '../state/replay';
-import { t } from '../i18n/t';
+import { COLONIES, formatTimeToWater, hoursToWater, REPLAY_STEPS, riskForColony } from '../shared/mockData';
 import { HELPLINE } from '../shared/constants';
+import { t } from '../i18n/t';
 
 export const ColonyView: React.FC = () => {
-  const { language, setLanguage } = useReplayStore();
+  const { language, selectedColonyId, setSelectedColonyId, currentTimestamp } = useReplayStore();
+  const colony = COLONIES.find((item) => item.id === selectedColonyId) ?? COLONIES[0];
+  const stage = REPLAY_STEPS.find((step) => step.timestamp === currentTimestamp) ?? REPLAY_STEPS[2];
+  const risk = riskForColony(stage.level, colony.wetLevelM);
+  const hours = hoursToWater(stage.level, colony.wetLevelM);
+  const name = language === 'hi' ? colony.nameHi : colony.name;
+
+  const listen = () => {
+    const message =
+      language === 'hi'
+        ? `${colony.nameHi} में पानी ${formatTimeToWater(hours, language)} में पहुंच सकता है। ${colony.routeHi} से ${colony.shelterHi} जाएं। ${colony.avoidRoadHi} से बचें।`
+        : `Water may reach ${colony.name} in ${formatTimeToWater(hours, language)}. Take ${colony.route} to ${colony.shelter}. Avoid ${colony.avoidRoad}.`;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = language === 'hi' ? 'hi-IN' : 'en-IN';
+    window.speechSynthesis.speak(utterance);
+  };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        width: '100vw',
-        background: '#0f172a',
-        color: '#f8fafc',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '16px',
-      }}
-    >
-      {/* Mobile Header */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '440px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '16px',
-        }}
-      >
-        <h1 style={{ fontSize: '1.2rem', color: '#38bdf8' }}>जलतरंग (Jaltaranga)</h1>
-        <button
-          onClick={() => setLanguage(language === 'hi' ? 'en' : 'hi')}
-          style={{
-            background: '#334155',
-            color: '#f8fafc',
-            padding: '4px 10px',
-            borderRadius: '6px',
-            fontSize: '0.8rem',
-          }}
-        >
-          {language === 'hi' ? 'English' : 'हिंदी'}
-        </button>
-      </div>
-
-      {/* Main Resident Card */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '440px',
-          background: '#1e293b',
-          borderRadius: '16px',
-          border: '2px solid #ef4444',
-          padding: '20px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-        }}
-      >
+    <div className="colony-view">
+      <div className="colony-page-heading">
         <div>
-          <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>आपका इलाका (Your Location)</span>
-          <h2 style={{ fontSize: '1.6rem', color: '#ffffff', fontWeight: 800 }}>
-            {language === 'hi' ? 'यमुना पुश्ता (सेक्टर सी)' : 'Yamuna Pushta (Sector C)'}
-          </h2>
+          <p className="eyebrow">{language === 'hi' ? 'नागरिक जानकारी · डेमो रीप्ले' : 'RESIDENT INFORMATION · DEMO REPLAY'}</p>
+          <h1>{language === 'hi' ? 'आपकी गली। आपका सुरक्षित रास्ता।' : 'Your street. A safer way forward.'}</h1>
         </div>
-
-        {/* Big Alert Banner */}
-        <div
-          style={{
-            background: '#450a0a',
-            border: '1px solid #b91c1c',
-            padding: '16px',
-            borderRadius: '12px',
-            textAlign: 'center',
-          }}
-        >
-          <div style={{ fontSize: '0.9rem', color: '#fca5a5' }}>{t('time_to_water', language)}</div>
-          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#ef4444', margin: '4px 0' }}>
-            ~3½ घंटे (3.5 h)
-          </div>
-          <div style={{ fontSize: '0.85rem', color: '#f87171' }}>
-            अनुमानित जलभराव: 206.3 मीटर (Your lane floods at 206.3 m)
-          </div>
-        </div>
-
-        {/* Route Instruction */}
-        <div style={{ background: '#0f172a', padding: '14px', borderRadius: '10px' }}>
-          <div style={{ fontWeight: 700, color: '#38bdf8', marginBottom: '4px' }}>
-            🛣️ {t('safe_evac_route', language)}
-          </div>
-          <div style={{ fontSize: '1rem', color: '#e2e8f0', lineHeight: 1.4 }}>
-            {language === 'hi'
-              ? 'लाल कुआं मार्ग होकर सीधे कश्मीरी गेट राहत शिविर की ओर जाएं।'
-              : 'Proceed via Lal Kuan Marg directly towards Kashmere Gate Shelter.'}
-          </div>
-          <div
-            style={{
-              marginTop: '8px',
-              padding: '6px 10px',
-              borderRadius: '6px',
-              background: '#7f1d1d',
-              color: '#fecaca',
-              fontSize: '0.8rem',
-              fontWeight: 600,
-            }}
-          >
-            ❌ {t('avoid_warning', language)}
-          </div>
-        </div>
-
-        {/* Shelter Destination */}
-        <div style={{ background: '#0f172a', padding: '14px', borderRadius: '10px' }}>
-          <div style={{ fontWeight: 700, color: '#10b981', marginBottom: '4px' }}>
-            🏕️ {t('shelter_destination', language)}
-          </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc' }}>
-            ISBT कम्युनिटी सेंटर राहत शिविर #2
-          </div>
-          <div style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '2px' }}>
-            उपलब्ध बिस्तर (Free beds): 480 · भोजन एवं प्राथमिक चिकित्सा उपलब्ध
-          </div>
-        </div>
-
-        {/* Offline Audio and Emergency Call Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <button
-            onClick={() => {
-              const msg =
-                language === 'hi'
-                  ? 'चेतावनी: यमुना पुश्ता सेक्टर सी में लगभग साढ़े तीन घंटे में पानी भरने की संभावना है। कृपया लाल कुआं मार्ग से राहत शिविर जाएं। रिंग रोड न लें।'
-                  : 'Warning: Yamuna Pushta Sector C is expected to submerge in 3.5 hours. Please proceed via Lal Kuan Marg to relief shelter. Do not take Ring Road.';
-              const utterance = new SpeechSynthesisUtterance(msg);
-              utterance.lang = language === 'hi' ? 'hi-IN' : 'en-IN';
-              window.speechSynthesis.speak(utterance);
-            }}
-            style={{
-              padding: '14px',
-              borderRadius: '10px',
-              background: '#0284c7',
-              color: '#ffffff',
-              fontSize: '1.05rem',
-              fontWeight: 700,
-            }}
-          >
-            🔊 {t('listen_audio', language)}
-          </button>
-
-          <a
-            href={`tel:${HELPLINE.DISASTER_CONTROL}`}
-            style={{
-              padding: '14px',
-              borderRadius: '10px',
-              background: '#dc2626',
-              color: '#ffffff',
-              fontSize: '1.05rem',
-              fontWeight: 700,
-              textAlign: 'center',
-              textDecoration: 'none',
-            }}
-          >
-            📞 {t('call_helpline', language)} ({HELPLINE.DISASTER_CONTROL} / {HELPLINE.POLICE_EMERGENCY})
-          </a>
-        </div>
+        <label className="colony-select-wrap">
+          <span className="eyebrow">{language === 'hi' ? 'अपना क्षेत्र चुनें' : 'SELECT YOUR AREA'}</span>
+          <select value={colony.id} onChange={(event) => setSelectedColonyId(event.currentTarget.value)}>
+            {COLONIES.map((item) => (
+              <option key={item.id} value={item.id}>{language === 'hi' ? item.nameHi : item.name}</option>
+            ))}
+          </select>
+        </label>
       </div>
+
+      <div className="resident-card">
+        <section className={`resident-alert risk-${risk}`}>
+          <div className="resident-alert-top">
+            <span className="eyebrow">{language === 'hi' ? 'आपका इलाका' : 'YOUR AREA'}</span>
+            <span className={`risk-label risk-label-${risk}`}>
+              {risk === 'critical'
+                ? (language === 'hi' ? 'तत्काल कार्रवाई' : 'ACT NOW')
+                : risk === 'watch'
+                  ? (language === 'hi' ? 'नज़र रखें' : 'STAY ALERT')
+                  : (language === 'hi' ? 'अभी सुरक्षित' : 'CURRENTLY SAFE')}
+            </span>
+          </div>
+          <h2>{name}</h2>
+          <div className="resident-countdown">
+            <span>{t('time_to_water', language)}</span>
+            <strong>{formatTimeToWater(hours, language)}</strong>
+            <span>{language === 'hi' ? `अनुमानित जल स्तर ${colony.wetLevelM.toFixed(2)} m` : `Estimated water threshold ${colony.wetLevelM.toFixed(2)} m`}</span>
+          </div>
+          <div className="resident-level">
+            <span>{language === 'hi' ? 'वर्तमान रीप्ले स्तर' : 'REPLAY WATER LEVEL'}</span>
+            <strong>{stage.level.toFixed(2)} <small>m</small></strong>
+            <span>{language === 'hi' ? stage.label : stage.label}</span>
+          </div>
+        </section>
+
+        <section className="resident-instructions">
+          <div className="instruction-block">
+            <span className="instruction-number">01</span>
+            <div>
+              <span className="eyebrow">{t('safe_evac_route', language)}</span>
+              <strong>{language === 'hi' ? colony.routeHi : colony.route}</strong>
+              <span className="avoid-line">{language === 'hi' ? `इस सड़क से बचें: ${colony.avoidRoadHi}` : `Do not use: ${colony.avoidRoad}`}</span>
+            </div>
+          </div>
+          <div className="instruction-block">
+            <span className="instruction-number">02</span>
+            <div>
+              <span className="eyebrow">{t('shelter_destination', language)}</span>
+              <strong>{language === 'hi' ? colony.shelterHi : colony.shelter}</strong>
+              <span>{colony.freeBeds.toLocaleString('en-IN')} {t('free_beds', language)} · {language === 'hi' ? 'डेमो क्षमता' : 'sample capacity'}</span>
+            </div>
+          </div>
+          <div className="resident-actions">
+            <button className="button-primary resident-listen" onClick={listen} disabled={!('speechSynthesis' in window)}>
+              <span aria-hidden="true">◖</span>{t('listen_audio', language)}
+            </button>
+            <a className="button-secondary" href={`tel:${HELPLINE.DISASTER_CONTROL}`}>
+              {t('call_helpline', language)} <strong>{HELPLINE.DISASTER_CONTROL}</strong>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <p className="resident-note">
+            {language === 'hi'
+              ? 'यह 2023 बाढ़ पर आधारित डेमो रीप्ले है। यह लाइव चेतावनी या व्यक्तिगत निकासी आदेश नहीं है।'
+              : 'This is a demo replay based on the 2023 flood. It is not a live warning or a personal evacuation order.'}
+          </p>
+        </section>
+      </div>
+
+      <TimelineScrubber />
     </div>
   );
 };

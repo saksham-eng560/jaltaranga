@@ -1,22 +1,20 @@
 import React, { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
+import { COLONIES, REPLAY_STEPS, riskForColony } from '../shared/mockData';
 
 interface MapViewProps {
   onSelectColony?: (colonyId: string) => void;
   selectedColonyId?: string;
-  floodGeoJsonUrl?: string;
+  stageLevel?: number;
 }
 
-export const MapView: React.FC<MapViewProps> = ({
-  onSelectColony,
-  selectedColonyId,
-  floodGeoJsonUrl,
-}) => {
+export const MapView: React.FC<MapViewProps> = ({ onSelectColony, selectedColonyId, stageLevel }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const markersRef = useRef(new Map<string, maplibregl.Marker>());
 
   useEffect(() => {
-    if (!mapContainer.current || mapRef.current) return;
+    if (!mapContainer.current || mapRef.current) return undefined;
 
     const map = new maplibregl.Map({
       container: mapContainer.current,
@@ -37,17 +35,23 @@ export const MapView: React.FC<MapViewProps> = ({
             source: 'osm',
             minzoom: 0,
             maxzoom: 19,
+            paint: {
+              'raster-saturation': -1,
+              'raster-contrast': 0.12,
+              'raster-opacity': 0.82,
+            },
           },
         ],
       },
-      center: [77.245, 28.655], // Yamuna Corridor, Delhi
+      center: [77.245, 28.655],
       zoom: 12.5,
+      attributionControl: false,
     });
 
-    map.addControl(new maplibregl.NavigationControl(), 'top-right');
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
 
     map.on('load', () => {
-      // Add Yamuna River Line / Channel
       map.addSource('yamuna-channel', {
         type: 'geojson',
         data: {
@@ -73,52 +77,72 @@ export const MapView: React.FC<MapViewProps> = ({
       });
 
       map.addLayer({
+        id: 'yamuna-halo',
+        type: 'line',
+        source: 'yamuna-channel',
+        paint: {
+          'line-color': '#ffffff',
+          'line-width': 13,
+          'line-opacity': 0.85,
+        },
+      });
+      map.addLayer({
         id: 'yamuna-line',
         type: 'line',
         source: 'yamuna-channel',
         paint: {
-          'line-color': '#0284c7',
-          'line-width': 8,
-          'line-opacity': 0.8,
+          'line-color': '#171717',
+          'line-width': 5,
+          'line-opacity': 0.78,
         },
       });
 
-      // Add Sample Colony Markers
-      const colonies = [
-        { id: 'DEL-YP-04', name: 'Yamuna Pushta Sector C', coords: [77.245, 28.655], status: 'red' },
-        { id: 'DEL-MKT-01', name: 'Majnu ka Tilla', coords: [77.23, 28.7], status: 'amber' },
-        { id: 'DEL-MV-02', name: 'Mayur Vihar Ext Phase 1', coords: [77.295, 28.605], status: 'amber' },
-        { id: 'DEL-CP-01', name: 'Connaught Place', coords: [77.218, 28.632], status: 'green' },
-      ];
-
-      colonies.forEach((col) => {
-        const el = document.createElement('div');
-        el.style.width = '24px';
-        el.style.height = '24px';
-        el.style.borderRadius = '50%';
-        el.style.backgroundColor =
-          col.status === 'red' ? '#ef4444' : col.status === 'amber' ? '#f59e0b' : '#10b981';
-        el.style.border = '2px solid white';
-        el.style.cursor = 'pointer';
-        el.title = col.name;
-
-        el.addEventListener('click', () => {
-          if (onSelectColony) onSelectColony(col.id);
-        });
-
-        new maplibregl.Marker({ element: el })
-          .setLngLat(col.coords as [number, number])
+      for (const colony of COLONIES) {
+        const risk = riskForColony(stageLevel ?? REPLAY_STEPS[2].level, colony.wetLevelM);
+        const marker = document.createElement('button');
+        marker.type = 'button';
+        marker.className = `map-marker risk-${risk}${colony.id === selectedColonyId ? ' is-selected' : ''}`;
+        marker.setAttribute('aria-label', colony.name);
+        marker.title = colony.name;
+        marker.innerHTML = '<span></span>';
+        marker.addEventListener('click', () => onSelectColony?.(colony.id));
+        const mapMarker = new maplibregl.Marker({ element: marker, anchor: 'center' })
+          .setLngLat(colony.coordinates)
           .addTo(map);
-      });
+        markersRef.current.set(colony.id, mapMarker);
+      }
+
+      map.resize();
     });
 
     mapRef.current = map;
-
     return () => {
+      markersRef.current.clear();
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [onSelectColony]);
 
-  return <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />;
+  useEffect(() => {
+    const level = stageLevel ?? REPLAY_STEPS[2].level;
+    markersRef.current.forEach((marker, colonyId) => {
+      const colony = COLONIES.find((item) => item.id === colonyId);
+      if (!colony) return;
+      const element = marker.getElement();
+      element.classList.remove('risk-critical', 'risk-watch', 'risk-safe');
+      element.classList.add(`risk-${riskForColony(level, colony.wetLevelM)}`);
+    });
+  }, [stageLevel]);
+
+  useEffect(() => {
+    const selected = COLONIES.find((colony) => colony.id === selectedColonyId);
+    markersRef.current.forEach((marker, colonyId) => {
+      marker.getElement().classList.toggle('is-selected', colonyId === selectedColonyId);
+    });
+    if (selected && mapRef.current) {
+      mapRef.current.easeTo({ center: selected.coordinates, duration: 550 });
+    }
+  }, [selectedColonyId]);
+
+  return <div ref={mapContainer} className="maplibre-canvas" />;
 };
