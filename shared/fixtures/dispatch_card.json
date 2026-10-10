@@ -1,0 +1,35 @@
+{
+ "dispatch_id": "00000000-0000-4000-8000-000000000001",
+ "plan_ref": {
+  "scenario_id": "yamuna-2023-07",
+  "colony_id": "DEL-YP-04",
+  "computed_at": "2023-07-11T09:00:00+05:30"
+ },
+ "alert_type": "URGENT_EVACUATION_DISPATCH",
+ "message_hi": "चेतावनी: 2.5 घंटे में, यानी 11:36 तक, यमुना पुश्ता सेक्टर सी में पानी आने की आशंका है। बेला रोड 01:00 से बंद है, उधर न जाएं। तुरंत दरियागंज राहत शिविर जाएं (1200 जगह खाली)। पहले बुज़ुर्गों, गर्भवती महिलाओं और बच्चों को निकालें (310 बुज़ुर्ग)। मदद: 1077 या 112",
+ "message_en": "WARNING: Water is likely to reach Yamuna Pushta Sector C in about 2.5 hours, by 11:36. Bela Road is closed from 01:00; do not use it. Walk now to Daryaganj Relief Camp (1200 places free). Help the elderly, pregnant women and young children leave before others (310 elderly residents). Help: 1077 or 112",
+ "sms_hi": "यमुना पुश्ता सेक्टर सी: 2.5 घंटे में पानी। बेला रोड न जाएं। दरियागंज राहत शिविर जाएं। मदद 1077/112",
+ "audio_url_hi": null,
+ "validation": {
+  "passed": true,
+  "checks": [
+   "numbers_match",
+   "names_match",
+   "slots_used",
+   "phones_whitelist",
+   "length",
+   "script"
+  ],
+  "fallback_used": true,
+  "failed_checks": [],
+  "fallback_fields": [
+   "message_hi",
+   "message_en",
+   "sms_hi"
+  ],
+  "source": "template"
+ },
+ "status": "draft",
+ "approved_by": null,
+ "ts": "2023-07-11T09:02:00+05:30"
+}

@@ -1,0 +1,49 @@
+{
+ "scenario_id": "yamuna-2023-07",
+ "steps": [
+  {
+   "valid_at": "2023-07-11T03:00:00+05:30",
+   "trapped_population": 4200,
+   "colonies": [
+    "DEL-YP-04"
+   ],
+   "roads": [
+    "Bela Road"
+   ]
+  },
+  {
+   "valid_at": "2023-07-11T06:00:00+05:30",
+   "trapped_population": 4200,
+   "colonies": [
+    "DEL-YP-04"
+   ],
+   "roads": [
+    "Bela Road"
+   ]
+  },
+  {
+   "valid_at": "2023-07-11T09:00:00+05:30",
+   "trapped_population": 4200,
+   "colonies": [
+    "DEL-YP-04"
+   ],
+   "roads": [
+    "Bela Road"
+   ]
+  },
+  {
+   "valid_at": "2023-07-11T12:00:00+05:30",
+   "trapped_population": 0,
+   "colonies": [],
+   "roads": []
+  },
+  {
+   "valid_at": "2023-07-11T15:00:00+05:30",
+   "trapped_population": 0,
+   "colonies": [],
+   "roads": []
+  }
+ ],
+ "max_trapped_population": 4200,
+ "max_at": "2023-07-11T00:00:00+05:30"
+}

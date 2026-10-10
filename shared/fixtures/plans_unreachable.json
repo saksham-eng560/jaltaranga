@@ -1,0 +1,32 @@
+[
+ {
+  "colony_id": "DEL-YP-04",
+  "reason": "already_wet",
+  "population": 4200
+ },
+ {
+  "colony_id": "DEL-YBZ-10",
+  "reason": "already_wet",
+  "population": 2600
+ },
+ {
+  "colony_id": "DEL-MON-03",
+  "reason": "already_wet",
+  "population": 1800
+ },
+ {
+  "colony_id": "DEL-MKT-01",
+  "reason": "already_wet",
+  "population": 3100
+ },
+ {
+  "colony_id": "DEL-GRH-08",
+  "reason": "already_wet",
+  "population": 2200
+ },
+ {
+  "colony_id": "DEL-BLA-02",
+  "reason": "already_wet",
+  "population": 1200
+ }
+]

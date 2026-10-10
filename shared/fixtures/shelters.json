@@ -1,0 +1,122 @@
+[
+ {
+  "shelter_id": "SH-KG-01",
+  "name_en": "Kashmiri Gate Community Hall",
+  "name_hi": "कश्मीरी गेट सामुदायिक भवन",
+  "location": [
+   77.2255,
+   28.6665
+  ],
+  "ground_elev_m": null,
+  "capacity": 1200,
+  "occupied": 300,
+  "free_beds": 900,
+  "type": "community_hall",
+  "updated_at": "2023-07-09T00:00:00+05:30"
+ },
+ {
+  "shelter_id": "SH-CL-02",
+  "name_en": "Civil Lines Govt School",
+  "name_hi": "सिविल लाइंस सरकारी स्कूल",
+  "location": [
+   77.2205,
+   28.6815
+  ],
+  "ground_elev_m": null,
+  "capacity": 2000,
+  "occupied": 400,
+  "free_beds": 1600,
+  "type": "school",
+  "updated_at": "2023-07-09T00:00:00+05:30"
+ },
+ {
+  "shelter_id": "SH-DG-03",
+  "name_en": "Daryaganj Relief Camp",
+  "name_hi": "दरियागंज राहत शिविर",
+  "location": [
+   77.2325,
+   28.643
+  ],
+  "ground_elev_m": null,
+  "capacity": 1500,
+  "occupied": 300,
+  "free_beds": 1200,
+  "type": "relief_camp",
+  "updated_at": "2023-07-09T00:00:00+05:30"
+ },
+ {
+  "shelter_id": "SH-SH-04",
+  "name_en": "Shahdara Community Hall",
+  "name_hi": "शाहदरा सामुदायिक भवन",
+  "location": [
+   77.2925,
+   28.6735
+  ],
+  "ground_elev_m": null,
+  "capacity": 1800,
+  "occupied": 500,
+  "free_beds": 1300,
+  "type": "community_hall",
+  "updated_at": "2023-07-09T00:00:00+05:30"
+ },
+ {
+  "shelter_id": "SH-LN-05",
+  "name_en": "Laxmi Nagar School",
+  "name_hi": "लक्ष्मी नगर स्कूल",
+  "location": [
+   77.283,
+   28.6315
+  ],
+  "ground_elev_m": null,
+  "capacity": 1200,
+  "occupied": 400,
+  "free_beds": 800,
+  "type": "school",
+  "updated_at": "2023-07-09T00:00:00+05:30"
+ },
+ {
+  "shelter_id": "SH-BH-06",
+  "name_en": "Bhajanpura Relief Camp",
+  "name_hi": "भजनपुरा राहत शिविर",
+  "location": [
+   77.271,
+   28.7
+  ],
+  "ground_elev_m": null,
+  "capacity": 1500,
+  "occupied": 300,
+  "free_beds": 1200,
+  "type": "relief_camp",
+  "updated_at": "2023-07-09T00:00:00+05:30"
+ },
+ {
+  "shelter_id": "SH-TM-07",
+  "name_en": "Timarpur School",
+  "name_hi": "तिमारपुर स्कूल",
+  "location": [
+   77.2215,
+   28.7065
+  ],
+  "ground_elev_m": null,
+  "capacity": 1200,
+  "occupied": 300,
+  "free_beds": 900,
+  "type": "school",
+  "updated_at": "2023-07-09T00:00:00+05:30"
+ },
+ {
+  "shelter_id": "SH-PV-08",
+  "name_en": "Preet Vihar Medical Camp",
+  "name_hi": "प्रीत विहार चिकित्सा शिविर",
+  "location": [
+   77.302,
+   28.642
+  ],
+  "ground_elev_m": null,
+  "capacity": 400,
+  "occupied": 100,
+  "free_beds": 300,
+  "type": "medical",
+  "updated_at": "2023-07-09T00:00:00+05:30"
+ }
+]
