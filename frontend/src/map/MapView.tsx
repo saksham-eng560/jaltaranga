@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { COLONIES, REPLAY_STEPS, riskForColony } from '../shared/mockData';
 
 interface MapViewProps {
@@ -23,7 +24,9 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectColony, selectedColony
         sources: {
           osm: {
             type: 'raster',
-            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+            tiles: [
+              'https://tile.openstreetmap.de/{z}/{x}/{y}.png',
+            ],
             tileSize: 256,
             attribution: '© OpenStreetMap contributors',
           },
@@ -144,5 +147,5 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectColony, selectedColony
     }
   }, [selectedColonyId]);
 
-  return <div ref={mapContainer} className="maplibre-canvas" />;
+  return <div ref={mapContainer} className="maplibre-canvas" style={{ width: '100%', height: '100%' }} />;
 };
