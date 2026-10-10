@@ -1,0 +1,26 @@
+[
+  {
+    "colony_id": "DEL-YP-04",
+    "wet_at_level_m": 203.22,
+    "cutoff_at_level_m": 203.52,
+    "buffer_m": 150
+  },
+  {
+    "colony_id": "DEL-MKT-01",
+    "wet_at_level_m": 206.78,
+    "cutoff_at_level_m": 207.08,
+    "buffer_m": 150
+  },
+  {
+    "colony_id": "DEL-MV-02",
+    "wet_at_level_m": 208.93,
+    "cutoff_at_level_m": 209.23,
+    "buffer_m": 150
+  },
+  {
+    "colony_id": "DEL-CP-01",
+    "wet_at_level_m": 216.04,
+    "cutoff_at_level_m": 216.34,
+    "buffer_m": 150
+  }
+]

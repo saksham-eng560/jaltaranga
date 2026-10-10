@@ -1,0 +1,62 @@
+[
+  {
+    "scenario_id": "yamuna-2023-07",
+    "issued_at": "2023-07-12T18:00:00+05:30",
+    "station_id": "DELHI_RLY_BRIDGE",
+    "horizon_h": 1,
+    "valid_at": "2023-07-12T19:00:00+05:30",
+    "level_m": 207.972,
+    "lo_m": 207.321,
+    "hi_m": 208.623,
+    "coverage": 0.8,
+    "model": "lagreg-v1"
+  },
+  {
+    "scenario_id": "yamuna-2023-07",
+    "issued_at": "2023-07-12T18:00:00+05:30",
+    "station_id": "DELHI_RLY_BRIDGE",
+    "horizon_h": 3,
+    "valid_at": "2023-07-12T21:00:00+05:30",
+    "level_m": 208.116,
+    "lo_m": 207.396,
+    "hi_m": 208.836,
+    "coverage": 0.8,
+    "model": "lagreg-v1"
+  },
+  {
+    "scenario_id": "yamuna-2023-07",
+    "issued_at": "2023-07-12T18:00:00+05:30",
+    "station_id": "DELHI_RLY_BRIDGE",
+    "horizon_h": 6,
+    "valid_at": "2023-07-13T00:00:00+05:30",
+    "level_m": 208.044,
+    "lo_m": 207.202,
+    "hi_m": 208.886,
+    "coverage": 0.8,
+    "model": "lagreg-v1"
+  },
+  {
+    "scenario_id": "yamuna-2023-07",
+    "issued_at": "2023-07-12T18:00:00+05:30",
+    "station_id": "DELHI_RLY_BRIDGE",
+    "horizon_h": 12,
+    "valid_at": "2023-07-13T06:00:00+05:30",
+    "level_m": 208.132,
+    "lo_m": 207.601,
+    "hi_m": 208.663,
+    "coverage": 0.8,
+    "model": "lagreg-v1"
+  },
+  {
+    "scenario_id": "yamuna-2023-07",
+    "issued_at": "2023-07-12T18:00:00+05:30",
+    "station_id": "DELHI_RLY_BRIDGE",
+    "horizon_h": 24,
+    "valid_at": "2023-07-13T18:00:00+05:30",
+    "level_m": 207.999,
+    "lo_m": 207.338,
+    "hi_m": 208.66,
+    "coverage": 0.8,
+    "model": "lagreg-v1"
+  }
+]

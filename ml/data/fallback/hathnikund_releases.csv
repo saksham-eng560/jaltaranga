@@ -1,0 +1,12 @@
+timestamp,discharge_cumecs,source_ref
+2023-07-09T08:00:00+05:30,1250.0,irrigation_dept
+2023-07-10T12:00:00+05:30,4500.0,irrigation_dept
+2023-07-11T09:00:00+05:30,9090.0,press_3.21_lakh_cusecs
+2023-07-12T12:00:00+05:30,6200.0,irrigation_dept
+2023-07-13T10:00:00+05:30,4587.0,press_1.62_lakh_cusecs
+2023-07-14T12:00:00+05:30,2800.0,irrigation_dept
+2023-07-15T08:00:00+05:30,1500.0,irrigation_dept
+2023-07-20T08:00:00+05:30,1800.0,irrigation_dept
+2023-07-22T10:00:00+05:30,7500.0,press_2.65_lakh_cusecs
+2023-07-23T12:00:00+05:30,5100.0,irrigation_dept
+2023-07-24T08:00:00+05:30,3200.0,irrigation_dept

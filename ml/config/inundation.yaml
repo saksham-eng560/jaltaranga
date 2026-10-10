@@ -1,0 +1,19 @@
+domain:
+  bbox: [77.20, 28.53, 77.33, 28.75]
+  wazirabad_lat: 28.712
+  okhla_lat: 28.545
+calibration:
+  delta_range_m: [-3.0, 2.0]
+  delta_step_m: 0.25
+  slopes_m_per_km: [0.15, 0.20, 0.25, 0.30]
+  prior_delta_m: 0.0
+  prior_slope_m_per_km: 0.22
+ladder:
+  min_level_m: 204.0
+  max_level_m: 209.5
+  step_m: 0.1
+colony_thresholds:
+  buffer_m: 150
+  percentile: 10.0
+road_cutoffs:
+  depth_m: 0.30

@@ -1,0 +1,9 @@
+{
+  "level_m": 204.2,
+  "wet_colonies": [],
+  "cut_colonies": [],
+  "cut_edge_ids": [
+    "osm:201:202:0"
+  ],
+  "flood_geojson_url": "/models/inundation/v1/ladder/204.2.geojson"
+}
