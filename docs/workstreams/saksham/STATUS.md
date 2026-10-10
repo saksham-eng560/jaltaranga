@@ -53,23 +53,23 @@ So this branch also carries:
   rasters, forecasts and colony thresholds, so routing and alerts run end to end. Replace with the real artefacts by
   pointing `JT_LOCAL_DATA` at the data Shivansh and Vaibhav build. Nothing else changes.
 
-## Blocked: needs valid AWS credentials
+## Deployed (2026-10-10): stack `jt-demo`, ap-south-1, account 410133710130
 
-The container has `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` set, but AWS rejects them
-(`sts:GetCallerIdentity` returns `InvalidClientTokenId`). The steps below are scripted and ready. They cannot honestly be run or
-faked without a real account. Add valid keys in the environment settings (Network secrets / environment variables)
-and run, in order:
+| Step | Result |
+|---|---|
+| `make -C alerts probe` | **Failed.** Every Nova profile returns `AccessDeniedException: Your account is currently being verified`. Deployed with the template defaults (`us-east-1`, `us.amazon.nova-micro-v1:0`). Until verification clears, the drafter falls back per field to the templates (`fallback_used: true`). |
+| `sam build` + `sam deploy` | OK. Built without a container (local python3.12). API `https://qu36c9519d.execute-api.ap-south-1.amazonaws.com`, bucket `jt-demo-data-410133710130`, topic `jt-demo-dispatch` (email subscription confirmed). |
+| `make -C routing publish`, `make -C alerts publish` | OK, after `make -C routing demo-local`. Data is still the **dev world**. |
+| Extra (not in the scripts) | Uploaded `manifest.json`, `gauges.json` and `static/{colonies,shelters}.geojson`, because the API 404s without the manifest. Seeded `jt-demo-shelters` (8 rows) from `shelters.geojson`, because nothing seeds the table. |
+| Smoke test | `GET /shelters`, `/scenarios/yamuna-2023-07/{roads,plans,unreachable}` → 200. Draft for DEL-BLA-02 passed validation (6/6), approve → `sent`. Polly returned no `audio_url` (likely also blocked by verification). |
+| `make -C alerts halluc-live N=20` | **Not run:** Bedrock is blocked. |
 
-```bash
-make -C alerts probe                          # → JT_BEDROCK_REGION / JT_BEDROCK_MODEL_ID
-cd infra && sam build --use-container && sam deploy --guided --stack-name jt-demo \
-  --parameter-overrides Env=demo BedrockRegion=<probe> BedrockModelId=<probe> DispatchEmail=<team inbox> BudgetEmail=<you>
-make -C routing publish BUCKET=jt-demo-data-<acct> && make -C alerts publish BUCKET=jt-demo-data-<acct>
-make -C alerts halluc-live N=20               # records real Nova drafts into alerts/tests/recorded/
-```
+**Still to do once AWS finishes verifying the account:** re-run `make -C alerts probe`. If the probe picks a different
+profile, re-deploy with its `BedrockRegion`/`BedrockModelId`. Then run `make -C alerts halluc-live N=20` and check Polly audio on approve.
+Add the manifest, static and shelter-seeding steps to the publish targets so a fresh deploy does not need them by hand.
 
 When Shivansh's `pipeline/` and Vaibhav's `ml/` outputs exist, point `JT_LOCAL_DATA` at them and re-run
-`make -C routing precompute && make -C routing hero WRITE_MANIFEST=1 && make -C alerts predraft`.
+`make -C routing precompute && make -C routing hero WRITE_MANIFEST=1 && make -C alerts predraft`, then publish again.
 
 ## Deviations (declared)
 
