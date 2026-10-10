@@ -1,0 +1,31 @@
+name: routing-alerts (Saksham)
+
+on:
+  push:
+    paths: ["routing/**", "alerts/**", "shared/**", "conftest.py", "pytest.ini", ".github/workflows/routing-alerts.yml"]
+  pull_request:
+    paths: ["routing/**", "alerts/**", "shared/**", "conftest.py", "pytest.ini", ".github/workflows/routing-alerts.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ""        # prove the offline chain needs no credentials (SHARED §9.4)
+      AWS_SECRET_ACCESS_KEY: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r routing/requirements-offline.txt jsonschema ruff
+      - name: Lint
+        run: ruff check --select F,E9,B --ignore B905 --line-length 120 shared routing alerts conftest.py
+      - name: Schema drift
+        run: cd shared/py && python -m jt_shared.export_schemas >/dev/null && git diff --exit-code ../schemas
+      - name: Unit + integration tests (schemas, invariants, mutations, handlers)
+        run: pytest -q
+      - name: Offline chain (dev world → precompute → T_hero → predraft)
+        run: make -C routing demo-local JT_LOCAL_DATA=$PWD/data
+      - name: Hallucination replay (0 untraceable tokens)
+        run: make -C alerts halluc-eval JT_LOCAL_DATA=$PWD/data
