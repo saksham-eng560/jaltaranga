@@ -1,0 +1,8 @@
+# Offline precompute (laptop / CI). Lambda needs none of these.
+networkx>=3.4,<4
+numpy>=2.0,<3
+rasterio>=1.4,<2
+ortools==9.15.6755
+pydantic>=2.7,<3
+pytest>=8
+pyyaml>=6
