@@ -73,12 +73,16 @@
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: PATCH
             Path: "/shelters/{id}"
         Reports:
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: POST
             Path: "/reports"
       Tags: {project: jaltaranga, owner: saksham, env: !Ref Env}
@@ -160,24 +164,32 @@
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: POST
             Path: "/scenarios/{id}/colonies/{cid}/dispatch"
         Approve:
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: POST
             Path: "/dispatches/{dispatch_id}/approve"
         List:
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: GET
             Path: "/dispatches"
         Ack:
           Type: HttpApi
           Properties:
             ApiId: !Ref HttpApi
+            Auth:
+              Authorizer: AWS_IAM
             Method: POST
             Path: "/dispatches/{dispatch_id}/ack"
       Tags: {project: jaltaranga, owner: saksham, env: !Ref Env}

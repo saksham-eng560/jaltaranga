@@ -1,7 +1,5 @@
 """Tests for exact split-conformal calibration."""
 
-import pytest
-import numpy as np
 from jt_ml.models.conformal import SplitConformalCalibrator
 
 

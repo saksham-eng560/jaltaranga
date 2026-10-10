@@ -1,6 +1,5 @@
 """Tests for morphological onset reconstruction and monotonicity."""
 
-import pytest
 import numpy as np
 from jt_ml.inundation.grid import make_synthetic_grid
 from jt_ml.inundation.onset import compute_onset_raster, compute_cutoff_0p30_raster, depth_at_level
