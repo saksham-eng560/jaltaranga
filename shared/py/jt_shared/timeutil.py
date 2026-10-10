@@ -46,3 +46,12 @@ def snap_to_step(at: str | datetime, step_min: int = 60, start: str | datetime |
 
 def hours_between(a: datetime, b: datetime) -> float:
     return (b - a).total_seconds() / 3600.0
+
+
+# Names used by the ml/ workstream.
+def parse_iso(value: str | datetime) -> datetime:
+    return parse_ts(value)
+
+
+def format_iso(dt: datetime) -> str:
+    return iso(dt)

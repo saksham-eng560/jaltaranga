@@ -1,0 +1,14 @@
+{
+  "level_m": 207.6,
+  "wet_colonies": [
+    {
+      "colony_id": "DEL-YP-04",
+      "wet_at_level_m": 205.69
+    }
+  ],
+  "cut_colonies": [],
+  "cut_edge_ids": [
+    "osm:201:202:0"
+  ],
+  "flood_geojson_url": "/models/inundation/v1/ladder/207.6.geojson"
+}

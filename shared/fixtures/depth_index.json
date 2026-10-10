@@ -1,0 +1,38 @@
+[
+  {
+    "valid_at": "2023-07-12T12:00:00+05:30",
+    "tif": "/scenarios/yamuna-2023-07/depth/2023-07-12T12_00_00+05_30.tif",
+    "geojson": "/scenarios/yamuna-2023-07/depth/2023-07-12T12_00_00+05_30.geojson",
+    "level_m_ref": 207.54
+  },
+  {
+    "valid_at": "2023-07-12T18:00:00+05:30",
+    "tif": "/scenarios/yamuna-2023-07/depth/2023-07-12T18_00_00+05_30.tif",
+    "geojson": "/scenarios/yamuna-2023-07/depth/2023-07-12T18_00_00+05_30.geojson",
+    "level_m_ref": 207.81
+  },
+  {
+    "valid_at": "2023-07-13T00:00:00+05:30",
+    "tif": "/scenarios/yamuna-2023-07/depth/2023-07-13T00_00_00+05_30.tif",
+    "geojson": "/scenarios/yamuna-2023-07/depth/2023-07-13T00_00_00+05_30.geojson",
+    "level_m_ref": 207.81
+  },
+  {
+    "valid_at": "2023-07-13T06:00:00+05:30",
+    "tif": "/scenarios/yamuna-2023-07/depth/2023-07-13T06_00_00+05_30.tif",
+    "geojson": "/scenarios/yamuna-2023-07/depth/2023-07-13T06_00_00+05_30.geojson",
+    "level_m_ref": 207.81
+  },
+  {
+    "valid_at": "2023-07-13T10:00:00+05:30",
+    "tif": "/scenarios/yamuna-2023-07/depth/2023-07-13T10_00_00+05_30.tif",
+    "geojson": "/scenarios/yamuna-2023-07/depth/2023-07-13T10_00_00+05_30.geojson",
+    "level_m_ref": 208.53
+  },
+  {
+    "valid_at": "2023-07-13T18:00:00+05:30",
+    "tif": "/scenarios/yamuna-2023-07/depth/2023-07-13T18_00_00+05_30.tif",
+    "geojson": "/scenarios/yamuna-2023-07/depth/2023-07-13T18_00_00+05_30.geojson",
+    "level_m_ref": 208.66
+  }
+]

@@ -1,0 +1,14 @@
+splits:
+  dev:
+    description: "July 20-25 2023 recession/second pulse and historical sanity points (2013, 2019)"
+    start_ts: "2023-07-20T00:00:00+05:30"
+    end_ts: "2023-07-25T23:59:59+05:30"
+  test:
+    description: "July 9-18 2023 main flood pulse (unseen during development)"
+    start_ts: "2023-07-09T00:00:00+05:30"
+    end_ts: "2023-07-18T23:59:59+05:30"
+champion_rule:
+  target_horizon_h: 6
+  metric: "mae"
+  selection_split: "dev"
+  gat_must_beat_lagreg: true

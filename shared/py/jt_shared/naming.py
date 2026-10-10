@@ -56,3 +56,28 @@ def s3_key(kind: str, **parts: str | datetime) -> str:
 def url_key(key: str) -> str:
     """Encode a key for an HTTP path (`+05:30` → `%2B05%3A30`), keeping '/'."""
     return quote(key, safe="/")
+
+
+# Helpers used by the ml/ workstream. Keys keep the raw timestamp (same as s3_key); use url_key for HTTP paths.
+def forecast_key(scenario_id: str, issued_at: str | datetime) -> str:
+    return s3_key("forecasts", scenario_id=scenario_id, issued_at=issued_at)
+
+
+def depth_tif_key(scenario_id: str, valid_at: str | datetime) -> str:
+    return s3_key("depth_tif", scenario_id=scenario_id, valid_at=valid_at)
+
+
+def depth_geojson_key(scenario_id: str, valid_at: str | datetime) -> str:
+    return s3_key("depth_geojson", scenario_id=scenario_id, valid_at=valid_at)
+
+
+def depth_index_key(scenario_id: str) -> str:
+    return s3_key("depth_index", scenario_id=scenario_id)
+
+
+def ladder_geojson_key(level_m: float) -> str:
+    return f"models/inundation/v1/ladder/{level_m:.1f}.geojson"
+
+
+def whatif_json_key(level_m: float) -> str:
+    return f"models/inundation/v1/whatif/{level_m:.1f}.json"

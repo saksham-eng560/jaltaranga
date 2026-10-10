@@ -1,0 +1,7 @@
+{
+  "delta_m": 0.0,
+  "slope_m_per_km": 0.22,
+  "balanced_acc": 0.88,
+  "n_wet": 15,
+  "n_dry": 15
+}

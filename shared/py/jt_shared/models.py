@@ -303,6 +303,39 @@ class ApiError(Produced):
     error: Body
 
 
+# --- ml/ workstream (Vaibhav): depth index, what-if, model card -----------------------------------
+class DepthIndexEntry(Consumed):
+    valid_at: str
+    tif: str
+    geojson: str
+    level_m_ref: float
+
+
+class FloodResponse(Consumed):
+    valid_at: str | None = None
+    tif_url: str
+    geojson_url: str
+    level_m_ref: float
+
+
+class WhatIfResponse(Consumed):
+    level_m: float
+    wet_colonies: list[dict] = Field(default_factory=list)
+    cut_colonies: list[dict] = Field(default_factory=list)
+    cut_edge_ids: list[str] = Field(default_factory=list)
+    flood_geojson_url: str | None = None
+
+
+class ModelCard(Consumed):
+    name: str
+    version: str
+    champion: str
+    provenance: dict
+    splits: dict
+    metrics: dict
+    caveats: list[str]
+
+
 ALL_MODELS: dict[str, type[BaseModel]] = {
     "gauge_reading": GaugeReading,
     "forecast_node": ForecastNode,
