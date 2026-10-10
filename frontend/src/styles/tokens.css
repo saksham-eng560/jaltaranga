@@ -1,0 +1,52 @@
+:root {
+  font-family: Inter, "Noto Sans Devanagari", "Nirmala UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #203231;
+  background: #f2f3ef;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --ink: #203231;
+  --ink-2: #40514f;
+  --muted: #6e7c78;
+  --faint: #97a29d;
+  --line: #dde2dc;
+  --line-strong: #c9d2ca;
+  --paper: #fffefa;
+  --canvas: #f2f3ef;
+  --green: #167e66;
+  --green-dark: #123f3c;
+  --green-pale: #e3f0eb;
+  --teal: #75c7b2;
+  --amber: #ad7413;
+  --amber-pale: #fff2d5;
+  --red: #c0443e;
+  --red-pale: #fae6e2;
+  --blue: #367d9a;
+  --blue-pale: #e4f0f4;
+  --violet: #655e9d;
+  --violet-pale: #eeebf8;
+  --shadow: 0 3px 12px rgb(26 47 42 / 4%);
+  --shadow-lift: 0 12px 32px rgb(26 47 42 / 9%);
+  --radius: 14px;
+  --radius-sm: 9px;
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--canvas); }
+button, input, select, textarea { font: inherit; }
+button { color: inherit; }
+a { color: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid #287e9a; outline-offset: 3px; }
+::selection { color: #fff; background: #167e66; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+html.high-contrast {
+  --ink: #061b17; --ink-2: #132b26; --muted: #344b45; --faint: #52655f; --line: #7b8f86; --line-strong: #536a60;
+  --paper: #fff; --canvas: #f4f4f0; --green: #006548; --green-dark: #062f27; --green-pale: #d8eee4;
+  --amber: #754700; --amber-pale: #fff0bd; --red: #9c1717; --red-pale: #ffe0d7; --blue: #005678; --blue-pale: #deeff9;
+  --violet: #443779; --violet-pale: #e9e3fb;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

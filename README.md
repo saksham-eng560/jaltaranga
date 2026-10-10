@@ -1,37 +1,168 @@
 # Jaltaranga — Predict. Route. Protect.
 
-Flood evacuation intelligence for the Yamuna corridor in Delhi. Built by team **ChaapSeekers** (Arjav, Vaibhav, Shivansh, Saksham) for Bharat Builds Tour 2026 · WeMakeDevs × AWS Environmental Hacks (Track 02: Heat and Water).
+Jaltaranga is a replay-first flood evacuation decision-support project for the
+Yamuna floodplain in Delhi. It turns river-level observations and forecasts
+into street-level flood exposure, safer walking routes to available shelters,
+and validated public dispatches. The project was built by team ChaapSeekers
+for Bharat Builds Tour 2026, WeMakeDevs × AWS Environmental Hacks (Track 02:
+Heat and Water).
 
-| Doc | What it is |
+The primary demonstration replays the July 2023 Yamuna flood on a simulated
+clock. Local fixture mode is available without AWS credentials or a running
+backend.
+
+## Project at a glance
+
+The system is composed of offline data and decision pipelines, an optional
+AWS-hosted API, and a progressive web frontend:
+
+1. **Prepare data:** `pipeline/` builds and records provenance for corridor
+   geography, elevation, gauge, rainfall, infrastructure, and replay inputs.
+2. **Forecast and map flooding:** `ml/` generates gauge forecasts, uncertainty
+   intervals, flood surfaces, and colony-level wet/cutoff thresholds.
+3. **Route and alert:** `routing/` estimates road closures, computes safe
+   evacuation plans, and assigns shelter capacity. `alerts/` prepares
+   code-grounded Hindi/English dispatches and validates them before approval.
+4. **Inform residents and officers:** `frontend/` presents live or replay
+   operations, a map, plans, dispatch review, reports, comparisons, and
+   offline Colony Packs.
+
+Every stage has a local-fixture or degraded mode. The LLM does not provide
+operational facts: names, numbers, times, routes, and helplines are supplied
+and checked by code. Only the approved helplines 1077 and 112 are used.
+
+## Repository layout
+
+| Path | Purpose |
 |---|---|
-| [`PROJECT_SUMMARY.md`](PROJECT_SUMMARY.md) | Enhanced overview, architecture, owners, timeline, risks, metrics |
-| [`SHARED_RESOURCES.md`](SHARED_RESOURCES.md) | Contracts every workstream builds against: schemas, API, S3, AWS naming |
-| [`INTEGRATION_PLAN.md`](INTEGRATION_PLAN.md) | Merge order, integration tests, deployment, demo-video script |
+| `frontend/` | React, TypeScript, Vite and MapLibre PWA; officer and resident views |
+| `pipeline/` | Geospatial/data ingestion, embankment-aware DTM, provenance ledger, infrastructure exposure, scenario replay |
+| `ml/` | Forecasting, uncertainty, flood inundation and what-if outputs/API |
+| `routing/` | Road status, time-dependent evacuation routes, shelter assignment and safety invariants |
+| `alerts/` | Dispatch lifecycle, fact-slot rendering, validation, optional Bedrock/Polly/SNS integrations |
+| `shared/` | Canonical Python contracts, JSON Schemas, and test fixtures |
+| `data/` | Bunds, corridor inputs, scenarios, published exclusions, and sample outputs |
+| `infra/` | AWS SAM templates, component sections, and deployment scripts |
+| `tests/` | Repository-level and pipeline integration tests |
+| `docs/` | Workstream plans, handoffs, integration guidance, and project documentation |
+| `PROJECT_SUMMARY.md` | Product scope, architecture, roles, and feature overview |
+| `SHARED_RESOURCES.md` | Canonical data/API contracts and shared project assumptions |
+| `INTEGRATION_PLAN.md` | Integration, validation, and deployment guidance |
 
-Workstream plans and quality reviews are grouped by owner under `docs/workstreams/<owner>/`. The separate folders let all four workstreams merge without overwriting one another.
+## Run the frontend locally
 
-## Routing & Alerting (Saksham)
-
-| Path | What |
-|---|---|
-| [`routing/`](routing/README.md) | Road cutoffs (red/amber), time-dependent safe walking routes, capacity-aware shelter assignment (greedy + OR-Tools), avoid list + "death-trap" counterfactual, `T_hero` |
-| [`alerts/`](alerts/README.md) | Slot-filled Bedrock Nova dispatch ("the LLM never types a fact"), 6-check validator, templates, Polly Kajal, SNS, dispatch log |
-| `shared/py/jt_shared`, `shared/schemas`, `shared/fixtures` | Contract package (pydantic models for SHARED §5/§11), exported JSON Schemas, fixtures from the real writers |
-| [`ml/`](ml/) | Forecast and inundation generation, precomputed artifacts, and the read-only `/models/card`, `/forecast`, `/flood`, and `/whatif` Lambda API |
-| `infra/sections/*.yaml` | Append-only SAM blocks for routing, alerts, and ML Lambdas |
-| [`docs/workstreams/saksham/STATUS.md`](docs/workstreams/saksham/STATUS.md) | What is built and tested vs the plan, and what still needs AWS |
+Requirements: Node.js (see `frontend/package.json`) and npm.
 
 ```bash
-pip install -r routing/requirements-offline.txt jsonschema
-pip install -e "ml[dev]" boto3
-pytest                              # routing, alerts, ML, handler and schema tests
-make -C routing demo-local          # synthetic dev world → precompute → T_hero → predraft, offline, ~25 s
+cd frontend
+npm ci
+npm run dev
 ```
 
-The ML artifact publisher defaults to a dry run and preserves `ml/out/` paths in the private data bucket. Pass
-`--apply` to upload; it does not delete existing objects:
+Open the local URL printed by Vite (normally `http://localhost:5173`). The
+included July 2023 fixtures let you explore the blue-and-white operations
+console, historical replay, map and route views, dispatch preview, reports,
+comparison, and saved Colony Pack without a backend. Live API and basemap
+configuration are optional; map data falls back to the selected plan geometry.
+
+To build and test the frontend:
 
 ```bash
-python3.12 ml/scripts/publish_artifacts.py --bucket <data-bucket>
-python3.12 ml/scripts/publish_artifacts.py --bucket <data-bucket> --apply
+cd frontend
+npm run build
+npm test
+npm run e2e
 ```
+
+The end-to-end command uses Playwright and may require its browser binaries to
+be installed in the development environment.
+
+## Run the offline Python workflows
+
+Python components document their own supported versions and optional
+dependencies. In particular, routing, alerts, and the shared package require
+Python 3.12 or newer; the ML package supports Python 3.11 or newer. Use a
+virtual environment and install only the component dependencies needed:
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r routing/requirements-offline.txt
+python -m pip install jsonschema
+```
+
+Run the synthetic routing demonstration (offline, no AWS credentials):
+
+```bash
+make -C routing demo-local
+```
+
+Run focused component tests:
+
+```bash
+make -C routing test
+make -C alerts test
+python -m pytest tests pipeline
+```
+
+Additional workflows and dependency setup are documented in
+[`pipeline/README.md`](pipeline/README.md),
+[`routing/README.md`](routing/README.md), and
+[`alerts/README.md`](alerts/README.md). The ML package defines its optional
+development dependencies in `ml/pyproject.toml`.
+
+To build a scenario from local/cached inputs, use the pipeline's documented
+entry points and set `JT_LOCAL_DATA` to the local artefact root when chaining
+pipeline, ML, routing, and alerts. A typical full replay chain is:
+
+```bash
+make -C pipeline scenario SCENARIO=yamuna-2023-07
+make -C ml replay-local SCENARIO=yamuna-2023-07
+make -C routing precompute SCENARIO=yamuna-2023-07
+make -C alerts predraft
+```
+
+Some targets and datasets depend on optional geospatial libraries and local
+source data. Check each component README and target help before running a
+pipeline that downloads external datasets.
+
+## Configuration and deployment
+
+Local fixture mode is the recommended first run. Live backend configuration
+is supplied through frontend build-time variables; see
+[`frontend/README.md`](frontend/README.md) and
+`frontend/.env.example`. Never commit credentials or production secrets.
+
+The AWS architecture and resource naming conventions are in
+[`SHARED_RESOURCES.md`](SHARED_RESOURCES.md); deployment and integration gates
+are in [`INTEGRATION_PLAN.md`](INTEGRATION_PLAN.md) and `infra/`. Cloud
+deployment, Bedrock, Polly, SNS delivery, and publishing artefacts require
+appropriate AWS configuration and permissions and are not necessary to run
+the local demo.
+
+## Operational safety and limitations
+
+- This is a prototype and decision-support tool, not an official warning
+  system or a substitute for local authorities and emergency services.
+- Fixture and synthetic results must be visibly treated as such; do not
+  present them as live measurements or validated forecasts.
+- Flood depths, DEM calibration, road connectivity, shelter capacity, and
+  forecast quality depend on source data and must be independently validated
+  before operational use.
+- The historical replay is simulated. Live mode requires correctly configured
+  and validated data services.
+- Dispatches are drafts until reviewed and approved by an authorized operator.
+- The system uses 1077 (district disaster control) and 112 (emergency) as its
+  helplines. Follow current official guidance in an actual emergency.
+
+## Further reading
+
+- [`PROJECT_SUMMARY.md`](PROJECT_SUMMARY.md) — features and system architecture
+- [`SHARED_RESOURCES.md`](SHARED_RESOURCES.md) — canonical contracts, schemas,
+  conventions, and assumptions
+- [`INTEGRATION_PLAN.md`](INTEGRATION_PLAN.md) — integration and validation
+  strategy
+- [`frontend/README.md`](frontend/README.md) — frontend configuration and use
+- [`pipeline/README.md`](pipeline/README.md) — data pipeline modules
+- [`routing/README.md`](routing/README.md) — routing inputs, outputs, and safety
+- [`alerts/README.md`](alerts/README.md) — dispatch validation and integrations
