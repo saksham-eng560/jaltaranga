@@ -114,17 +114,16 @@
           "type": "string"
         },
         "route_geojson": {
-          "additionalProperties": true,
           "title": "Route Geojson",
           "type": "object"
         },
         "distance_m": {
-          "minimum": 0,
+          "minimum": 0.0,
           "title": "Distance M",
           "type": "number"
         },
         "walk_min": {
-          "minimum": 0,
+          "minimum": 0.0,
           "title": "Walk Min",
           "type": "number"
         },
@@ -143,7 +142,7 @@
           "type": "array"
         },
         "max_depth_m": {
-          "minimum": 0,
+          "minimum": 0.0,
           "title": "Max Depth M",
           "type": "number"
         }
@@ -235,8 +234,8 @@
       "type": "array"
     },
     "priority": {
-      "maximum": 1,
-      "minimum": 0,
+      "maximum": 1.0,
+      "minimum": 0.0,
       "title": "Priority",
       "type": "number"
     },

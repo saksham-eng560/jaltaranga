@@ -16,7 +16,7 @@
       "type": "string"
     },
     "depth_m": {
-      "minimum": 0,
+      "minimum": 0.0,
       "title": "Depth M",
       "type": "number"
     },

@@ -159,7 +159,6 @@
     "context": {
       "anyOf": [
         {
-          "additionalProperties": true,
           "type": "object"
         },
         {
@@ -171,7 +170,6 @@
     },
     "sources": {
       "items": {
-        "additionalProperties": true,
         "type": "object"
       },
       "title": "Sources",

@@ -59,8 +59,8 @@
       "type": "string"
     },
     "trust": {
-      "maximum": 1,
-      "minimum": 0,
+      "maximum": 1.0,
+      "minimum": 0.0,
       "title": "Trust",
       "type": "number"
     },

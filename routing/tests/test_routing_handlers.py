@@ -20,7 +20,7 @@ def call(*a, **k):
 
 
 def test_plans_and_roads(world):
-    m = json.loads((Path(world["data"]) / "scenarios/yamuna-2023-07/manifest.json").read_text())
+    m = json.loads((Path(world["data"]) / "scenarios/yamuna-2023-07/manifest.json").read_text(encoding="utf-8"))
     s, plans, h = call("GET", "/scenarios/yamuna-2023-07/plans", {"at": m["default_at"].replace("+", " ")})
     assert s == 200 and plans and h["Access-Control-Allow-Origin"]
     assert plans[0]["priority"] >= plans[-1]["priority"]

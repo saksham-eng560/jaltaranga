@@ -12,6 +12,13 @@ class NotFound(KeyError):
     pass
 
 
+def _safe_fs_key(key: str) -> str:
+    if os.name == "nt":
+        # Windows filesystem forbids ':' in filenames; sanitize key components for local filesystem
+        return key.replace(":", "_")
+    return key
+
+
 def local_root() -> Path | None:
     root = os.environ.get("JT_LOCAL_DATA")
     return Path(root) if root else None
@@ -37,14 +44,23 @@ def local_path(key: str) -> Path:
     root = local_root()
     if root is None:
         raise RuntimeError("JT_LOCAL_DATA is not set")
-    return root / key
+    safe_p = root / _safe_fs_key(key)
+    if safe_p.exists():
+        return safe_p
+    orig_p = root / key
+    if orig_p.exists():
+        return orig_p
+    return safe_p
 
 
 def read_bytes(key: str) -> bytes:
     root = local_root()
     if root is not None:
-        p = root / key
+        p = root / _safe_fs_key(key)
         if not p.exists():
+            p_orig = root / key
+            if p_orig.exists():
+                return p_orig.read_bytes()
             raise NotFound(key)
         return p.read_bytes()
     b = bucket()
@@ -65,7 +81,7 @@ def read_bytes(key: str) -> bytes:
 def write_bytes(key: str, data: bytes, content_type: str = "application/octet-stream") -> None:
     root = local_root()
     if root is not None:
-        p = root / key
+        p = root / _safe_fs_key(key)
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_bytes(data)
         return

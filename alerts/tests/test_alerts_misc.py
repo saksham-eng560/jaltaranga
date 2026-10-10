@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -46,10 +47,14 @@ def test_predraft_cards_valid(world):
 
 
 def test_halluc_eval_replay_has_zero_untraceable_tokens(world):
-    script = Path(__file__).resolve().parents[1] / "scripts" / "halluc_eval.py"
     root = Path(__file__).resolve().parents[2]
-    env = {"JT_LOCAL_DATA": str(io.local_root()), "PATH": "/usr/bin:/bin",
-           "PYTHONPATH": ":".join(str(root / p) for p in ("shared/py", "routing", "alerts"))}
+    script = Path(__file__).resolve().parents[1] / "scripts" / "halluc_eval.py"
+    env = dict(os.environ)
+    env["JT_LOCAL_DATA"] = str(io.local_root())
+    extra_pythonpath = [str(root / p) for p in ("shared/py", "routing", "alerts")]
+    if "PYTHONPATH" in os.environ:
+        extra_pythonpath.append(os.environ["PYTHONPATH"])
+    env["PYTHONPATH"] = os.pathsep.join(extra_pythonpath)
     out = subprocess.run([sys.executable, str(script), "-n", "20"], capture_output=True, text=True, env=env)
     assert out.returncode == 0, out.stderr
     rep = json.loads(out.stdout)
