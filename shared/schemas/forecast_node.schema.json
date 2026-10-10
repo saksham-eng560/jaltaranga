@@ -1,0 +1,63 @@
+{
+  "properties": {
+    "scenario_id": {
+      "title": "Scenario Id",
+      "type": "string"
+    },
+    "issued_at": {
+      "format": "date-time",
+      "pattern": "\\+05:30$",
+      "title": "Issued At",
+      "type": "string"
+    },
+    "station_id": {
+      "title": "Station Id",
+      "type": "string"
+    },
+    "horizon_h": {
+      "title": "Horizon H",
+      "type": "integer"
+    },
+    "valid_at": {
+      "format": "date-time",
+      "pattern": "\\+05:30$",
+      "title": "Valid At",
+      "type": "string"
+    },
+    "level_m": {
+      "title": "Level M",
+      "type": "number"
+    },
+    "lo_m": {
+      "title": "Lo M",
+      "type": "number"
+    },
+    "hi_m": {
+      "title": "Hi M",
+      "type": "number"
+    },
+    "coverage": {
+      "default": 0.8,
+      "title": "Coverage",
+      "type": "number"
+    },
+    "model": {
+      "title": "Model",
+      "type": "string"
+    }
+  },
+  "required": [
+    "scenario_id",
+    "issued_at",
+    "station_id",
+    "horizon_h",
+    "valid_at",
+    "level_m",
+    "lo_m",
+    "hi_m",
+    "model"
+  ],
+  "title": "ForecastNode",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/forecast_node.schema.json"
+}

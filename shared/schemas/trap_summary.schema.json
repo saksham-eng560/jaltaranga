@@ -1,0 +1,81 @@
+{
+  "$defs": {
+    "TrapStep": {
+      "additionalProperties": false,
+      "properties": {
+        "valid_at": {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "title": "Valid At",
+          "type": "string"
+        },
+        "trapped_population": {
+          "title": "Trapped Population",
+          "type": "integer"
+        },
+        "colonies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Colonies",
+          "type": "array"
+        },
+        "roads": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Roads",
+          "type": "array"
+        }
+      },
+      "required": [
+        "valid_at",
+        "trapped_population",
+        "colonies",
+        "roads"
+      ],
+      "title": "TrapStep",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "scenario_id": {
+      "title": "Scenario Id",
+      "type": "string"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/TrapStep"
+      },
+      "title": "Steps",
+      "type": "array"
+    },
+    "max_trapped_population": {
+      "title": "Max Trapped Population",
+      "type": "integer"
+    },
+    "max_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Max At"
+    }
+  },
+  "required": [
+    "scenario_id",
+    "steps",
+    "max_trapped_population"
+  ],
+  "title": "TrapSummary",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/trap_summary.schema.json"
+}

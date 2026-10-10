@@ -1,0 +1,31 @@
+{
+  "properties": {
+    "valid_at": {
+      "format": "date-time",
+      "pattern": "\\+05:30$",
+      "title": "Valid At",
+      "type": "string"
+    },
+    "tif": {
+      "title": "Tif",
+      "type": "string"
+    },
+    "geojson": {
+      "title": "Geojson",
+      "type": "string"
+    },
+    "level_m_ref": {
+      "title": "Level M Ref",
+      "type": "number"
+    }
+  },
+  "required": [
+    "valid_at",
+    "tif",
+    "geojson",
+    "level_m_ref"
+  ],
+  "title": "FloodIndexEntry",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/flood_index_entry.schema.json"
+}

@@ -1,0 +1,16 @@
+[project]
+name = "jt_shared"
+version = "1.2.0"
+description = "Jaltaranga shared contracts: constants, pydantic models, naming, time and IO helpers (SHARED_RESOURCES v1.2)"
+requires-python = ">=3.12"
+dependencies = ["pydantic>=2.7,<3"]
+
+[project.optional-dependencies]
+aws = ["boto3>=1.34"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["jt_shared"]

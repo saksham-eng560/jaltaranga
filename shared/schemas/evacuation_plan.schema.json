@@ -1,0 +1,267 @@
+{
+  "$defs": {
+    "AvoidEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "name_en": {
+          "title": "Name En",
+          "type": "string"
+        },
+        "name_hi": {
+          "title": "Name Hi",
+          "type": "string"
+        },
+        "cutoff_at": {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "title": "Cutoff At",
+          "type": "string"
+        },
+        "edge_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Edge Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name_en",
+        "name_hi",
+        "cutoff_at"
+      ],
+      "title": "AvoidEntry",
+      "type": "object"
+    },
+    "PlanExt": {
+      "additionalProperties": false,
+      "description": "Optional additive block (Saksham plan §11 ask (b)); null when unused.",
+      "properties": {
+        "walk_speed_kmh": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Walk Speed Kmh"
+        },
+        "transport_needed": {
+          "default": false,
+          "title": "Transport Needed",
+          "type": "boolean"
+        },
+        "replanned_due_to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replanned Due To"
+        },
+        "origin_offset_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Origin Offset M"
+        },
+        "assigned_people": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assigned People"
+        },
+        "demand_people": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Demand People"
+        }
+      },
+      "title": "PlanExt",
+      "type": "object"
+    },
+    "RouteOption": {
+      "additionalProperties": false,
+      "properties": {
+        "shelter_id": {
+          "title": "Shelter Id",
+          "type": "string"
+        },
+        "route_geojson": {
+          "additionalProperties": true,
+          "title": "Route Geojson",
+          "type": "object"
+        },
+        "distance_m": {
+          "minimum": 0,
+          "title": "Distance M",
+          "type": "number"
+        },
+        "walk_min": {
+          "minimum": 0,
+          "title": "Walk Min",
+          "type": "number"
+        },
+        "via_names_en": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Via Names En",
+          "type": "array"
+        },
+        "via_names_hi": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Via Names Hi",
+          "type": "array"
+        },
+        "max_depth_m": {
+          "minimum": 0,
+          "title": "Max Depth M",
+          "type": "number"
+        }
+      },
+      "required": [
+        "shelter_id",
+        "route_geojson",
+        "distance_m",
+        "walk_min",
+        "max_depth_m"
+      ],
+      "title": "RouteOption",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "scenario_id": {
+      "title": "Scenario Id",
+      "type": "string"
+    },
+    "colony_id": {
+      "title": "Colony Id",
+      "type": "string"
+    },
+    "computed_at": {
+      "format": "date-time",
+      "pattern": "\\+05:30$",
+      "title": "Computed At",
+      "type": "string"
+    },
+    "t_submersion": {
+      "format": "date-time",
+      "pattern": "\\+05:30$",
+      "title": "T Submersion",
+      "type": "string"
+    },
+    "t_submersion_earliest": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "T Submersion Earliest"
+    },
+    "t_submersion_latest": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "pattern": "\\+05:30$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "T Submersion Latest"
+    },
+    "lead_time_h": {
+      "title": "Lead Time H",
+      "type": "number"
+    },
+    "primary": {
+      "$ref": "#/$defs/RouteOption"
+    },
+    "backup": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RouteOption"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "avoid": {
+      "items": {
+        "$ref": "#/$defs/AvoidEntry"
+      },
+      "title": "Avoid",
+      "type": "array"
+    },
+    "priority": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Priority",
+      "type": "number"
+    },
+    "ext": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PlanExt"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "scenario_id",
+    "colony_id",
+    "computed_at",
+    "t_submersion",
+    "lead_time_h",
+    "primary",
+    "priority"
+  ],
+  "title": "EvacuationPlan",
+  "type": "object",
+  "$id": "https://jaltaranga.dev/schemas/evacuation_plan.schema.json"
+}

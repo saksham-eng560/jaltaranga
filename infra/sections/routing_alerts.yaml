@@ -1,0 +1,194 @@
+# --- routing/alerts (Saksham) -----------------------------------------------------------------
+# Append-only section for infra/template.yaml (SHARED §4, INTEGRATION_PLAN §1 rules).
+# Shivansh owns the template and merges this block under `Resources:`.
+#
+# Expects these from the shared template (rename here if the logical IDs differ):
+#   Parameters: Env (dev|demo), BedrockRegion, BedrockModelId, CorsOrigin
+#   Resources:  DataBucket (S3), HttpApi (AWS::Serverless::HttpApi), DispatchTopic (SNS),
+#               SheltersTable, DispatchesTable, ReportsTable, ScenarioStateTable (DynamoDB),
+#               JtSharedLayer (jt_shared + pydantic, python3.12 arm64)
+# Powertools is not required: handlers use jt_shared.http and EMF metrics directly.
+
+  RoutingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub jt-${Env}-routing-fn
+      CodeUri: ../routing/
+      Handler: handlers.api.handler
+      Runtime: python3.12
+      Architectures: [arm64]
+      MemorySize: 512
+      Timeout: 10
+      Layers: [!Ref JtSharedLayer]
+      LoggingConfig: {LogFormat: JSON}
+      Environment:
+        Variables:
+          JT_ENV: !Ref Env
+          JT_DATA_BUCKET: !Ref DataBucket
+          JT_SHELTERS_TABLE: !Ref SheltersTable
+          JT_REPORTS_TABLE: !Ref ReportsTable
+          JT_CORS_ORIGIN: !Ref CorsOrigin
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: s3:GetObject
+              Resource:
+                - !Sub arn:aws:s3:::${DataBucket}/scenarios/*
+                - !Sub arn:aws:s3:::${DataBucket}/static/*
+            - Effect: Allow
+              Action: s3:PutObject
+              Resource: !Sub arn:aws:s3:::${DataBucket}/uploads/reports/*
+            - Effect: Allow
+              Action: [dynamodb:GetItem, dynamodb:Scan, dynamodb:UpdateItem]
+              Resource: !GetAtt SheltersTable.Arn
+            - Effect: Allow
+              Action: dynamodb:PutItem
+              Resource: !GetAtt ReportsTable.Arn
+      Events:
+        Roads:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: "/scenarios/{id}/roads"
+        Plans:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: "/scenarios/{id}/plans"
+        Unreachable:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: "/scenarios/{id}/unreachable"
+        Shelters:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: "/shelters"
+        ShelterPatch:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: PATCH
+            Path: "/shelters/{id}"
+        Reports:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: POST
+            Path: "/reports"
+      Tags: {project: jaltaranga, owner: saksham, env: !Ref Env}
+
+  RoutingLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/jt-${Env}-routing-fn
+      RetentionInDays: 7
+
+  AlertsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub jt-${Env}-alerts-fn
+      CodeUri: ../alerts/
+      Handler: handlers.api.handler
+      Runtime: python3.12
+      Architectures: [arm64]
+      MemorySize: 512
+      Timeout: 25            # under the 30 s HTTP API limit; the draft itself has an 18 s budget
+      Layers: [!Ref JtSharedLayer]
+      LoggingConfig: {LogFormat: JSON}
+      Environment:
+        Variables:
+          JT_ENV: !Ref Env
+          JT_DATA_BUCKET: !Ref DataBucket
+          JT_BEDROCK_REGION: !Ref BedrockRegion
+          JT_BEDROCK_MODEL_ID: !Ref BedrockModelId
+          JT_BEDROCK_DISABLED: "0"      # kill switch → template-only
+          JT_SNS_TOPIC_ARN: !Ref DispatchTopic
+          JT_POLLY_VOICE: Kajal
+          JT_POLLY_REGION: ap-south-1
+          JT_DISPATCHES_TABLE: !Ref DispatchesTable
+          JT_STATE_TABLE: !Ref ScenarioStateTable
+          JT_DRAFT_DEADLINE_S: "18"
+          JT_CORS_ORIGIN: !Ref CorsOrigin
+      Policies:
+        - Statement:
+            # Bedrock through a (global or geo) inference profile: SHARED §11.8-11, documented 3-statement form.
+            - Effect: Allow
+              Action: bedrock:InvokeModel
+              Resource: !Sub arn:aws:bedrock:${BedrockRegion}:${AWS::AccountId}:inference-profile/${BedrockModelId}
+            - Effect: Allow
+              Action: bedrock:InvokeModel
+              Resource: arn:aws:bedrock:*::foundation-model/amazon.nova-*
+              Condition:
+                StringLike:
+                  bedrock:InferenceProfileArn: !Sub arn:aws:bedrock:${BedrockRegion}:${AWS::AccountId}:inference-profile/${BedrockModelId}
+            - Effect: Allow
+              Action: bedrock:InvokeModel
+              Resource: arn:aws:bedrock:::foundation-model/amazon.nova-*
+              Condition:
+                StringEquals: {aws:RequestedRegion: unspecified}
+                StringLike:
+                  bedrock:InferenceProfileArn: !Sub arn:aws:bedrock:${BedrockRegion}:${AWS::AccountId}:inference-profile/${BedrockModelId}
+            - Effect: Allow
+              Action: polly:SynthesizeSpeech
+              Resource: "*"
+            - Effect: Allow
+              Action: s3:GetObject
+              Resource:
+                - !Sub arn:aws:s3:::${DataBucket}/scenarios/*
+                - !Sub arn:aws:s3:::${DataBucket}/static/*
+            - Effect: Allow
+              Action: [s3:GetObject, s3:PutObject]
+              Resource: !Sub arn:aws:s3:::${DataBucket}/audio/*
+            - Effect: Allow
+              Action: s3:ListBucket       # so a missing audio key is a 404 (not 403) on head_object
+              Resource: !Sub arn:aws:s3:::${DataBucket}
+              Condition: {StringLike: {s3:prefix: ["audio/*"]}}
+            - Effect: Allow
+              Action: sns:Publish
+              Resource: !Ref DispatchTopic
+            - Effect: Allow
+              Action: [dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:Scan]
+              Resource: [!GetAtt DispatchesTable.Arn, !GetAtt ScenarioStateTable.Arn]
+      Events:
+        Draft:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: POST
+            Path: "/scenarios/{id}/colonies/{cid}/dispatch"
+        Approve:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: POST
+            Path: "/dispatches/{dispatch_id}/approve"
+        List:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: "/dispatches"
+        Ack:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: POST
+            Path: "/dispatches/{dispatch_id}/ack"
+      Tags: {project: jaltaranga, owner: saksham, env: !Ref Env}
+
+  AlertsLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/jt-${Env}-alerts-fn
+      RetentionInDays: 7
+
+# Outputs (added by build_template.py):
+#   RoutingFunctionName: !Ref RoutingFunction
+#   AlertsFunctionName:  !Ref AlertsFunction
+# --- end routing/alerts (Saksham) -------------------------------------------------------------
