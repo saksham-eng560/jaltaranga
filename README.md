@@ -40,11 +40,12 @@ Current disaster systems suffer from three critical architectural flaws:
 
 Jaltaranga is an end-to-end, hydrology-aware decision-support platform designed for extreme riverine flooding:
 
-- **Hyperlocal Inundation Forecasting:** Translates upstream barrage release telemetry (Hathnikund) and CWC gauge readings into street-level submersion timestamps ($t_{\text{submersion}}$) with quantified uncertainty bounds.
+- **Hyperlocal Inundation Forecasting:** Translates upstream barrage release telemetry and river gauge readings into street-level submersion timestamps ($t_{\text{submersion}}$) with quantified uncertainty bounds.
 - **Dynamic Inundation-Penalized Routing:** A time-dependent topological router running over OpenStreetMap graph topology that computes primary and backup evacuation routes, penalizing submerged and rising road edges.
 - **Counterfactual Flood-Blind Safety Validation:** Quantifies the exact population that would have been trapped by naive shortest-path routing (over 15,100 people during peak July 2023) and proves zero routing into hazardous water.
-- **Hallucination-Proof AI Dispatches:** Uses **Amazon Bedrock** with strict prompt-slot contracts and **Amazon Polly (Kajal voice)** for bilingual (Hindi/English) voice synthesis. Operational facts (names, shelter bed capacities, emergency numbers 1077/112) are enforced deterministically by code.
+- **Hallucination-Proof AI Dispatches:** Uses **Amazon Bedrock** with strict prompt-slot contracts and **Amazon Polly (Kajal voice)** for bilingual voice synthesis. Operational facts (shelter capacities, emergency helplines) are enforced deterministically by code.
 - **Offline-First PWA (Colony Packs):** A lightweight (<100 KB gzip) Progressive Web App with IndexedDB persistence that provides full turn-by-turn guidance and audio advisories even after cellular towers fail.
+- **Universal, Basin-Agnostic Engine:** While calibrated against the Yamuna corridor as our high-density ground truth benchmark, the core architecture is fundamentally geography-agnostic. By swapping the Digital Terrain Model and river gauge telemetry, Jaltaranga seamlessly scales to the Koshi basin in Nepal, the Brahmaputra floodplains in Assam, or any global riverine corridor.
 
 ---
 
