@@ -57,7 +57,7 @@ In life safety disaster engineering, operational models must be proven against v
 
 ### Trained on 100 Percent Real Hydrological Datasets
 
-Our champion machine learning model (lagreg v1) was trained with zero synthetic data. The training pipeline ingested continuous, digitized historical sensor records directly from official Central Water Commission river gauges at Old Railway Bridge alongside upstream discharge logs from Hathnikund Barrage located 220 kilometers upstream. By fitting autoregressive multi hour stage lags against logarithmic upstream releases using Ridge regression, the model achieved a 0.942 Nash Sutcliffe Efficiency score and an 0.18 meter Root Mean Square Error under genuine operational crisis conditions.
+Our core machine learning model (lagreg v1) was trained with zero synthetic data. The training pipeline ingested continuous, digitized historical sensor records directly from official Central Water Commission river gauges at Old Railway Bridge alongside upstream discharge logs from Hathnikund Barrage located 220 kilometers upstream. By fitting autoregressive multi hour stage lags against logarithmic upstream releases using Ridge regression, the model achieved a 0.942 Nash Sutcliffe Efficiency score and an 0.18 meter Root Mean Square Error under genuine operational crisis conditions.
 
 ### Universal Global Extensibility Across Any River Basin
 
@@ -111,9 +111,9 @@ $$\text{Coverage}_{80} = \frac{1}{T} \sum_{t=1}^{T} \mathbb{I}\left(H_{\text{obs
 | Model | Horizon ($\Delta t$) | NSE ($\uparrow$) | RMSE ($\downarrow$) | MAE ($\downarrow$) | 80% CI Coverage |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Persistence Baseline | 6 hours | 0.812 | 0.54 m | 0.41 m | — |
-| **Jaltaranga `lagreg-v1` (Champion)** | **6 hours** | **0.942** | **0.18 m** | **0.13 m** | **83.4%** |
+| **Jaltaranga `lagreg-v1` (Production)** | **6 hours** | **0.942** | **0.18 m** | **0.13 m** | **83.4%** |
 | Persistence Baseline | 12 hours | 0.634 | 0.98 m | 0.77 m | — |
-| **Jaltaranga `lagreg-v1` (Champion)** | **12 hours** | **0.891** | **0.31 m** | **0.24 m** | **81.2%** |
+| **Jaltaranga `lagreg-v1` (Production)** | **12 hours** | **0.891** | **0.31 m** | **0.24 m** | **81.2%** |
 
 *(Benchmarked on the extreme July 10–15, 2023 Delhi flood wave).*
 
@@ -344,7 +344,7 @@ You can verify the live AWS deployment using `curl`:
 ```bash
 curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/models/card
 ```
-*Returns model architecture (Ridge Lag-Regression), active champion status (`lagreg-v1`), training features, and frozen weights.*
+*Returns model architecture (Ridge Lag-Regression), active production status (`lagreg-v1`), training features, and frozen weights.*
 
 ### 9.2 Get Stage Forecast & Uncertainty Bands
 ```bash
