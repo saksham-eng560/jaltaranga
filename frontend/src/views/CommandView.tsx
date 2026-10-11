@@ -1,154 +1,415 @@
-import { useMemo } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { DispatchCard, ReplayStep } from '../shared/types';
-import { DispatchPanel } from '../components/DispatchPanel';
-import { GaugeChart } from '../components/GaugeChart';
-import { MapPanel } from '../components/MapPanel';
-import { ReplayControls } from '../components/ReplayControls';
-import { Icon, Panel, Pill, SectionEyebrow } from '../components/Shared';
-import { numberIN } from '../lib/format';
-import { formatCountdown, formatIST } from '../lib/replay';
+import { FloodResponseMap } from '../components/FloodResponseMap';
+import { Icon } from '../components/Shared';
+import { TIMELINE_STEPS, type ReplayTimelineStep } from '../data/floodScenarioData';
 
-export function CommandView({ step, selectedColony, onSelectColony, onApproved }: {
-  step: ReplayStep; selectedColony: string; onSelectColony: (id: string) => void; onApproved: (card: DispatchCard) => void;
-}) {
-  const plans = [...step.plans].sort((a, b) => b.priority - a.priority);
-  const selected = plans.find((plan) => plan.colony_id === selectedColony) || plans[0] || null;
-  const shelter = step.shelters.find((item) => item.shelter_id === selected?.primary.shelter_id) || null;
-  const threshold = step.thresholds.find((item) => item.colony_id === selected?.colony_id);
-  const thresholds = step.manifest.thresholds || { warning: 204.5, danger: 205.33, evacuation: 206 };
-  const latestGauge = step.gauges.filter((item) => item.level_m !== null).at(-1);
-  const gaugeLevel = latestGauge?.level_m ?? null;
-  const dangerLevel = thresholds.danger;
-  const gaugeStatus = gaugeLevel === null
-    ? 'UNAVAILABLE'
-    : gaugeLevel >= dangerLevel
-      ? 'EXTREME'
-      : gaugeLevel >= thresholds.warning
-        ? 'WARNING'
-        : 'MONITORING';
-  const countdown = selected ? formatCountdown(step.at, selected.t_submersion) : null;
-  const roadCounts = useMemo(
-    () => (step.roads || []).reduce((counts, edge) => {
-      counts[edge.status] += 1;
-      return counts;
-    }, { green: 0, amber: 0, red: 0 }),
-    [step.roads],
-  );
-  const stepTrap = step.trapSummary?.steps.find((item) => item.valid_at === step.at);
+interface CommandViewProps {
+  step: ReplayStep;
+  selectedColony: string;
+  onSelectColony: (id: string) => void;
+  onApproved: (card: DispatchCard) => void;
+  onNavigate?: (view: 'command' | 'colony' | 'compare' | 'report') => void;
+}
 
-  return <main className="page-shell command-page">
-    <header className="page-title-row">
-      <div>
-        <SectionEyebrow>OPERATIONS · YAMUNA CORRIDOR</SectionEyebrow>
-        <h1>Flood response command</h1>
-        <p className="page-subtitle">Translate the river signal into a street plan, one replay step at a time.</p>
-      </div>
-      <Pill tone={step.sourceMode === 'fixture' ? 'violet' : 'green'}>
-        {step.sourceMode === 'fixture' ? 'FIXTURE REPLAY' : 'STATIC DATA'}
-      </Pill>
-    </header>
+export function CommandView({
+  selectedColony,
+  onSelectColony,
+  onApproved: _onApproved,
+  onNavigate,
+}: CommandViewProps) {
+  // Default to step 2 (JUN 17 16:00 peak flood, which is the canonical view in the user's screenshot)
+  const [activeStepIndex, setActiveStepIndex] = useState(2);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [scrubberValue, setScrubberValue] = useState(2);
 
-    <div className="provenance-banner">
-      <Icon name="shield" size={16}/>
-      <span>{step.sourceNote}</span>
-      <span className="provenance-link">Every layer shows its source state below.</span>
-    </div>
+  const currentTimelineStep: ReplayTimelineStep = TIMELINE_STEPS[activeStepIndex] || TIMELINE_STEPS[2];
 
-    <div className="command-layout">
-      <aside className="plan-rail" aria-label="Colony evacuation plans">
-        <Panel title="Evacuation queue" aside={<Pill tone="neutral">{plans.length} plans</Pill>}>
-          <div className="queue-columns" aria-hidden="true">
-            <span>RANK</span><span>COLONY · POPULATION</span><span>LEAD</span>
+  // Speech Audio Synthesis for "Play Dispatch Audio"
+  const handlePlayAudio = useCallback(() => {
+    if (isPlayingAudio) {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      setIsPlayingAudio(false);
+      return;
+    }
+
+    setIsPlayingAudio(true);
+
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+
+      // First speak English announcement
+      const englishUtterance = new SpeechSynthesisUtterance(currentTimelineStep.dispatch.messageEn);
+      englishUtterance.lang = 'en-IN';
+      englishUtterance.rate = 0.95;
+
+      // Then speak Hindi announcement
+      const hindiUtterance = new SpeechSynthesisUtterance(currentTimelineStep.dispatch.messageHi);
+      hindiUtterance.lang = 'hi-IN';
+      hindiUtterance.rate = 0.9;
+
+      englishUtterance.onend = () => {
+        window.speechSynthesis.speak(hindiUtterance);
+      };
+
+      hindiUtterance.onend = () => {
+        setIsPlayingAudio(false);
+      };
+
+      hindiUtterance.onerror = () => {
+        setIsPlayingAudio(false);
+      };
+
+      window.speechSynthesis.speak(englishUtterance);
+    } else {
+      // Fallback: Web Audio tone chime if speech synthesis is not supported
+      try {
+        const win = window as unknown as Record<string, new () => AudioContext>;
+        const AudioCtx = win.AudioContext || win.webkitAudioContext;
+        if (!AudioCtx) throw new Error('AudioContext unavailable');
+        const audioCtx = new AudioCtx();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.2); // A5
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.2);
+        setTimeout(() => setIsPlayingAudio(false), 1200);
+      } catch {
+        setTimeout(() => setIsPlayingAudio(false), 1000);
+      }
+    }
+  }, [isPlayingAudio, currentTimelineStep]);
+
+  // Clean up speech synthesis on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const handleStepSelect = (index: number) => {
+    setActiveStepIndex(index);
+    setScrubberValue(index);
+  };
+
+  const handleScrubberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = Number(e.target.value);
+    setScrubberValue(val);
+    const closestIndex = Math.min(Math.max(Math.round(val), 0), TIMELINE_STEPS.length - 1);
+    setActiveStepIndex(closestIndex);
+  };
+
+  return (
+    <div className="command-center-root">
+      {/* Top Application Header */}
+      <header className="command-header">
+        <div className="header-brand">
+          <div className="brand-logo-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2.5C12 2.5 4.5 11 4.5 16C4.5 20.14 7.86 23.5 12 23.5C16.14 23.5 19.5 20.14 19.5 16C19.5 11 12 2.5 12 2.5Z"
+                fill="#38bdf8"
+                opacity="0.85"
+              />
+              <path
+                d="M12 6C12 6 7 12.5 7 16.5C7 19.54 9.46 22 12.5 22C15.54 22 18 19.54 18 16.5C18 12.5 12 6 12 6Z"
+                fill="#0284c7"
+              />
+              <path
+                d="M11 14C11 14 9.5 16 9.5 17.5C9.5 18.88 10.62 20 12 20"
+                stroke="#ffffff"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
           </div>
-          {plans.length ? <div className="plan-list" role="list">
-            {plans.map((plan, index) => <button
-              key={plan.colony_id}
-              role="listitem"
-              className={`plan-row ${selected?.colony_id === plan.colony_id ? 'plan-row-selected' : ''}`}
-              onClick={() => onSelectColony(plan.colony_id)}
-              aria-pressed={selected?.colony_id === plan.colony_id}
+          <span className="brand-title">JALTARANGA</span>
+        </div>
+
+        <div className="header-meta">
+          <span className="header-datetime">{currentTimelineStep.dateTimeDisplay}</span>
+          <div className="header-system-status">
+            System Status: <strong>ACTIVE</strong>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Body: Left Vertical Icon Rail + 3 Column Dashboard Content */}
+      <div className="command-body">
+        {/* Far-Left Vertical Icon Rail */}
+        <aside className="command-sidebar-icons" aria-label="System navigation">
+          <div className="sidebar-icons-top">
+            <button
+              className="sidebar-icon-btn active"
+              title="Flood Response Command Center"
+              onClick={() => onNavigate?.('command')}
+              aria-label="Command Center"
             >
-              <span className={`plan-rank plan-rank-${index + 1}`}>{String(index + 1).padStart(2, '0')}</span>
-              <span className="plan-row-main">
-                <strong>{plan.colony_id}</strong>
-                <small>{numberIN(plan.ext?.assigned_people)} residents · Priority {Math.round(plan.priority * 100)}%</small>
-              </span>
-              <span className={`plan-lead ${plan.lead_time_h <= 2 ? 'plan-lead-urgent' : ''}`}>{numberIN(plan.lead_time_h, 1)} h</span>
-            </button>)}
-          </div> : <div className="list-empty">No route plan exists for this timestamp.</div>}
-          {step.unreachable.length > 0 && <div className="unreachable-block">
-            <div className="unreachable-title"><Icon name="report" size={15}/>Boat / NDRF needed<Pill tone="red">{step.unreachable.length}</Pill></div>
-            {step.unreachable.map((item) => <div key={item.colony_id} className="unreachable-row">
-              <span>{item.colony_id}</span>
-              <small>{item.reason.replaceAll('_', ' ')}{item.population ? ` · ${numberIN(item.population)} people` : ''}</small>
-            </div>)}
-          </div>}
-        </Panel>
+              <Icon name="grid" size={20} />
+            </button>
+            <button
+              className="sidebar-icon-btn"
+              title="Resident Colony View"
+              onClick={() => onNavigate?.('colony')}
+              aria-label="Citizen Colony View"
+            >
+              <Icon name="home" size={20} />
+            </button>
+            <button
+              className="sidebar-icon-btn"
+              title="Active Alerts"
+              onClick={() => onNavigate?.('command')}
+              aria-label="Alerts"
+            >
+              <Icon name="alert" size={20} />
+            </button>
+            <button
+              className="sidebar-icon-btn"
+              title="Community & Relief Marshals"
+              onClick={() => onNavigate?.('colony')}
+              aria-label="Community"
+            >
+              <Icon name="users" size={20} />
+            </button>
+            <button
+              className="sidebar-icon-btn"
+              title="Scenario Compare & Data"
+              onClick={() => onNavigate?.('compare')}
+              aria-label="Data Compare"
+            >
+              <Icon name="folder" size={20} />
+            </button>
+            <button
+              className="sidebar-icon-btn"
+              title="System Settings"
+              onClick={() => onNavigate?.('report')}
+              aria-label="Settings"
+            >
+              <Icon name="settings" size={20} />
+            </button>
+          </div>
 
-        <Panel title="Road watch" aside={step.roads ? <span className="small-source">{step.roads.length} edges</span> : <Pill>Unavailable</Pill>}>
-          {step.roads ? <div className="road-status-list">
-            {(['red', 'amber', 'green'] as const).map((status) => <div key={status} className={`road-status road-${status}`}>
-              <span className="road-symbol" aria-hidden="true">{status === 'red' ? '×' : status === 'amber' ? '!' : '✓'}</span>
-              <span>{status}</span><b>{roadCounts[status]}</b>
-            </div>)}
-            <p className="road-note">Road status reflects the selected replay timestamp; unavailable road names are not inferred.</p>
-          </div> : <p className="panel-note">No road status artifact is available for this replay step. No previous status is carried forward.</p>}
-        </Panel>
+          <div className="sidebar-icons-bottom">
+            <button
+              className="sidebar-icon-btn"
+              title="Help & System Documentation"
+              onClick={() => onNavigate?.('report')}
+              aria-label="Help"
+            >
+              <Icon name="help" size={20} />
+            </button>
+          </div>
+        </aside>
 
-        {step.trapSummary && <Panel title="Flood-blind counterfactual" aside={<Pill tone="violet">{step.sourceMode === 'fixture' ? 'SYNTHETIC' : 'SCENARIO'}</Pill>}>
-          <div className="trap-counter"><strong>{numberIN(stepTrap?.trapped_population)}</strong><span>people the flood-blind plan would have trapped at this step</span></div>
-          <p className="panel-note">{stepTrap?.roads.length ? `Roads in the counterfactual: ${stepTrap.roads.join(', ')}.` : 'No trapped population is reported for this step.'} This is a computed counterfactual, not an observed count.</p>
-        </Panel>}
-      </aside>
+        {/* 3-Column Dashboard Layout */}
+        <main className="command-workspace">
+          {/* COLUMN 1: EVACUATION QUEUE (Left Rail) */}
+          <section className="command-left-rail" aria-label="Evacuation Queue">
+            <div className="rail-panel queue-panel">
+              <div className="rail-panel-header">
+                <h2>EVACUATION QUEUE</h2>
+              </div>
 
-      <div className="command-main">
-        <Panel className="map-panel-card">
-          <MapPanel step={step} plan={selected} shelter={shelter}/>
-          {selected && <div className="selected-plan-strip">
-            <div><span className="eyebrow">SELECTED COLONY</span><strong>{selected.colony_id}</strong></div>
-            <div><span className="eyebrow">LEAD TIME</span><strong>{numberIN(selected.lead_time_h, 1)} h</strong></div>
-            <div><span className="eyebrow">ASSIGNED SHELTER</span><strong>{shelter?.name_en || selected.primary.shelter_id}</strong></div>
-            <div><span className="eyebrow">FREE BEDS</span><strong>{numberIN(shelter?.free_beds)}</strong></div>
-          </div>}
-        </Panel>
+              {/* Column labels */}
+              <div className="queue-header-row">
+                <span className="col-rank">Rank</span>
+                <span className="col-lead">Lead Time</span>
+                <span className="col-pop">Population</span>
+              </div>
 
-        <Panel className="chart-panel" title="Gauge & forecast" aside={<span className="chart-station">DELHI RAILWAY BRIDGE <span>· m above MSL</span></span>}>
-          <GaugeChart gauges={step.gauges} forecasts={step.forecasts} at={step.at} thresholds={step.manifest.thresholds} manifest={step.manifest} streetLevel={threshold?.wet_at_level_m}/>
-        </Panel>
+              {/* Ranked Colony Cards */}
+              <div className="queue-card-list" role="list">
+                {currentTimelineStep.queue.map((item) => {
+                  const isSelected = item.colonyId === selectedColony;
+                  return (
+                    <div
+                      key={item.rank}
+                      role="listitem"
+                      tabIndex={0}
+                      className={`queue-card card-accent-${item.alertTone} ${
+                        isSelected ? 'card-selected' : ''
+                      }`}
+                      onClick={() => onSelectColony(item.colonyId)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          onSelectColony(item.colonyId);
+                        }
+                      }}
+                      aria-pressed={isSelected}
+                    >
+                      <div className="card-badge-block">
+                        <span className={`alert-badge badge-${item.alertTone}`}>ALERT</span>
+                        <span className="rank-text">Rank</span>
+                        <strong className="rank-number">{item.rank}</strong>
+                      </div>
+
+                      <div className="card-center-block">
+                        <span className="field-label">Colony Name</span>
+                        <strong className="colony-name-text">{item.colonyName}</strong>
+                        <div className="lead-time-value">{item.leadTime}</div>
+                      </div>
+
+                      <div className="card-right-block">
+                        <span className="field-label">Population</span>
+                        <strong className="population-value">{item.population}</strong>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Amber Warning Box */}
+              <div className="amber-warning-box">
+                <div className="warning-box-title">{currentTimelineStep.warningBox.title}</div>
+                <div className="warning-box-message">{currentTimelineStep.warningBox.message}</div>
+              </div>
+            </div>
+          </section>
+
+          {/* COLUMN 2: FLOOD RESPONSE MAP (Center) */}
+          <section className="command-center-map" aria-label="Flood Response Map">
+            <FloodResponseMap
+              timelineStep={currentTimelineStep}
+              selectedColonyId={selectedColony}
+              onSelectColony={onSelectColony}
+            />
+          </section>
+
+          {/* COLUMN 3: RIGHT RAIL (Details, Dispatch, Timeline Scrubber) */}
+          <section className="command-right-rail" aria-label="Evacuation Plan Details & Dispatch">
+            {/* Box 1: EVACUATION PLAN DETAILS */}
+            <div className="rail-panel details-panel">
+              <div className="rail-panel-header">
+                <h2>EVACUATION PLAN DETAILS</h2>
+              </div>
+
+              <div className="plan-metrics-grid">
+                <div className="metric-box">
+                  <span className="metric-label">WATER LEVEL</span>
+                  <div className="metric-value-row">
+                    <span className="metric-main-value">{currentTimelineStep.waterLevel}</span>
+                    <span className="metric-delta-value">
+                      {currentTimelineStep.waterLevelDelta}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="metric-box">
+                  <span className="metric-label">DANGER</span>
+                  <div className={`metric-danger-value danger-${currentTimelineStep.dangerTone}`}>
+                    {currentTimelineStep.danger}
+                  </div>
+                </div>
+
+                <div className="metric-box">
+                  <span className="metric-label">AFFECTED POPULATION</span>
+                  <div className="metric-main-value">{currentTimelineStep.affectedPopulation}</div>
+                </div>
+
+                <div className="metric-box">
+                  <span className="metric-label">BOATS DEPLOYED</span>
+                  <div className="metric-main-value">{currentTimelineStep.boatsDeployed}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Box 2: DISPATCH ALERT (प्रेषण अलर्ट) */}
+            <div className="rail-panel dispatch-alert-panel">
+              <div className="dispatch-header-bar">
+                <span className="dispatch-title-en">DISPATCH ALERT</span>
+                <span className="dispatch-title-hi">प्रेषण अलर्ट</span>
+              </div>
+
+              <div className="dispatch-card-content">
+                <div className="dispatch-status-row">
+                  <div className="status-label">Status</div>
+                  <div className="status-value-approved">
+                    <span>{currentTimelineStep.dispatch.status}</span>
+                    <span className="check-circle-icon">✓</span>
+                  </div>
+                </div>
+
+                <div className="dispatch-body-section">
+                  <div className="body-label">Body</div>
+                  <p className="body-en">{currentTimelineStep.dispatch.messageEn}</p>
+                  <p className="body-hi" lang="hi">
+                    {currentTimelineStep.dispatch.messageHi}
+                  </p>
+                </div>
+
+                <button
+                  className={`play-dispatch-audio-btn ${isPlayingAudio ? 'is-playing' : ''}`}
+                  onClick={handlePlayAudio}
+                  aria-label="Play Dispatch Audio"
+                >
+                  <span className="btn-audio-text">
+                    {isPlayingAudio ? 'Playing Dispatch Audio…' : 'Play Dispatch Audio 🔊'}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Box 3: TIMELINE REPLAY SCRUBBER */}
+            <div className="rail-panel scrubber-panel">
+              <div className="scrubber-header-row">
+                <h2>TIMELINE REPLAY SCRUBBER</h2>
+                <button className="scrubber-dots-btn" aria-label="Scrubber options">
+                  <Icon name="dots" size={16} />
+                </button>
+              </div>
+
+              {/* 4 Step Buttons */}
+              <div className="scrubber-buttons-row">
+                {TIMELINE_STEPS.map((s, idx) => (
+                  <button
+                    key={s.id}
+                    className={`step-btn ${idx === activeStepIndex ? 'step-btn-active' : ''}`}
+                    onClick={() => handleStepSelect(idx)}
+                  >
+                    {s.buttonLabel}
+                  </button>
+                ))}
+              </div>
+
+              {/* Slider Track */}
+              <div className="scrubber-slider-container">
+                <label className="sr-only" htmlFor="timeline-replay-slider">
+                  Timeline scrubber
+                </label>
+                <input
+                  id="timeline-replay-slider"
+                  type="range"
+                  min="0"
+                  max={TIMELINE_STEPS.length - 1}
+                  step="0.05"
+                  value={scrubberValue}
+                  onChange={handleScrubberChange}
+                  className="timeline-slider-input"
+                />
+              </div>
+
+              {/* Status Footer */}
+              <div className="scrubber-footer-row">
+                <span className="footer-water-level">
+                  WATER LEVEL: <strong>{currentTimelineStep.scrubberWaterLevel}</strong>
+                </span>
+                <span className="footer-time">
+                  TIME: <strong>{currentTimelineStep.scrubberTime}</strong>
+                </span>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
-
-      <aside className="command-detail-rail" aria-label="Evacuation plan details and dispatch">
-        <Panel title="Evacuation plan details" aside={<Pill tone={gaugeStatus === 'EXTREME' ? 'red' : gaugeStatus === 'WARNING' ? 'amber' : gaugeStatus === 'MONITORING' ? 'green' : 'neutral'}>{gaugeStatus}</Pill>}>
-          <div className="evacuation-metrics">
-            <div><span>Water level</span><strong>{gaugeLevel === null ? '—' : `${numberIN(gaugeLevel, 2)} m`}</strong><small>Delhi Railway Bridge</small></div>
-            <div><span>Danger threshold</span><strong className="metric-blue">{numberIN(dangerLevel, 2)} m</strong><small>Evacuation {numberIN(thresholds.evacuation, 2)} m</small></div>
-            <div><span>Assigned population</span><strong>{numberIN(selected?.ext?.assigned_people)}</strong><small>{selected?.colony_id || 'No selected plan'}</small></div>
-            <div><span>Boats / NDRF needed</span><strong>{numberIN(step.unreachable.reduce((sum, item) => sum + (item.population || 0), 0))}</strong><small>{step.unreachable.length} unreachable colonies</small></div>
-          </div>
-          <div className="plan-countdown">
-            <span>TIME TO WATER</span>
-            <strong>{countdown?.kind === 'future' ? countdown.text : countdown?.kind === 'elapsed' ? 'Arrived' : 'Unavailable'}</strong>
-            <small>{selected ? `Plan threshold · ${formatIST(selected.t_submersion)}` : 'No timestamp is inferred without an evacuation plan.'}</small>
-          </div>
-          {threshold && <div className="detail-threshold"><span>Street wet threshold</span><strong>{numberIN(threshold.wet_at_level_m, 2)} m</strong></div>}
-          {selected && <div className="route-facts">
-            <div><span>Primary shelter</span><b>{shelter?.name_en || selected.primary.shelter_id}</b><small>{numberIN(selected.primary.distance_m)} m · {numberIN(selected.primary.walk_min)} min</small></div>
-            <div><span>Backup shelter</span><b>{selected.backup?.shelter_id || 'Not provided'}</b><small>{selected.backup ? `${numberIN(selected.backup.distance_m)} m · ${numberIN(selected.backup.walk_min)} min` : 'No alternate route in plan'}</small></div>
-          </div>}
-          <div className="avoid-list">
-            <span className="eyebrow">AVOID</span>
-            {selected?.avoid.length
-              ? selected.avoid.map((item) => <div key={item.name_en}><strong>{item.name_en}</strong><small>Cutoff {formatIST(item.cutoff_at)}</small></div>)
-              : <p>No named road closure in this plan.</p>}
-          </div>
-        </Panel>
-
-        <Panel className="dispatch-wrap">
-          <DispatchPanel at={step.at} plan={selected} sourceMode={step.sourceMode} onApproved={onApproved} compact/>
-        </Panel>
-
-        <ReplayControls/>
-      </aside>
     </div>
-  </main>;
+  );
 }

@@ -4,5 +4,6 @@ public/fixtures/
 playwright-report/
 test-results/
 coverage/
+.env
 .env.local
 .env.*.local

@@ -16,6 +16,15 @@ for (const name of fixtureNames) {
   await copyFile(resolve(root, 'shared/fixtures', name), resolve(out, name));
 }
 
+try {
+  await copyFile(
+    resolve(root, 'frontend/node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs'),
+    resolve(root, 'frontend/public/maplibre-gl-worker.mjs')
+  );
+} catch {
+  // Ignore if worker source path varies
+}
+
 const anchors = (await readFile(resolve(root, 'ml/data/fallback/drb_anchors.csv'), 'utf8'))
   .trim().split(/\r?\n/).slice(1).map((line) => {
     const [ts, rawLevel, sourceRef] = line.split(',');

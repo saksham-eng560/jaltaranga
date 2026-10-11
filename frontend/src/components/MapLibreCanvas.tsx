@@ -187,6 +187,10 @@ export function MapLibreCanvas({ step, plan, shelter, onFallback }: {
         const maplibre = await import('maplibre-gl');
         await import('maplibre-gl/dist/maplibre-gl.css');
 
+        if (typeof maplibre.setWorkerUrl === 'function') {
+          maplibre.setWorkerUrl('/maplibre-gl-worker.mjs');
+        }
+
         if (cancelled || !element.current) return;
 
         const hasWebGL = Boolean(

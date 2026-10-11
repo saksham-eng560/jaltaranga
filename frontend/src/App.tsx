@@ -154,8 +154,8 @@ function AppBody() {
   if (bootstrapError) return <main className="startup-error"><Icon name="report" size={24}/><h1>Replay unavailable</h1><p>{bootstrapError}</p><button className="button button-secondary" onClick={() => window.location.reload()}>Retry</button></main>;
   if (!manifest) return <main className="startup-loading"><span className="loading-pulse"/><strong>Preparing the replay</strong><small>Reading the manifest and local fixture pack…</small></main>;
 
-  return <div className={`app-root ${demo ? 'director-mode' : ''} ${view === 'colony' ? 'resident-app' : ''}`}>
-    {!demo && <header className="app-header">
+  return <div className={`app-root ${demo ? 'director-mode' : ''} ${view === 'colony' ? 'resident-app' : ''} ${view === 'command' ? 'command-view-active' : ''}`}>
+    {!demo && view !== 'command' && <header className="app-header">
       <a className="brand-lockup" href="/command" onClick={(e) => { e.preventDefault(); navigate('command'); }}><span className="brand-mark"><img src="/logo.svg" alt="" /></span><span><strong>JALTARANGA</strong><small>Predict · Route · Protect</small></span></a>
       <div className="header-clock"><span>{formatIST(at, { month: 'long', day: 'numeric', year: 'numeric', hour: undefined, minute: undefined })}</span><i/><b>{formatIST(at, { hour: '2-digit', minute: '2-digit', hour12: false, day: undefined, month: undefined, year: undefined })}</b> IST</div>
       <nav className="primary-nav" aria-label="Main navigation">{routes.map((route) => <a key={route.key} href={route.key === 'colony' ? `/colony/${colonyId}` : `/${route.key}`} onClick={(e) => { e.preventDefault(); navigate(route.key); }} className={view === route.key ? 'nav-active' : ''} aria-current={view === route.key ? 'page' : undefined}><Icon name={route.icon}/><span>{route.label}</span></a>)}</nav>
@@ -170,13 +170,13 @@ function AppBody() {
     {stepQuery.isFetching && !stepQuery.data && <div className="step-loading" role="status">Loading artifacts for {at}…</div>}
     {stepQuery.isError && !offlineOnly && <div className="step-error" role="alert"><strong>Selected replay step could not be loaded.</strong><span>{stepQuery.error instanceof Error ? stepQuery.error.message : 'Data source unavailable.'} No layers from another step are shown.</span><button onClick={() => void stepQuery.refetch()}>Retry</button></div>}
     {activeStep && !stepQuery.isError && <Suspense fallback={<div className="step-loading" role="status">Opening {view} view…</div>}>
-      {view === 'command' && <CommandView step={activeStep} selectedColony={colonyId} onSelectColony={chooseColony} onApproved={onApproved}/>}
+      {view === 'command' && <CommandView step={activeStep} selectedColony={colonyId} onSelectColony={chooseColony} onApproved={onApproved} onNavigate={navigate}/>}
       {view === 'colony' && <ColonyView step={activeStep} colonyId={colonyId} language={language} setLanguage={setLanguagePref} lite={lite} setLite={setLite} currentDispatch={null} approvedDispatch={approvedDispatch} offlineOnly={offlineOnly} offlinePack={offlinePack} onPackLoaded={setOfflinePack}/>}
       {view === 'compare' && <CompareView step={activeStep} colonyId={colonyId} language={language}/>}
       {view === 'report' && <ReportView step={activeStep}/>}
     </Suspense>}
     {!activeStep && !stepQuery.isFetching && !stepQuery.isError && <div className="step-error"><strong>Replay data unavailable for this timestamp.</strong><span>Check the scenario manifest and static artifact configuration.</span></div>}
-    {!demo && <footer className="app-footer"><span>Jaltaranga · Historical replay</span><span>Every displayed value retains its source label.</span><a href="/report" onClick={(e) => { e.preventDefault(); navigate('report'); }}>Report a condition <Icon name="arrow" size={13}/></a></footer>}
+    {!demo && view !== 'command' && <footer className="app-footer"><span>Jaltaranga · Historical replay</span><span>Every displayed value retains its source label.</span><a href="/report" onClick={(e) => { e.preventDefault(); navigate('report'); }}>Report a condition <Icon name="arrow" size={13}/></a></footer>}
   </div>;
 }
 
