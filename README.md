@@ -340,13 +340,53 @@ curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/scenarios/yamuna-20
 
 ---
 
-## 10. Team ChaapSeekers
+## 10. Dual Experience: Incident Command (Web) vs. Resident Mobile (Phone / PWA)
 
-Built with dedication for the **Bharat Builds Tour 2026** by:
+Jaltaranga delivers two purpose-built, responsive interfaces tailored to their operational environments:
 
-- **Vaibhav Mittal** — Hydrological ML Models, Stage Forecasting, Uncertainty Quantification & Cloud Architecture
-- **Saksham Verma** — Topological Evacuation Router, Bedrock/Polly Alert Dispatch, and Backend Integration
+| Feature / Dimension | Desktop Incident Command Console (Web) | Resident Mobile Web App (Phone / PWA) |
+|---|---|---|
+| **Target User** | District Magistrates (DMs), SDMs, NDRF Commanders, Municipal Engineers | Slum/colony residents, local volunteers, ward wardens |
+| **Primary Goal** | Macro corridor situational awareness, prioritization, resource dispatch | Micro self-evacuation, nearest dry relief shelter, step-by-step navigation |
+| **Layout & Display** | Multi-panel layout: interactive Esri/MapLibre GIS canvas, hydrograph charts, queue rail | Single-column, mobile-first daylight high-contrast cards, big touch targets |
+| **Language Support** | Operations English with dual Hindi status chips | 1-click instant bilingual toggle: **हिंदी (Hindi)** / **English** |
+| **Connectivity** | Broadband / EOC satellite links | Offline-first Service Worker + IndexedDB (<100 KB gzip Colony Pack) |
+| **Key Actions** | Review AI drafts, approve dispatches, track shelter beds, trigger boat rescue | Play voice audio alert, view primary & backup route, avoid severed roads |
+
+---
+
+## 11. Multimodal Notification & Alert Pipeline
+
+When an Incident Commander approves an evacuation order in the Command Console, the notification engine executes an automated, multichannel fan-out:
+
+```mermaid
+flowchart LR
+    Officer["Incident Commander Approves Dispatch"] --> AlertsLambda["AWS Lambda (AlertsFn)"]
+    AlertsLambda --> Bedrock["Amazon Bedrock (Nova LLM)\nDrafts Localized Copy"]
+    AlertsLambda --> Polly["Amazon Polly (Kajal Neural Voice)\nSynthesizes Hindi Audio"]
+    Polly --> S3Audio["Amazon S3 Audio Bucket\n(/audio/*.mp3)"]
+    AlertsLambda --> SNS["Amazon SNS Topic\n(SMS & WhatsApp Gateway)"]
+    AlertsLambda --> Push["Web Push API\n(Browser Notification)"]
+    S3Audio --> Loudspeakers["Community PA / Loudspeakers"]
+    SNS --> Citizens["Citizen Mobile Devices"]
+    Push --> Citizens
+```
+
+1. **Deterministic Verification:** Facts (shelter name, walk distance, avoid roads, cutoff time) are injected via immutable slots—Bedrock cannot alter operational safety data.
+2. **Audio Synthesis (Amazon Polly):** Synthesizes natural Hindi speech (`Kajal` voice) saved to S3 and served directly to the mobile browser and local PA loudspeakers.
+3. **Emergency Push & SMS (Amazon SNS):** Fans out SMS and Web Push notifications to registered residents in the targeted colony polygon.
+4. **Official Emergency Helplines:** Enforces strict compliance with India's official disaster lines (**1077** District Disaster Control Room and **112** National Emergency Response).
+
+---
+
+## 12. Team ChaapSeekers
+
+Built with dedication for the **Bharat Builds Tour 2026 | WeMakeDevs × AWS Environmental Hacks** by:
+
+- **Vaibhav Mittal** — Hydrological ML Models, River Stage Forecasting, Uncertainty Quantification & Cloud Architecture
+- **Saksham Verma** — Topological Evacuation Router, Bedrock/Polly Alert Dispatch Engine & Backend Integration
 - **Shivansh** — AWS SAM Infrastructure-as-Code, DynamoDB Schemas, Data Pipelines & DTM Processing
+- **Arjav** — Frontend Engineering, Resident Mobile Web App (PWA), Offline Colony Packs, Emergency Notification UI & Responsive Cross-Device Experience
 
 ---
 
