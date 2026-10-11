@@ -374,8 +374,23 @@ flowchart LR
 
 1. **Deterministic Verification:** Facts (shelter name, walk distance, avoid roads, cutoff time) are injected via immutable slots—Bedrock cannot alter operational safety data.
 2. **Audio Synthesis (Amazon Polly):** Synthesizes natural Hindi speech (`Kajal` voice) saved to S3 and served directly to the mobile browser and local PA loudspeakers.
-3. **Emergency Push & SMS (Amazon SNS):** Fans out SMS and Web Push notifications to registered residents in the targeted colony polygon.
+3. **Emergency Push & SMS (Amazon SNS):** Fans out SMS, WhatsApp, and email dispatches to residents and responders in the targeted colony polygon.
 4. **Official Emergency Helplines:** Enforces strict compliance with India's official disaster lines (**1077** District Disaster Control Room and **112** National Emergency Response).
+
+### 11.1 Real-Time Gmail / Email Alert Integration (Amazon SNS)
+
+Evaluators and incident commanders can subscribe any email/Gmail directly to the live AWS broadcast pipeline:
+
+- **Production Topic ARN:** `arn:aws:sns:ap-south-1:410133710130:jt-demo-dispatch`
+- **One-Command Subscription:**
+  ```bash
+  aws sns subscribe \
+    --topic-arn "arn:aws:sns:ap-south-1:410133710130:jt-demo-dispatch" \
+    --protocol email \
+    --notification-endpoint "your-email@gmail.com" \
+    --region ap-south-1
+  ```
+- **Automated Delivery:** Once confirmed via the 1-click verification email, any evacuation order approved in the Incident Console delivers an immediate alert to the inbox containing water levels, cutoff times, safe walking corridors, and relief shelter coordinates.
 
 ---
 
