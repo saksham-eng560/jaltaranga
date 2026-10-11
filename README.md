@@ -3,12 +3,21 @@
 > **Hyperlocal Flood Forecasting, Inundation-Constrained Evacuation Routing, and Multimodal Dispatches.**  
 > Built for the **Bharat Builds Tour 2026 | WeMakeDevs × AWS Environmental Hacks** (*Track 02: Heat and Water*).
 
+<p align="center"><img src="frontend/public/logo.svg" alt="Jaltaranga logo" width="112"></p>
+
 [![AWS Serverless](https://img.shields.io/badge/AWS-Serverless%20SAM-orange?logo=amazon-aws)](https://aws.amazon.com/)
 [![Region](https://img.shields.io/badge/Region-ap--south--1%20(Mumbai)-blue)](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/)
 [![Python](https://img.shields.io/badge/Python-3.12%20(ARM64)-3776AB?logo=python)](https://python.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8%20(React%2019)-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
-[![Tests Passing](https://img.shields.io/badge/Tests-15%20Passing%20(vitest%20%2B%20pytest)-brightgreen)](#automated-testing--quality-gates)
+[![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-Frontend-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![OpenStreetMap](https://img.shields.io/badge/OpenStreetMap-Maps-7EBC6F?logo=openstreetmap&logoColor=white)](https://www.openstreetmap.org/)
+[![MapLibre](https://img.shields.io/badge/MapLibre-GL-396CB2)](https://maplibre.org/)
+[![Amazon Bedrock](https://img.shields.io/badge/Amazon-Bedrock-232F3E?logo=amazonaws&logoColor=white)](https://aws.amazon.com/bedrock/)
+[![Amazon Polly](https://img.shields.io/badge/Amazon-Polly-232F3E?logo=amazonaws&logoColor=white)](https://aws.amazon.com/polly/)
+[![pytest](https://img.shields.io/badge/pytest-Tests-0A9EDC?logo=pytest&logoColor=white)](https://pytest.org/)
+[![Vitest](https://img.shields.io/badge/Vitest-Tests-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
 
 ---
 
@@ -57,7 +66,7 @@ In life safety disaster engineering, operational models must be proven against v
 
 ### Trained on 100 Percent Real Hydrological Datasets
 
-Our core machine learning model (lagreg v1) was trained with zero synthetic data. The training pipeline ingested continuous, digitized historical sensor records directly from official Central Water Commission river gauges at Old Railway Bridge alongside upstream discharge logs from Hathnikund Barrage located 220 kilometers upstream. By fitting autoregressive multi hour stage lags against logarithmic upstream releases using Ridge regression, the model achieved a 0.942 Nash Sutcliffe Efficiency score and an 0.18 meter Root Mean Square Error under genuine operational crisis conditions.
+The `lagreg-v1` model uses causal gauge features and Ridge regression to forecast stage changes at 1, 3, 6, 12, and 24 hour horizons. The checked-in held-out model card reports a 6-hour NSE of 0.613 and RMSE of 0.715 m on 16 samples; the reported values and sample counts are summarized below.
 
 ### Universal Global Extensibility Across Any River Basin
 
@@ -73,8 +82,8 @@ Jaltaranga moves beyond standard prototypes into production-grade civic infrastr
 
 | Engineering Pillar | Typical Hackathon Project | Jaltaranga (Tier-1 Production Standard) |
 |---|---|---|
-| **Hydrological Rigor** | Arbitrary heuristics or static buffer zones | Autoregressive Ridge Lag-Regression benchmarked at **0.942 Nash-Sutcliffe Efficiency (NSE)** and **0.18 m RMSE** |
-| **Dynamic Routing** | Naive shortest path (trapping evacuees in floodwaters) | Time-dependent topological router with **quadratic inundation penalties** ($d \ge 0.30\text{ m} \to \infty$) |
+| **Hydrological Rigor** | Arbitrary heuristics or static buffer zones | Causal Ridge Lag-Regression with held-out 6-hour metrics of **0.613 NSE** and **0.715 m RMSE** |
+| **Dynamic Routing** | Naive shortest path (trapping evacuees in floodwaters) | Time-dependent router with depth and forecast-risk costs, plus a 30-minute closure safety buffer |
 | **Cloud Architecture** | Localhost demo or single monolithic server | **AWS Serverless Multi-AZ**: SAM IaC, Graviton3 ARM64, S3 Data Lake, DynamoDB on-demand, and SNS real-time fan-out |
 | **Generative AI Safety** | Unchecked LLM prompts prone to dangerous hallucinations | **Code-governed slot contracts**: Amazon Bedrock drafts phrasing while shelter coordinates and helplines (1077/112) are immutable |
 | **Offline Resilience** | Online-only app failing during cell tower blackout | **Zero-connectivity PWA**: Service Worker + IndexedDB Colony Packs (<100 KB gzip) running fully offline |
@@ -84,62 +93,59 @@ Jaltaranga moves beyond standard prototypes into production-grade civic infrastr
 
 ## 5. Mathematical & Hydrological Formulation
 
-Jaltaranga adheres to formal physical, statistical, and algorithmic formulations evaluated against gold-standard industry benchmarks.
+The equations below describe the model and routing logic implemented in the repository; forecast scores are reported from the checked-in model card.
 
 ### 5.1 River Stage Lag-Regression Forecasting Model
 
-Downstream stage height $H_{t + \Delta t}$ at Delhi Railway Bridge is predicted using an Autoregressive Ridge Lag-Regression model conditioned on multi-horizon river levels and upstream barrage releases:
+For each forecast horizon $h$, `lagreg-v1` uses Ridge regression to predict the change in river stage from the current level. Let $x_t$ be the feature vector built from causal gauge readings, recent stage changes, the latest available Hathnikund discharge, and time-of-day features:
 
-$$H_{t + \Delta t} = \alpha_0 + \sum_{k \in \mathcal{K}} \beta_k H_{t - k} + \sum_{j \in \mathcal{J}} \gamma_j \ln\left(1 + Q_{\text{Hathnikund}, t - j}\right) + \epsilon$$
+$$\widehat{\Delta H}_{t,h} = b_h + x_t^\mathsf{T}\beta_h$$
 
-Where:
-- $\mathcal{K} = \{0, 1, 2, 3, 6, 12, 24, 48\}$ hours represent autoregressive water stage lags at Old Railway Bridge.
-- $\mathcal{J} = \{24, 36, 48, 72\}$ hours represent hydrodynamic wave propagation transit lags from Hathnikund Barrage ($\sim 220\text{ km}$ upstream).
-- $Q_{\text{Hathnikund}}$ is the upstream discharge in cusecs.
-- Ridge regularization ($\lambda = 1.0$) prevents collinearity overfitting across successive lag hours.
+$$\widehat{H}_{t+h} = H_t + \widehat{\Delta H}_{t,h}, \qquad \Delta H_{t,h} = H_{t+h} - H_t$$
 
-### 3.2 Evaluation Metrics & Model Benchmarks
+The gauge lag features use $0, 1, 2, 3, 6, 12, 24,$ and $48$ hours, plus one-hour and three-hour stage changes. Forecast horizons are $h \in \{1, 3, 6, 12, 24\}$ hours. The model fits a separate Ridge regression for each horizon with regularization strength $\alpha = 1.0$:
 
-To meet hydrological industry standards (as used by USGS, NOAA, and CWC), models are evaluated using **Nash-Sutcliffe Efficiency (NSE)** and **Root Mean Square Error (RMSE)**:
+$$\hat{\beta}_h = \arg\min_{\beta}\left(\lVert y_h - X\beta\rVert_2^2 + \alpha\lVert\beta\rVert_2^2\right)$$
 
-$$\text{NSE} = 1 - \frac{\sum_{t=1}^{T} \left(H_{\text{obs}}^t - H_{\text{sim}}^t\right)^2}{\sum_{t=1}^{T} \left(H_{\text{obs}}^t - \overline{H_{\text{obs}}}\right)^2}$$
+The Hathnikund input is the latest causal discharge observation available at issue time; it is not a set of independently observed lagged releases.
 
-$$\text{RMSE} = \sqrt{\frac{1}{T} \sum_{t=1}^{T} \left(H_{\text{obs}}^t - H_{\text{sim}}^t\right)^2}$$
+### 5.2 Evaluation Metrics & Model Benchmarks
 
-$$\text{Coverage}_{80} = \frac{1}{T} \sum_{t=1}^{T} \mathbb{I}\left(H_{\text{obs}}^t \in \left[\hat{H}_{\text{lo}}^t, \hat{H}_{\text{hi}}^t\right]\right)$$
+The checked-in [model card](ml/out/MODEL_CARD.md) reports held-out results for the July 9-18, 2023 event. For observations $H_{\mathrm{obs}}^t$ and predictions $H_{\mathrm{sim}}^t$:
 
-| Model | Horizon ($\Delta t$) | NSE ($\uparrow$) | RMSE ($\downarrow$) | MAE ($\downarrow$) | 80% CI Coverage |
-|---|:---:|:---:|:---:|:---:|:---:|
-| Persistence Baseline | 6 hours | 0.812 | 0.54 m | 0.41 m | — |
-| **Jaltaranga `lagreg-v1` (Production)** | **6 hours** | **0.942** | **0.18 m** | **0.13 m** | **83.4%** |
-| Persistence Baseline | 12 hours | 0.634 | 0.98 m | 0.77 m | — |
-| **Jaltaranga `lagreg-v1` (Production)** | **12 hours** | **0.891** | **0.31 m** | **0.24 m** | **81.2%** |
+$$\mathrm{NSE} = 1 - \frac{\sum_{t=1}^{T}(H_{\mathrm{obs}}^t - H_{\mathrm{sim}}^t)^2}{\sum_{t=1}^{T}(H_{\mathrm{obs}}^t - \overline{H_{\mathrm{obs}}})^2}$$
 
-*(Benchmarked on the extreme July 10–15, 2023 Delhi flood wave).*
+$$\mathrm{RMSE} = \sqrt{\frac{1}{T}\sum_{t=1}^{T}(H_{\mathrm{obs}}^t - H_{\mathrm{sim}}^t)^2}, \qquad \mathrm{MAE} = \frac{1}{T}\sum_{t=1}^{T}\left|H_{\mathrm{obs}}^t - H_{\mathrm{sim}}^t\right|$$
 
-### 3.3 Dynamic Evacuation Cost Function & Router
+| Model | Horizon | NSE | RMSE | MAE | Skill vs. persistence | Samples |
+|---|:---:|---:|---:|---:|---:|---:|
+| `lagreg-v1` | 1 hour | 0.550 | 0.733 m | 0.411 m | 0.081 | 16 |
+| `lagreg-v1` | 3 hours | 0.604 | 0.717 m | 0.434 m | 0.174 | 16 |
+| `lagreg-v1` | 6 hours | 0.613 | 0.715 m | 0.449 m | 0.211 | 16 |
+| `lagreg-v1` | 12 hours | 0.724 | 0.608 m | 0.406 m | 0.553 | 16 |
+| `lagreg-v1` | 24 hours | 0.689 | 0.657 m | 0.525 m | 0.711 | 16 |
 
-Let $G = (V, E)$ represent the road network graph. The traversal cost $C(e, t)$ of edge $e \in E$ at time $t$ is formulated as a dynamic, non-linear function of physical edge length $L(e)$, walking speed $v_{\text{walk}} \approx 1.1\text{ m/s}$, and modeled flood depth $d(e, t)$:
+### 5.3 Dynamic Evacuation Cost Function & Router
 
-$$C(e, t) = \begin{cases} \infty & \text{if } d(e, t) \ge d_{\text{crit}} \quad \text{(Severed Road Closure)} \\ \frac{L(e)}{v_{\text{walk}}} \times \left(1 + \kappa \cdot \left(\frac{d(e, t)}{d_{\text{crit}}}\right)^2\right) & \text{if } 0 < d(e, t) < d_{\text{crit}} \quad \text{(Water Inundation Penalty)} \\ \frac{L(e)}{v_{\text{walk}}} & \text{if } d(e, t) = 0 \quad \text{(Dry Edge)} \end{cases}$$
+For edge $e$, the router computes walking time $T_e = L_e / v$ from edge length $L_e$ and walking speed $v$. For a usable edge with modeled depth $d_e$ and amber status $a_e \in \{0,1\}$, the route-search cost is:
 
-Where:
-- $d_{\text{crit}} = 0.30\text{ m}$ (the critical depth at which wading becomes unsafe for children and elderly individuals).
-- $\kappa = 15.0$ is the steep exponential penalty factor preventing routing through shallow waters when dry detours exist.
+$$C_e = T_e(1 + (5\,\mathrm{m}^{-1})d_e)(1 + 0.5a_e)$$
 
-### 3.4 Colony Evacuation Urgency & Prioritization Index
+Here, depth is measured in metres. Edges that fail the closure safety check are excluded: the traveler must leave the edge at least 30 minutes before its predicted closure. Routes are also constrained by a 90-minute maximum walk. The implementation uses walking speeds of 3 km/h, or 2 km/h for colonies above the configured vulnerability threshold. See [`routing/jt_routing/tdsp.py`](routing/jt_routing/tdsp.py) and [`routing/jt_routing/config.py`](routing/jt_routing/config.py).
 
-Evacuation priority score $P_c \in [0, 1]$ for colony $c$ is computed dynamically across each replay step:
+### 5.4 Colony Evacuation Urgency & Prioritization Index
 
-$$t_{\text{lead}} = t_{\text{submersion}} - t_{\text{current}} - t_{\text{walk}}$$
+For a colony with forecast time-to-inundation $\ell_c$ in hours, normalized population $n_c$, normalized vulnerability $v_c$, and amber-edge share $r_c$, the implementation computes:
 
-$$P_c = \sigma\left(w_1 \cdot \frac{1}{\max(t_{\text{lead}}, 0.25)} + w_2 \cdot \log_{10}(N_c) + w_3 \cdot \mathbb{I}_{\text{unreachable}}\right)$$
+$$u_c = \operatorname{clip}\left(1 - \frac{\ell_c}{24}, 0, 1\right)$$
 
-Where $N_c$ is the colony population, $t_{\text{walk}}$ is the evacuation walking duration to the nearest shelter with capacity, and $\mathbb{I}_{\text{unreachable}} = 1$ when all overland egress edges are severed ($d \ge d_{\text{crit}}$), triggering NDRF/boat deployment dispatches.
+$$P_c = \operatorname{clip}\left(0.45u_c + 0.25n_c + 0.20v_c + 0.10r_c, 0, 1\right)$$
+
+Population is normalized by the largest seeded colony population. Vulnerability is min-max normalized across the seeded colonies using the weighted vulnerable-population ratio, and route risk is the amber-edge share of the selected route. The forecast lead time is measured to the modeled inundation threshold; it does not subtract walking time. The calculation is implemented in [`routing/jt_routing/priority.py`](routing/jt_routing/priority.py).
 
 ---
 
-## 5. Real-Time Data Types & Schemas
+## 6. Real-Time Data Types & Schemas
 
 The system enforces strict real-time type contracts shared across Python microservices and TypeScript frontend clients:
 
@@ -216,7 +222,7 @@ export interface RealTimeDispatchCard {
 
 ---
 
-## 6. System Architecture
+## 7. System Architecture
 
 Jaltaranga is deployed natively on **Amazon Web Services (AWS)** using the AWS Serverless Application Model (SAM):
 
@@ -262,9 +268,9 @@ flowchart TD
 
 ---
 
-## 7. Real-Time Verification & Counterfactual Safety Audit
+## 8. Real-Time Verification & Counterfactual Safety Audit
 
-During the peak Yamuna flood replay (11–13 July 2023), Jaltaranga computed a **flood-blind counterfactual audit**:
+During the peak Yamuna flood replay (11-13 July 2023), Jaltaranga computed a **flood-blind counterfactual audit**:
 
 ```
 +-----------------------------------------------------------------------------------------+
@@ -277,23 +283,22 @@ During the peak Yamuna flood replay (11–13 July 2023), Jaltaranga computed a *
 | Citizens Safely Routed by Jaltaranga Dynamic Router | 112,450 residents (100.0%)        |
 | Submerged Road Crossings in Jaltaranga Plans        | 0 edges (Zero tolerance invariant)|
 | Average Lead Time Advantage Provided                | 3.8 hours before street cutoff    |
-| Peak River Stage Forecast Accuracy (RMSE)           | 0.18 m                            |
 +-----------------------------------------------------+-----------------------------------+
 ```
 
 ---
 
-## 8. Developer Quickstart & Local Reproduction
+## 9. Developer Quickstart & Local Reproduction
 
 You can run Jaltaranga either connected to live AWS endpoints or completely offline in standalone fixture mode.
 
-### 8.1 Prerequisites
+### 9.1 Prerequisites
 
 - **Node.js**: v20 or newer
 - **Python**: v3.12 (or v3.11 for ML standalone)
 - **AWS CLI v2 & SAM CLI** *(optional, for cloud deployment)*
 
-### 8.2 Run the Frontend Locally
+### 9.2 Run the Frontend Locally
 
 ```bash
 # Clone the repository
@@ -307,7 +312,7 @@ npm run dev
 
 Visit `http://localhost:5173/command` for the Command Console and `http://localhost:5173/colony/DEL-YP-04` for the Citizen Mobile view.
 
-### 8.3 Run the Python Test Suite & Routing Pipeline
+### 9.3 Run the Python Test Suite & Routing Pipeline
 
 ```bash
 # Setup Python virtual environment
@@ -323,7 +328,7 @@ pytest -v routing/
 pytest -v alerts/
 ```
 
-### 8.4 Automated Testing & Quality Gates
+### 9.4 Automated Testing & Quality Gates
 
 ```bash
 # Frontend Unit, GeoJSON, and Schema Contract Tests
@@ -336,29 +341,29 @@ npm run build
 
 ---
 
-## 9. Live API Reference & Endpoints
+## 10. Live API Reference & Endpoints
 
 You can verify the live AWS deployment using `curl`:
 
-### 9.1 Retrieve Machine Learning Model Card
+### 10.1 Retrieve Machine Learning Model Card
 ```bash
 curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/models/card
 ```
 *Returns model architecture (Ridge Lag-Regression), active production status (`lagreg-v1`), training features, and frozen weights.*
 
-### 9.2 Get Stage Forecast & Uncertainty Bands
+### 10.2 Get Stage Forecast & Uncertainty Bands
 ```bash
 curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/scenarios/yamuna-2023-07/forecast
 ```
 *Returns 1h to 24h forecast horizons with point predictions (`level_m`) and 80% confidence interval bounds (`lo_m`, `hi_m`).*
 
-### 9.3 Get Dynamic Relief Shelter Bed Availability
+### 10.3 Get Dynamic Relief Shelter Bed Availability
 ```bash
 curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/shelters
 ```
 *Returns live shelters queried from AWS DynamoDB (`jt-demo-shelters`), including capacity, occupancy, and remaining free beds.*
 
-### 9.4 Get Evacuation Route Plans
+### 10.4 Get Evacuation Route Plans
 ```bash
 curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/scenarios/yamuna-2023-07/plans
 ```
@@ -366,7 +371,7 @@ curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/scenarios/yamuna-20
 
 ---
 
-## 10. Operational Safety & Ethical Invariants
+## 11. Operational Safety & Ethical Invariants
 
 1. **Human-in-the-Loop Authority:** All generative AI dispatches drafted by Bedrock remain in `DRAFT` status until explicitly reviewed and approved by an authorized Incident Commander.
 2. **Deterministic Emergency Contacts:** The system strictly permits only official disaster control helplines (**1077** for District Disaster Management and **112** for Police/Fire/Ambulance). No synthetic telephone number can pass the JSON Schema validator.
@@ -374,7 +379,7 @@ curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/scenarios/yamuna-20
 
 ---
 
-## 11. Dual Experience: Incident Command (Web) vs. Resident Mobile (Phone / PWA)
+## 12. Dual Experience: Incident Command (Web) vs. Resident Mobile (Phone / PWA)
 
 Jaltaranga delivers two purpose-built, responsive interfaces tailored to their operational environments:
 
@@ -389,7 +394,7 @@ Jaltaranga delivers two purpose-built, responsive interfaces tailored to their o
 
 ---
 
-## 12. Multimodal Notification & Alert Pipeline
+## 13. Multimodal Notification & Alert Pipeline
 
 When an Incident Commander approves an evacuation order in the Command Console, the notification engine executes an automated, multichannel fan-out:
 
@@ -406,12 +411,12 @@ flowchart LR
     Push --> Citizens
 ```
 
-1. **Deterministic Verification:** Facts (shelter name, walk distance, avoid roads, cutoff time) are injected via immutable slots—Bedrock cannot alter operational safety data.
+1. **Deterministic Verification:** Facts (shelter name, walk distance, avoid roads, cutoff time) are injected via immutable slots; Bedrock cannot alter operational safety data.
 2. **Audio Synthesis (Amazon Polly):** Synthesizes natural Hindi speech (`Kajal` voice) saved to S3 and served directly to the mobile browser and local PA loudspeakers.
 3. **Emergency Push & SMS (Amazon SNS):** Fans out SMS, WhatsApp, and email dispatches to residents and responders in the targeted colony polygon.
 4. **Official Emergency Helplines:** Enforces strict compliance with India's official disaster lines (**1077** District Disaster Control Room and **112** National Emergency Response).
 
-### 12.1 Real-Time Gmail / Email Alert Integration (Amazon SNS)
+### 13.1 Real-Time Gmail / Email Alert Integration (Amazon SNS)
 
 Evaluators and incident commanders can subscribe any email/Gmail directly to the live AWS broadcast pipeline:
 
@@ -428,14 +433,14 @@ Evaluators and incident commanders can subscribe any email/Gmail directly to the
 
 ---
 
-## 13. Team ChaapSeekers
+## 14. Team ChaapSeekers
 
 Built with dedication for the **Bharat Builds Tour 2026 | WeMakeDevs × AWS Environmental Hacks** by:
 
-- **Vaibhav Mittal** — Hydrological ML Models, River Stage Forecasting, Uncertainty Quantification & Cloud Architecture
-- **Saksham Verma** — Topological Evacuation Router, Bedrock/Polly Alert Dispatch Engine & Backend Integration
-- **Shivansh** — AWS SAM Infrastructure-as-Code, DynamoDB Schemas, Data Pipelines & DTM Processing
-- **Arjav** — Frontend Engineering, Resident Mobile Web App (PWA), Offline Colony Packs, Emergency Notification UI & Responsive Cross-Device Experience
+- **Vaibhav Mittal**: Hydrological ML Models, River Stage Forecasting, Uncertainty Quantification & Cloud Architecture
+- **Saksham Verma**: Topological Evacuation Router, Bedrock/Polly Alert Dispatch Engine & Backend Integration
+- **Shivansh**: AWS SAM Infrastructure-as-Code, DynamoDB Schemas, Data Pipelines & DTM Processing
+- **Arjav**: Frontend Engineering, Resident Mobile Web App (PWA), Offline Colony Packs, Emergency Notification UI & Responsive Cross-Device Experience
 
 ---
 
