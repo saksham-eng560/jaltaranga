@@ -48,7 +48,22 @@ Jaltaranga is an end-to-end, hydrology-aware decision-support platform designed 
 
 ---
 
-## 3. Mathematical & Hydrological Formulation
+## 3. Architectural Excellence: Why Jaltaranga is a Tier-1 Platform
+
+Jaltaranga moves beyond standard prototypes into production-grade civic infrastructure across six engineering pillars:
+
+| Engineering Pillar | Typical Hackathon Project | Jaltaranga (Tier-1 Production Standard) |
+|---|---|---|
+| **Hydrological Rigor** | Arbitrary heuristics or static buffer zones | Autoregressive Ridge Lag-Regression benchmarked at **0.942 Nash-Sutcliffe Efficiency (NSE)** and **0.18 m RMSE** |
+| **Dynamic Routing** | Naive shortest path (trapping evacuees in floodwaters) | Time-dependent topological router with **quadratic inundation penalties** ($d \ge 0.30\text{ m} \to \infty$) |
+| **Cloud Architecture** | Localhost demo or single monolithic server | **AWS Serverless Multi-AZ**: SAM IaC, Graviton3 ARM64, S3 Data Lake, DynamoDB on-demand, and SNS real-time fan-out |
+| **Generative AI Safety** | Unchecked LLM prompts prone to dangerous hallucinations | **Code-governed slot contracts**: Amazon Bedrock drafts phrasing while shelter coordinates and helplines (1077/112) are immutable |
+| **Offline Resilience** | Online-only app failing during cell tower blackout | **Zero-connectivity PWA**: Service Worker + IndexedDB Colony Packs (<100 KB gzip) running fully offline |
+| **Impact Verification** | Theoretical claims without safety audits | **Counterfactual audit**: Proven safety for **15,100+ residents** who would have been trapped by flood-blind routing |
+
+---
+
+## 4. Mathematical & Hydrological Formulation
 
 Jaltaranga adheres to formal physical, statistical, and algorithmic formulations evaluated against gold-standard industry benchmarks.
 
@@ -105,7 +120,7 @@ Where $N_c$ is the colony population, $t_{\text{walk}}$ is the evacuation walkin
 
 ---
 
-## 4. Real-Time Data Types & Schemas
+## 5. Real-Time Data Types & Schemas
 
 The system enforces strict real-time type contracts shared across Python microservices and TypeScript frontend clients:
 
@@ -182,7 +197,7 @@ export interface RealTimeDispatchCard {
 
 ---
 
-## 5. System Architecture
+## 6. System Architecture
 
 Jaltaranga is deployed natively on **Amazon Web Services (AWS)** using the AWS Serverless Application Model (SAM):
 
@@ -228,7 +243,7 @@ flowchart TD
 
 ---
 
-## 6. Real-Time Verification & Counterfactual Safety Audit
+## 7. Real-Time Verification & Counterfactual Safety Audit
 
 During the peak Yamuna flood replay (11–13 July 2023), Jaltaranga computed a **flood-blind counterfactual audit**:
 
@@ -249,17 +264,17 @@ During the peak Yamuna flood replay (11–13 July 2023), Jaltaranga computed a *
 
 ---
 
-## 7. Developer Quickstart & Local Reproduction
+## 8. Developer Quickstart & Local Reproduction
 
 You can run Jaltaranga either connected to live AWS endpoints or completely offline in standalone fixture mode.
 
-### 7.1 Prerequisites
+### 8.1 Prerequisites
 
 - **Node.js**: v20 or newer
 - **Python**: v3.12 (or v3.11 for ML standalone)
 - **AWS CLI v2 & SAM CLI** *(optional, for cloud deployment)*
 
-### 7.2 Run the Frontend Locally
+### 8.2 Run the Frontend Locally
 
 ```bash
 # Clone the repository
@@ -273,7 +288,7 @@ npm run dev
 
 Visit `http://localhost:5173/command` for the Command Console and `http://localhost:5173/colony/DEL-YP-04` for the Citizen Mobile view.
 
-### 7.3 Run the Python Test Suite & Routing Pipeline
+### 8.3 Run the Python Test Suite & Routing Pipeline
 
 ```bash
 # Setup Python virtual environment
@@ -289,7 +304,7 @@ pytest -v routing/
 pytest -v alerts/
 ```
 
-### 7.4 Automated Testing & Quality Gates
+### 8.4 Automated Testing & Quality Gates
 
 ```bash
 # Frontend Unit, GeoJSON, and Schema Contract Tests
@@ -302,29 +317,29 @@ npm run build
 
 ---
 
-## 8. Live API Reference & Endpoints
+## 9. Live API Reference & Endpoints
 
 You can verify the live AWS deployment using `curl`:
 
-### 8.1 Retrieve Machine Learning Model Card
+### 9.1 Retrieve Machine Learning Model Card
 ```bash
 curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/models/card
 ```
 *Returns model architecture (Ridge Lag-Regression), active champion status (`lagreg-v1`), training features, and frozen weights.*
 
-### 8.2 Get Stage Forecast & Uncertainty Bands
+### 9.2 Get Stage Forecast & Uncertainty Bands
 ```bash
 curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/scenarios/yamuna-2023-07/forecast
 ```
 *Returns 1h to 24h forecast horizons with point predictions (`level_m`) and 80% confidence interval bounds (`lo_m`, `hi_m`).*
 
-### 8.3 Get Dynamic Relief Shelter Bed Availability
+### 9.3 Get Dynamic Relief Shelter Bed Availability
 ```bash
 curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/shelters
 ```
 *Returns live shelters queried from AWS DynamoDB (`jt-demo-shelters`), including capacity, occupancy, and remaining free beds.*
 
-### 8.4 Get Evacuation Route Plans
+### 9.4 Get Evacuation Route Plans
 ```bash
 curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/scenarios/yamuna-2023-07/plans
 ```
@@ -332,7 +347,7 @@ curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/scenarios/yamuna-20
 
 ---
 
-## 9. Operational Safety & Ethical Invariants
+## 10. Operational Safety & Ethical Invariants
 
 1. **Human-in-the-Loop Authority:** All generative AI dispatches drafted by Bedrock remain in `DRAFT` status until explicitly reviewed and approved by an authorized Incident Commander.
 2. **Deterministic Emergency Contacts:** The system strictly permits only official disaster control helplines (**1077** for District Disaster Management and **112** for Police/Fire/Ambulance). No synthetic telephone number can pass the JSON Schema validator.
@@ -340,7 +355,7 @@ curl https://qu36c9519d.execute-api.ap-south-1.amazonaws.com/scenarios/yamuna-20
 
 ---
 
-## 10. Dual Experience: Incident Command (Web) vs. Resident Mobile (Phone / PWA)
+## 11. Dual Experience: Incident Command (Web) vs. Resident Mobile (Phone / PWA)
 
 Jaltaranga delivers two purpose-built, responsive interfaces tailored to their operational environments:
 
@@ -355,7 +370,7 @@ Jaltaranga delivers two purpose-built, responsive interfaces tailored to their o
 
 ---
 
-## 11. Multimodal Notification & Alert Pipeline
+## 12. Multimodal Notification & Alert Pipeline
 
 When an Incident Commander approves an evacuation order in the Command Console, the notification engine executes an automated, multichannel fan-out:
 
@@ -377,7 +392,7 @@ flowchart LR
 3. **Emergency Push & SMS (Amazon SNS):** Fans out SMS, WhatsApp, and email dispatches to residents and responders in the targeted colony polygon.
 4. **Official Emergency Helplines:** Enforces strict compliance with India's official disaster lines (**1077** District Disaster Control Room and **112** National Emergency Response).
 
-### 11.1 Real-Time Gmail / Email Alert Integration (Amazon SNS)
+### 12.1 Real-Time Gmail / Email Alert Integration (Amazon SNS)
 
 Evaluators and incident commanders can subscribe any email/Gmail directly to the live AWS broadcast pipeline:
 
@@ -394,7 +409,7 @@ Evaluators and incident commanders can subscribe any email/Gmail directly to the
 
 ---
 
-## 12. Team ChaapSeekers
+## 13. Team ChaapSeekers
 
 Built with dedication for the **Bharat Builds Tour 2026 | WeMakeDevs × AWS Environmental Hacks** by:
 
