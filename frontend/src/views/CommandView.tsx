@@ -136,7 +136,11 @@ export function CommandView({
         </div>
 
         <div className="header-meta">
-          <span className="header-datetime">{currentTimelineStep.dateTimeDisplay}</span>
+          <div className="header-datetime-wrap">
+            <span className="header-date">{currentTimelineStep.dateTimeDisplay.split('|')[0]?.trim()}</span>
+            <span className="header-pipe">|</span>
+            <span className="header-time">{currentTimelineStep.dateTimeDisplay.split('|')[1]?.trim()}</span>
+          </div>
           <div className="header-system-status">
             System Status: <strong>ACTIVE</strong>
           </div>
@@ -149,20 +153,20 @@ export function CommandView({
         <aside className="command-sidebar-icons" aria-label="System navigation">
           <div className="sidebar-icons-top">
             <button
-              className="sidebar-icon-btn active"
-              title="Flood Response Command Center"
-              onClick={() => onNavigate?.('command')}
-              aria-label="Command Center"
-            >
-              <Icon name="grid" size={20} />
-            </button>
-            <button
               className="sidebar-icon-btn"
               title="Resident Colony View"
               onClick={() => onNavigate?.('colony')}
               aria-label="Citizen Colony View"
             >
               <Icon name="home" size={20} />
+            </button>
+            <button
+              className="sidebar-icon-btn active"
+              title="Flood Response Command Center"
+              onClick={() => onNavigate?.('command')}
+              aria-label="Command Center"
+            >
+              <Icon name="grid" size={20} />
             </button>
             <button
               className="sidebar-icon-btn"
@@ -268,9 +272,11 @@ export function CommandView({
               </div>
 
               {/* Amber Warning Box */}
-              <div className="amber-warning-box">
-                <div className="warning-box-title">{currentTimelineStep.warningBox.title}</div>
-                <div className="warning-box-message">{currentTimelineStep.warningBox.message}</div>
+              <div className="amber-warning-wrapper">
+                <div className="warning-box-outer-title">{currentTimelineStep.warningBox.title}</div>
+                <div className="amber-warning-box">
+                  <div className="warning-box-message">{currentTimelineStep.warningBox.message}</div>
+                </div>
               </div>
             </div>
           </section>
@@ -375,7 +381,8 @@ export function CommandView({
                     className={`step-btn ${idx === activeStepIndex ? 'step-btn-active' : ''}`}
                     onClick={() => handleStepSelect(idx)}
                   >
-                    {s.buttonLabel}
+                    <span className="step-btn-date">{s.dateLabel}</span>
+                    <span className="step-btn-time">{s.timeLabel}</span>
                   </button>
                 ))}
               </div>

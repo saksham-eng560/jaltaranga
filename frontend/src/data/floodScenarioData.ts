@@ -21,6 +21,8 @@ export interface QueueItem {
 export interface ReplayTimelineStep {
   id: string;
   buttonLabel: string;
+  dateLabel: string;
+  timeLabel: string;
   dateTimeDisplay: string;
   waterLevel: string;
   waterLevelDelta: string;
@@ -307,6 +309,8 @@ export const TIMELINE_STEPS: ReplayTimelineStep[] = [
   {
     id: 'step-jun-15',
     buttonLabel: 'JUN 15 (08:00)',
+    dateLabel: 'JUN 15',
+    timeLabel: '(08:00)',
     dateTimeDisplay: 'June 15, 2024 | 08:00',
     waterLevel: '205.10m',
     waterLevelDelta: '(▲ +0.12m)',
@@ -384,6 +388,8 @@ export const TIMELINE_STEPS: ReplayTimelineStep[] = [
   {
     id: 'step-jun-16',
     buttonLabel: 'JUN 16 (12:00)',
+    dateLabel: 'JUN 16',
+    timeLabel: '(12:00)',
     dateTimeDisplay: 'June 16, 2024 | 12:00',
     waterLevel: '207.25m',
     waterLevelDelta: '(▲ +0.25m)',
@@ -462,6 +468,8 @@ export const TIMELINE_STEPS: ReplayTimelineStep[] = [
     // The exact canonical state shown in user's UI screenshot!
     id: 'step-jun-17',
     buttonLabel: 'JUN 17 (16:00)',
+    dateLabel: 'JUN 17',
+    timeLabel: '(16:00)',
     dateTimeDisplay: 'June 17, 2024 | 16:35',
     waterLevel: '208.52m',
     waterLevelDelta: '(▲ +0.32m)',
@@ -549,6 +557,8 @@ export const TIMELINE_STEPS: ReplayTimelineStep[] = [
   {
     id: 'step-jun-18',
     buttonLabel: 'JUN 18 (20:00)',
+    dateLabel: 'JUN 18',
+    timeLabel: '(20:00)',
     dateTimeDisplay: 'June 18, 2024 | 20:00',
     waterLevel: '207.80m',
     waterLevelDelta: '(▼ -0.15m)',

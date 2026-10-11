@@ -129,8 +129,8 @@ export function FloodResponseMap({
         const map = new maplibre.Map({
           container: containerRef.current,
           style: ESRI_DARK_STYLE,
-          center: [77.248, 28.655],
-          zoom: 12.1,
+          center: [77.258, 28.654],
+          zoom: 11.85,
           attributionControl: false,
         });
 
@@ -316,7 +316,7 @@ export function FloodResponseMap({
   const handleZoomIn = () => mapRef.current?.zoomIn();
   const handleZoomOut = () => mapRef.current?.zoomOut();
   const handleReset = () => {
-    mapRef.current?.flyTo({ center: [77.255, 28.648], zoom: 12.3, pitch: 0, bearing: 0 });
+    mapRef.current?.flyTo({ center: [77.258, 28.654], zoom: 11.85, pitch: 0, bearing: 0 });
   };
 
   return (
@@ -336,7 +336,7 @@ export function FloodResponseMap({
         )}
       </div>
 
-      {/* Map Controls (+ / - / Compass / Reset) */}
+      {/* Map Controls Top-Left (+ / - / Compass / Reset) */}
       <div className="flood-map-controls">
         <button
           className="map-ctrl-btn"
@@ -372,8 +372,36 @@ export function FloodResponseMap({
         </button>
       </div>
 
-      {/* Legend Overlay: COLONY STATUS (Red, Amber, Green) */}
-      <div className="flood-map-legend-card" aria-label="Colony status legend">
+      {/* Map Controls Bottom-Right (Recenter / + / -) */}
+      <div className="flood-map-controls-bottom-right">
+        <button
+          className="map-ctrl-btn"
+          onClick={handleReset}
+          aria-label="Recenter map"
+          title="Recenter"
+        >
+          <Icon name="target" size={16} />
+        </button>
+        <button
+          className="map-ctrl-btn"
+          onClick={handleZoomIn}
+          aria-label="Zoom in"
+          title="Zoom in"
+        >
+          <Icon name="plus" size={16} />
+        </button>
+        <button
+          className="map-ctrl-btn"
+          onClick={handleZoomOut}
+          aria-label="Zoom out"
+          title="Zoom out"
+        >
+          <Icon name="minus" size={16} />
+        </button>
+      </div>
+
+      {/* Legend Overlay Top-Right: COLONY STATUS (Red, Amber, Green with descriptions) */}
+      <div className="flood-map-legend-card legend-top-right" aria-label="Colony status detailed legend">
         <div className="legend-header">COLONY STATUS</div>
         <div className="legend-items">
           <div className="legend-row">
@@ -393,6 +421,25 @@ export function FloodResponseMap({
             <span className="legend-label">
               <strong>GREEN</strong> (Monitoring/Safe)
             </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Legend Overlay Bottom-Left: COLONY STATUS */}
+      <div className="flood-map-legend-card legend-bottom-left" aria-label="Colony status compact legend">
+        <div className="legend-header">COLONY STATUS</div>
+        <div className="legend-items">
+          <div className="legend-row">
+            <span className="status-dot dot-red" />
+            <span className="legend-label">Critical/Active Evacuation</span>
+          </div>
+          <div className="legend-row">
+            <span className="status-dot dot-amber" />
+            <span className="legend-label">Warning/Pending</span>
+          </div>
+          <div className="legend-row">
+            <span className="status-dot dot-green" />
+            <span className="legend-label">Monitoring/Safe</span>
           </div>
         </div>
       </div>
