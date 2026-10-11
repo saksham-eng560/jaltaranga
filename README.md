@@ -26,7 +26,7 @@
 | Service Component | Live Endpoint / Access URI | Description |
 |---|---|---|
 | **Incident Command Console** | [http://jt-demo-web-410133710130.s3-website.ap-south-1.amazonaws.com/command](http://jt-demo-web-410133710130.s3-website.ap-south-1.amazonaws.com/command) | Operational situational awareness, dynamic colony queue, and dispatch approval |
-| **Citizen Evacuation App (PWA)** | [http://jt-demo-web-410133710130.s3-website.ap-south-1.amazonaws.com/colony/DEL-YP-04](http://jt-demo-web-410133710130.s3-website.ap-south-1.amazonaws.com/colony/DEL-YP-04) | Turn-by-turn route guidance, bilingual advisory, and offline-first Colony Pack |
+| **Citizen Evacuation App (PWA)** | [http://jt-demo-web-410133710130.s3-website.ap-south-1.amazonaws.com/colony/DEL-YP-04?at=2023-07-11T09%3A00%3A00%2B05%3A30](http://jt-demo-web-410133710130.s3-website.ap-south-1.amazonaws.com/colony/DEL-YP-04?at=2023-07-11T09%3A00%3A00%2B05%3A30) | Turn by turn route guidance, bilingual advisory, and offline first Colony Pack (Open over HTTP on mobile) |
 | **AWS API Gateway (HTTP API v2)** | [`https://qu36c9519d.execute-api.ap-south-1.amazonaws.com`](https://qu36c9519d.execute-api.ap-south-1.amazonaws.com) | Serverless microservices powering forecast, routing, shelters, and dispatch |
 | **S3 Geospatial Data Lake** | `s3://jt-demo-data-410133710130` (`ap-south-1`) | Historical CWC observations, hydrodynamic flood models, and road network graphs |
 | **CloudFormation Stack** | `jt-demo` | AWS SAM Infrastructure-as-Code in Mumbai (`ap-south-1`) |
