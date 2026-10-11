@@ -5,19 +5,7 @@
 
 <p align="center"><img src="frontend/public/logo.svg" alt="Jaltaranga logo" width="112"></p>
 
-[![AWS Serverless](https://img.shields.io/badge/AWS-Serverless%20SAM-orange?logo=amazon-aws)](https://aws.amazon.com/)
-[![Region](https://img.shields.io/badge/Region-ap--south--1%20(Mumbai)-blue)](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/)
-[![Python](https://img.shields.io/badge/Python-3.12%20(ARM64)-3776AB?logo=python)](https://python.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8%20(React%2019)-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
-[![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-Frontend-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
-[![OpenStreetMap](https://img.shields.io/badge/OpenStreetMap-Maps-7EBC6F?logo=openstreetmap&logoColor=white)](https://www.openstreetmap.org/)
-[![MapLibre](https://img.shields.io/badge/MapLibre-GL-396CB2)](https://maplibre.org/)
-[![Amazon Bedrock](https://img.shields.io/badge/Amazon-Bedrock-232F3E?logo=amazonaws&logoColor=white)](https://aws.amazon.com/bedrock/)
-[![Amazon Polly](https://img.shields.io/badge/Amazon-Polly-232F3E?logo=amazonaws&logoColor=white)](https://aws.amazon.com/polly/)
-[![pytest](https://img.shields.io/badge/pytest-Tests-0A9EDC?logo=pytest&logoColor=white)](https://pytest.org/)
-[![Vitest](https://img.shields.io/badge/Vitest-Tests-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
+[![AWS SAM](https://img.shields.io/badge/-AWS%20SAM-232F3E?style=flat&logo=amazonaws&logoColor=white)](https://aws.amazon.com/serverless/sam/) [![Python](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white)](https://python.org) [![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![React](https://img.shields.io/badge/-React-149ECA?style=flat&logo=react&logoColor=white)](https://react.dev/) [![Vite](https://img.shields.io/badge/-Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vite.dev/) [![OpenStreetMap](https://img.shields.io/badge/-OpenStreetMap-7EBC6F?style=flat&logo=openstreetmap&logoColor=white)](https://www.openstreetmap.org/) [![MapLibre](https://img.shields.io/badge/-MapLibre-396CB2?style=flat)](https://maplibre.org/) [![Amazon Bedrock](https://img.shields.io/badge/-Bedrock-232F3E?style=flat&logo=amazonaws&logoColor=white)](https://aws.amazon.com/bedrock/) [![Amazon Polly](https://img.shields.io/badge/-Polly-232F3E?style=flat&logo=amazonaws&logoColor=white)](https://aws.amazon.com/polly/) [![pytest](https://img.shields.io/badge/-pytest-0A9EDC?style=flat&logo=pytest&logoColor=white)](https://pytest.org/) [![Vitest](https://img.shields.io/badge/-Vitest-6E9F18?style=flat&logo=vitest&logoColor=white)](https://vitest.dev/)
 
 ---
 
