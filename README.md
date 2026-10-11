@@ -137,9 +137,9 @@ Here, depth is measured in metres. Edges that fail the closure safety check are 
 
 For a colony with forecast time-to-inundation $\ell_c$ in hours, normalized population $n_c$, normalized vulnerability $v_c$, and amber-edge share $r_c$, the implementation computes:
 
-$$u_c = \operatorname{clip}\left(1 - \frac{\ell_c}{24}, 0, 1\right)$$
+$$u_c = \min\left(1, \max\left(0, 1 - \frac{\ell_c}{24}\right)\right)$$
 
-$$P_c = \operatorname{clip}\left(0.45u_c + 0.25n_c + 0.20v_c + 0.10r_c, 0, 1\right)$$
+$$P_c = \min\left(1, \max\left(0, 0.45u_c + 0.25n_c + 0.20v_c + 0.10r_c\right)\right)$$
 
 Population is normalized by the largest seeded colony population. Vulnerability is min-max normalized across the seeded colonies using the weighted vulnerable-population ratio, and route risk is the amber-edge share of the selected route. The forecast lead time is measured to the modeled inundation threshold; it does not subtract walking time. The calculation is implemented in [`routing/jt_routing/priority.py`](routing/jt_routing/priority.py).
 
