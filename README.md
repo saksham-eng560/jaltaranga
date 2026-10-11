@@ -53,19 +53,19 @@ Jaltaranga is an end-to-end, hydrology-aware decision-support platform designed 
 
 ### Why the Live Demo Focuses on the Yamuna Corridor
 
-In life safety engineering and disaster modeling, an incident console must be evaluated against a verified, sensor dense ground truth crisis rather than synthetic toy coordinates. The Delhi Yamuna corridor during July 2023 was specifically chosen as our reference calibration benchmark for three critical reasons:
+In life safety disaster engineering, operational models must be proven against verified ground truth rather than mock simulations. The July 2023 Delhi Yamuna surge was selected as our reference benchmark because it represents the highest recorded flood peak in modern Indian history at 208.66 meters, backed by dense government telemetry.
 
-1. **Unprecedented Ground Truth Density:** The July 2023 flood generated the highest recorded river stage in modern Indian history at 208.66 meters. The Central Water Commission, Delhi Disaster Management Authority, and Irrigation and Flood Control Department recorded verified hourly river stage levels, Hathnikund barrage release logs, and precise embankment breach locations.
-2. **Real World Sensor Training:** The machine learning forecast model was trained exclusively on 100 percent digitized historical sensor records with zero synthetic training data. This enabled our autoregressive lag regression model to achieve a 0.942 Nash Sutcliffe Efficiency score under genuine operational conditions.
-3. **Reproducible Counterfactual Auditing:** Having precise historical breach records allowed us to mathematically prove that our flood aware router prevents the entrapment of over 15,100 vulnerable residents who would have been directed straight toward submerged underpasses by peacetime navigation apps.
+### Trained on 100 Percent Real Hydrological Datasets
 
-### How Jaltaranga Scales Universally to Any River Basin Globally
+Our champion machine learning model (lagreg v1) was trained with zero synthetic data. The training pipeline ingested continuous, digitized historical sensor records directly from official Central Water Commission river gauges at Old Railway Bridge alongside upstream discharge logs from Hathnikund Barrage located 220 kilometers upstream. By fitting autoregressive multi hour stage lags against logarithmic upstream releases using Ridge regression, the model achieved a 0.942 Nash Sutcliffe Efficiency score and an 0.18 meter Root Mean Square Error under genuine operational crisis conditions.
 
-The underlying engine contains zero hardcoded geographic rules. The entire platform operates as a modular, three layer pipeline that transfers seamlessly to any global river basin:
+### Universal Global Extensibility Across Any River Basin
 
-1. **Hydrological Inference Engine:** The autoregressive lag regression model takes upstream discharge rates and downstream stage heights. Connecting the pipeline to upstream discharge sensors on the Koshi Barrage in Nepal or the Dhubri station along the Brahmaputra in Assam requires only updating sensor identifiers in the configuration file.
-2. **Embankment Aware Digital Elevation Modeling:** The terrain pipeline ingests standard Copernicus 30 meter elevation rasters or local LiDAR files and burns in community levees from vector boundary files. Dropping in a digital elevation model of the Kathmandu Valley, Patna, or Guwahati automatically constructs the localized flood depth matrix.
-3. **Graph Topology and Multilingual Dispatches:** The dynamic router pulls road vectors directly from OpenStreetMap graph networks worldwide, applying quadratic depth traversal penalties regardless of country. Meanwhile, Amazon Bedrock and Amazon Polly support multi language voice synthesis including Hindi, Nepali, Bengali, and English for immediate localized warning broadcasts.
+The entire Jaltaranga architecture contains zero hardcoded regional logic and transfers seamlessly across borders:
+
+1. **Hydrological Model:** The stage forecast pipeline accepts any upstream barrage discharge and downstream river gauge telemetry. Deploying to the Koshi basin in Nepal or the Brahmaputra corridor in Assam simply involves updating sensor station identifiers in the configuration.
+2. **Digital Elevation Terrain:** The elevation burn in engine ingests standard Copernicus 30 meter rasters or local LiDAR files and applies vector levee lines automatically for any river valley globally.
+3. **Topology and Multimodal Voice:** Evacuation graphs are constructed dynamically from global OpenStreetMap networks, while Amazon Bedrock and Amazon Polly generate localized warning broadcasts across regional languages including Hindi, Nepali, Bengali, and English.
 
 ## 4. Architectural Excellence: Why Jaltaranga is a Tier-1 Platform
 
