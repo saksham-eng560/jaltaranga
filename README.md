@@ -1,6 +1,6 @@
-# Jaltaranga (जलतरंग) — Predict. Route. Protect.
+# Jaltaranga: Universal Cloud Platform for Real Time Flood Prediction and Evacuation Routing
 
-> **Hyperlocal Flood Forecasting, Inundation-Constrained Evacuation Routing, and Multimodal Dispatches for the Yamuna River Corridor.**  
+> **Hyperlocal Flood Forecasting, Inundation-Constrained Evacuation Routing, and Multimodal Dispatches.**  
 > Built for the **Bharat Builds Tour 2026 | WeMakeDevs × AWS Environmental Hacks** (*Track 02: Heat and Water*).
 
 [![AWS Serverless](https://img.shields.io/badge/AWS-Serverless%20SAM-orange?logo=amazon-aws)](https://aws.amazon.com/)
