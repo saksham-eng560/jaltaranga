@@ -11,6 +11,14 @@ The primary demonstration replays the July 2023 Yamuna flood on a simulated
 clock. Local fixture mode is available without AWS credentials or a running
 backend.
 
+## Live AWS Deployment
+
+- **Web Application (Citizen Mobile View)**: [http://jt-demo-web-410133710130.s3-website.ap-south-1.amazonaws.com/](http://jt-demo-web-410133710130.s3-website.ap-south-1.amazonaws.com/)
+- **Officer Command Console**: [http://jt-demo-web-410133710130.s3-website.ap-south-1.amazonaws.com/command](http://jt-demo-web-410133710130.s3-website.ap-south-1.amazonaws.com/command)
+- **API Gateway (HTTP API v2)**: `https://qu36c9519d.execute-api.ap-south-1.amazonaws.com`
+- **S3 Data Lake Bucket**: `s3://jt-demo-data-410133710130` (`ap-south-1`)
+
+
 ## Project at a glance
 
 The system is composed of offline data and decision pipelines, an optional
